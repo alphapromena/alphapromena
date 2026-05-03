@@ -1,0 +1,191 @@
+# Alphapromena Enterprise Website TODO
+
+## Design & Global
+- [x] Dark/premium theme with deep navy, slate, and gold/cyan accent palette
+- [x] Refined typography using Inter + Playfair Display from Google Fonts
+- [x] Global smooth scrolling and scroll-based animations (framer-motion)
+- [x] Responsive layout across mobile, tablet, desktop
+
+## Navigation
+- [x] Sticky top navigation with Alphapromena logo/wordmark
+- [x] Nav links: Home, Partnership, Services, Solutions, About, Contact
+- [x] Smooth scroll to each section on click
+- [x] Mobile hamburger menu
+
+## Hero Section
+- [x] Full-viewport hero with gradient/particle background
+- [x] Headline and sub-headline for enterprise positioning
+- [x] Two CTA buttons: "Explore Services" and "Contact Us"
+- [x] Animated entrance (framer-motion)
+
+## Ataccama One Reseller Partner Section
+- [x] Dedicated section with Ataccama One logo
+- [x] Partnership badge / "Official Reseller Partner" callout
+- [x] Partnership description and key benefits
+- [x] Feature highlights (data governance, data catalog, data quality)
+
+## AI Services Section
+- [x] Grid of enterprise AI service cards with icons
+- [x] Services: AI Strategy & Consulting, Data Intelligence, Machine Learning Solutions, AI Integration, Intelligent Automation, AI Governance
+- [x] Each card: icon, title, short description, feature tags
+
+## Enterprise Solutions Section
+- [x] Data Governance pillar
+- [x] Data Intelligence pillar
+- [x] Business Value Propositions
+- [x] Stats/metrics row (clients, projects, etc.)
+
+## About Us Section
+- [x] Company overview paragraph
+- [x] Mission statement
+- [x] Vision statement
+- [x] Core values grid
+
+## Contact / Lead Generation Form
+- [x] Fields: Name, Company, Email, Inquiry Type (dropdown), Message
+- [x] Form validation (zod)
+- [x] Backend tRPC mutation to save submission to DB
+- [x] Owner notification on every submission (notifyOwner)
+- [x] Success/error toast feedback
+
+## Database
+- [x] contact_submissions table in drizzle/schema.ts
+- [x] Migration applied via drizzle-kit migrate
+
+## Footer
+- [x] Company name, tagline, copyright
+- [x] Quick links to all sections
+- [x] Contact details (email, location)
+- [x] Social links (LinkedIn, Twitter)
+
+## Backend / Tests
+- [x] tRPC router for contact form submission
+- [x] Vitest test for contact form router
+
+## Branding Kit (Alpha Pro MENA)
+- [x] Apply Alpha Pro MENA brand colors (#FF1E57, #E92156, #B7274F, #313234, #F3F2F1)
+- [x] Switch typography to Barlow font (all caps headings)
+- [x] Render real SVG logo mark (interlinked rounded squares, crimson + charcoal)
+- [x] Update all UI elements, gradients, and accents to use brand identity
+- [x] Light theme redesign with 21st.dev-inspired card/bento layout
+
+## Enhancements (Round 3)
+- [x] Add Ataccama One clickable link to https://www.ataccama.com/platform (opens in new tab)
+- [x] Replace AI services section with cybernetic bento grid (mouse-tracking glow, mixed col/row spans)
+- [x] Adapt bento grid to Alpha Pro MENA brand colors (crimson glow, charcoal cards)
+
+## Enhancements (Round 4)
+- [x] Create AnimatedBlobs component in client/src/components/ui/blobs.tsx
+- [x] Adapt blob colors to Alpha Pro MENA brand (crimson, charcoal, rose)
+- [x] Integrate AnimatedBlobs into hero section as decorative background element
+
+## Enhancements (Round 5)
+- [x] Change navbar background to dark charcoal (#313234) matching the footer
+- [x] Update navbar text/link colors to white for contrast on dark background
+
+## Full Rebuild — Multi-Practice Cinematic Site
+- [x] Cinematic dark/light design system with premium motion tokens
+- [x] Hero: full-viewport with animated blobs, editorial headline, floating stat cards
+- [x] Practice areas tab/scroll navigation
+- [x] Data & Governance section (Ataccama One partnership, bento grid)
+- [x] AI Consulting & Audits section (cinematic layout)
+- [x] AI Implementation & Custom Solutions section
+- [x] Banking & Finance vertical section
+- [x] Full-Stack Development section
+- [x] Ataccama One partnership deep-dive with link
+- [x] Stats counter section (animated numbers)
+- [x] Testimonials / social proof section
+- [x] CTA banner above footer (crimson gradient)
+- [x] Contact form with owner notification
+- [x] Cinematic footer
+
+## Gap Resolution
+- [x] Re-integrate AnimatedBlobs into hero section (replace static parallax with blobs card)
+- [x] Add testimonials / social proof section with quotes and client callouts
+
+## Enhancements (Round 6)
+- [x] Rebuild Ataccama One section with light/white background (contrast against dark site)
+- [x] Dual-logo badge bar: Alpha Pro MENA logo + "Official Reseller Partner" + Ataccama One logo with external link
+- [x] 4-capability cards: Data Catalog, Data Quality, Data Governance, Master Data (white cards, crimson icons, blob accent)
+
+## Enhancements (Round 7)
+- [x] Pixel-match Ataccama section to screenshot: off-white bg, centered pill badge, bold headline, 3-panel badge bar with Ataccama purple logo, 4 light-grey rounded cards with crimson icons
+
+## Enhancements (Round 8)
+- [x] Add scroll-triggered popup when user scrolls to Partnership section showing Alpha Pro Consulting listing on ataccama.com/partners
+- [x] Popup shows partner card screenshot, description, and "View on Ataccama.com" CTA button
+- [x] Fine-tune Ataccama section background and card styling to pixel-match screenshot
+
+## Enhancements (Round 9)
+- [x] Convert full Ataccama section into scroll-triggered modal: pill badge, headline, paragraph, 3-panel badge bar, 4 capability cards — all inside the popup
+- [x] Replace the inline page section with a minimal anchor/trigger area that fires the popup
+
+## Enhancements (Round 10)
+- [x] Restore inline Data Governance & Intelligence section: dark card, ATACCAMA ONE PARTNER badge, bold headline, POWERED BY ATACCAMA ONE subtitle, paragraph, 2-col checklist, ENQUIRE NOW + EXPLORE ATACCAMA ONE buttons
+- [x] Keep scroll-triggered light-pink popup modal firing when section enters viewport
+
+## Enhancements (Round 11)
+- [x] Create ServiceCard component (service-card.tsx) with brand-adapted crimson/charcoal variants, framer-motion scale/image/arrow hover animations
+- [x] Add "Our Services" section with 5-card grid (Data Governance, AI Consulting, Custom AI, Banking, Full-Stack) — each card clicks through to the relevant practice tab
+
+## Enhancements (Round 12)
+- [x] Add light/dark mode toggle button in navbar (sun/moon icon, persists to localStorage)
+- [x] Redesign Ataccama One popup: smaller compact white modal, clean 4-card grid (Data Catalog, Data Quality, Data Governance, Master Data)
+- [x] Add Baker Tilly partnership section/card with official branding
+- [x] Add "Powered by nabdh.ai" branding badge/section
+- [x] Add ShineBorder "How We Work" timeline section in white with animated shine border effect
+
+## Enhancements (Round 13)
+- [x] Create DepartmentContactCard component (white card, avatar initials, role badge, email + phone action buttons)
+- [x] Add "Talk to Our Experts" section with 3 department cards: Data Governance/Ataccama (Qusai), Banking & Finance/Partnerships (Abood, US + JO numbers), AI Solutions (Hamza, US + JO numbers)
+- [x] Add department-specific audit CTA banners per practice area (Data Audit, AI Readiness Audit, Banking Compliance Audit)
+
+## Enhancements (Round 14)
+- [x] Redesign contact section: replace person cards with department cards (practice name, description, services list, email + phone CTA — no personal names shown)
+
+## Enhancements (Round 15)
+- [x] In light mode: keep hero, practices panel, stats band, CTA band, contact section, and footer always-dark; keep services, about, how-we-work, partnerships, departments sections light — deliberate dark/light alternating rhythm
+
+## Enhancements (Round 16)
+- [x] Practice tab buttons: active tab = #FF1E57 background, all tabs = white text
+
+## Enhancements (Round 17)
+- [x] Remove empty space at top of page (removed 64px spacer div + pt-16 from main, hero now starts flush under navbar)
+
+## Enhancements (Round 18)
+- [x] Redesign navbar: rose-glow glass morphism (blur + translucent dark rose tint), ambient rose glow blobs, animated underline on hover, pill CTA with gradient + glow shadow
+- [x] Replace SVG logo placeholder squares with Zap-icon gradient logo + "Alpha Pro / MENA" stacked text
+
+## Enhancements (Round 19)
+- [x] Department contact cards: clicking a card opens a modal with full department details (services list, email, phone numbers, CTA buttons)
+
+## Enhancements (Round 20)
+- [x] Replace department cards with GradientCard component design (gradient backgrounds, badge, title, description, CTA, decorative image, framer-motion hover)
+
+## Enhancements (Round 21)
+- [x] Remove bottom audit CTA section from departments
+- [x] Replace phone/email pills on GradientCard with Sales@Alphapromena.com only
+- [x] Add mini contact form on each department card (firstName, lastName, email, phone, company, jobTitle, message) that submits via CRM webhook
+- [x] Add tRPC procedure to forward form submission to CRM webhook with Bearer token + source field
+
+## Enhancements (Round 22)
+- [x] Hero section: switch to light theme (white/light background, dark text, dark buttons) while rest of page stays dark
+
+## Enhancements (Round 23)
+- [x] Merge Full-Stack Development and Custom AI Solutions into one combined service card/practice tab (now 'AI & Full-Stack Engineering')
+
+## Enhancements (Round 24)
+- [x] Rename hero secondary CTA from "Talk to Us" to "Book Your Free Discovery"
+- [x] Add AuroraButton component to /components/ui/aurora-button.tsx
+- [x] Apply AuroraButton to the hero "Book Your Free Discovery" CTA
+
+## Enhancements (Round 25)
+- [x] Ataccama badge popup: redesign as small bottom-right corner widget (not full modal), open Ataccama link scrolled down to show Alpha Pro MENA listing
+
+## Enhancements (Round 26)
+- [x] Data Governance section: updated body copy to Exclusive MENA Partner positioning, badge changed from "Ataccama One Partner" to "Exclusive MENA Partner"
+- [x] Remove ALL "Reseller" mentions site-wide — CONFIRMED ZERO OCCURRENCES
+- [x] Remove ALL "Baker Tilly" mentions site-wide — CONFIRMED ZERO OCCURRENCES
+- [x] Updated Banking department card description to remove Baker Tilly reference
+- [x] Footer: removed placeholder social icon links (LI, TW, GH)
+- [x] Department email display: gradient-card uses plain mailto:Sales@Alphapromena.com — no obfuscation
