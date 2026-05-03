@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ArrowRight, Zap, Menu, X } from 'lucide-react';
+import { ChevronDown, ArrowRight, Menu, X } from 'lucide-react';
 
 interface NavbarDropdownProps {
   isLight: boolean;
@@ -113,28 +113,13 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = ({ isLight: _isLigh
         <div className="relative mx-auto max-w-7xl px-6 py-3 flex items-center justify-between gap-6">
 
           {/* Logo */}
-          <a href="#hero" className="flex items-center gap-2.5 shrink-0 group">
-            <span
-              className="relative flex h-9 w-9 items-center justify-center rounded-xl text-white transition-transform group-hover:scale-105"
-              style={{
-                background: 'linear-gradient(135deg, #fb7185 0%, #f43f5e 50%, #be123c 100%)',
-                boxShadow: '0 4px 14px -2px rgba(244,63,94,0.45)',
-              }}
-            >
-              <Zap className="h-4 w-4" strokeWidth={2.5} fill="currentColor" />
-              <span className="absolute inset-0 rounded-xl" style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 60%)' }} />
-            </span>
-            <div className="flex flex-col leading-none">
-              <span
-                className="text-sm font-semibold tracking-tight"
-                style={{ background: 'linear-gradient(90deg, #ffffff, #fda4af, #fb7185)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
-              >
-                Alpha Pro
-              </span>
-              <span className="text-[10px] font-medium uppercase tracking-[0.2em]" style={{ color: 'rgba(251,113,133,0.75)' }}>
-                MENA
-              </span>
-            </div>
+          <a href="#hero" className="flex items-center shrink-0">
+            <img
+              src="/alpha-pro-mena-logo-full.png"
+              alt="Alpha Pro MENA"
+              className="h-10 w-auto"
+              loading="eager"
+            />
           </a>
 
           {/* Desktop Nav Links */}

@@ -34,17 +34,6 @@ const DATA_IMG   = "https://d2xsxph8kpxj0f.cloudfront.net/310519663453434320/Sdw
 const DEV_IMG    = "https://d2xsxph8kpxj0f.cloudfront.net/310519663453434320/SdwMsFUUv95cDxwRJ6Hwjt/fullstack-dev-visual-HAc54YqGJnrqHAgCfyzEC.webp";
 
 /* ── Logo ───────────────────────────────────────────────────────── */
-function AlphaLogo({ size = 32 }: { size?: number }) {
-  return (
-    <svg width={size * 1.9} height={size * 0.7} viewBox="0 0 76 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="0" y="0" width="34" height="28" rx="7" fill="#FF1E57"/>
-      <rect x="42" y="0" width="34" height="28" rx="7" fill="#313234"/>
-      <text x="17" y="19" textAnchor="middle" fill="white" fontSize="11" fontWeight="800" fontFamily="Barlow Condensed, Barlow, sans-serif" letterSpacing="0.5">α</text>
-      <text x="59" y="19" textAnchor="middle" fill="white" fontSize="11" fontWeight="800" fontFamily="Barlow Condensed, Barlow, sans-serif" letterSpacing="0.5">PM</text>
-    </svg>
-  );
-}
-
 /* ── Animation Variants ─────────────────────────────────────────── */
 const fadeUp = {
   hidden: { opacity: 0, y: 32 },
@@ -969,7 +958,11 @@ export default function Home() {
             <div className="grid md:grid-cols-4 gap-10 mb-12">
               {/* Brand */}
               <div className="md:col-span-2">
-                <AlphaLogo size={28} />
+                <img
+                  src="/alpha-pro-mena-logo-full.png"
+                  alt="Alpha Pro MENA"
+                  className="h-10 w-auto"
+                />
                 <p className="mt-4 text-sm leading-relaxed max-w-xs" style={{ color: "rgba(255,255,255,0.80)" }}>
                   Alpha Pro MENA — the region's leading multi-practice AI and data firm. Delivering intelligence, governance, and engineering excellence to enterprises across MENA.
                 </p>
@@ -1073,7 +1066,11 @@ export default function Home() {
 
                 {/* Logos row */}
                 <div className="flex items-center gap-2 mb-3">
-                  <AlphaLogo size={20} />
+                  <img
+                    src="/alpha-pro-mena-icon.png"
+                    alt="Alpha Pro MENA"
+                    className="h-5 w-auto"
+                  />
                   <span className="text-xs font-black uppercase tracking-widest" style={{ color: "#1a1a1a", fontFamily: "'Barlow Condensed', sans-serif" }}>Alpha Pro MENA</span>
                   <span className="text-xs" style={{ color: "#ccc" }}>×</span>
                   <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
