@@ -129,6 +129,27 @@ const DEPARTMENTS = [
   { accent: "#FF1E57", tag: "Free discovery", title: "AI Solutions & Consulting", desc: "End-to-end AI — strategy, custom model development, MLOps, and production deployment for the enterprise." },
 ];
 
+const PARTNERS = [
+  {
+    name: "Ataccama",
+    accent: "#6C2BD9",
+    role: "Data & Governance",
+    positioning: "Only certified Solution Partner in MENA",
+    desc: "We deploy Ataccama One — the industry's leading unified data management platform — for governance, quality, catalog, and master data management across the region's most demanding enterprises.",
+    highlights: ["Unified governance & catalog", "Automated data quality at scale", "Audit-ready compliance"],
+    link: "https://www.ataccama.com/platform", linkLabel: "Explore Ataccama One",
+  },
+  {
+    name: "Baker Tilly",
+    accent: "#0E8A8A",
+    role: "Audit, Tax & Advisory",
+    positioning: "Strategic alliance across MENA",
+    desc: "In alliance with Baker Tilly — one of the world's leading networks of independent audit, tax, and advisory firms — we pair our AI and data engineering with deep assurance and financial advisory expertise for regulated institutions.",
+    highlights: ["Audit & assurance depth", "Tax & regulatory advisory", "Financial transformation"],
+    link: "https://www.bakertilly.com", linkLabel: "Explore Baker Tilly",
+  },
+];
+
 const CAPS = ["Data Governance", "AI Strategy & Audits", "Machine Learning", "MLOps", "Fraud Detection", "Regulatory Reporting", "Data Quality", "Master Data Management", "Cloud-Native Platforms"];
 
 const contactSchema = z.object({
@@ -181,6 +202,11 @@ export default function Home() {
         <section id="hero" className="relative overflow-hidden" style={{ paddingTop: "8.5rem", paddingBottom: "4rem" }}>
           <div className="absolute inset-0 dot-field dot-field-fade pointer-events-none" />
           <div className="container container-wide relative z-10">
+            <div className="flex items-center justify-between pb-8 mb-10" style={{ borderBottom: "1px solid var(--line)" }}>
+              <span className="seclabel">Alpha Pro MENA</span>
+              <span className="seclabel hidden sm:inline">Enterprise AI · Data · Advisory</span>
+              <span className="seclabel">MENA</span>
+            </div>
             <div className="grid lg:grid-cols-12 gap-10 items-end">
               <div className="lg:col-span-7">
                 <motion.div variants={fadeUp} custom={0}><span className="eyebrow">Enterprise AI & Data — MENA</span></motion.div>
@@ -198,11 +224,11 @@ export default function Home() {
               </div>
 
               <motion.div variants={fadeUp} custom={2} className="lg:col-span-5">
-                <div className="relative rounded-[1.4rem] overflow-hidden" style={{ aspectRatio: "4/3.4", boxShadow: "var(--shadow-lg)" }}>
+                <div className="relative rounded-md overflow-hidden framed" style={{ aspectRatio: "4/3.4", boxShadow: "var(--shadow-md)" }}>
                   <img src={DATA_IMG} alt="Enterprise data intelligence" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 55%, rgba(20,12,18,0.45) 100%)" }} />
-                  <div className="absolute left-4 bottom-4">
-                    <span className="chip"><Shield className="w-3.5 h-3.5" style={{ color: "var(--rose-ink)" }} /> Certified Ataccama One Partner</span>
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 52%, rgba(16,10,16,0.5) 100%)" }} />
+                  <div className="absolute left-3 bottom-3">
+                    <span className="chip" style={{ background: "rgba(255,255,255,0.92)" }}><Shield className="w-3.5 h-3.5" style={{ color: "var(--rose-ink)" }} /> Ataccama One · Baker Tilly</span>
                   </div>
                 </div>
               </motion.div>
@@ -228,10 +254,10 @@ export default function Home() {
             <motion.div variants={stagger} className="grid grid-cols-2 md:grid-cols-4 vrules py-12">
               {STATS.map((s, i) => (
                 <motion.div key={s.label} variants={fadeUp} custom={i} className="px-0 md:px-8 py-4 first:pl-0 md:first:pl-0">
-                  <div className="display" style={{ fontSize: "clamp(2.4rem, 5vw, 3.6rem)", color: "var(--ink)" }}>
+                  <div className="mono" style={{ fontSize: "clamp(2.3rem, 5vw, 3.4rem)", fontWeight: 600, letterSpacing: "-0.03em", color: "var(--ink)" }}>
                     <Counter to={s.value} suffix={s.suffix} prefix={s.prefix} />
                   </div>
-                  <div className="text-[15px] text-soft mt-1.5">{s.label}</div>
+                  <div className="text-[14px] text-soft mt-2">{s.label}</div>
                 </motion.div>
               ))}
             </motion.div>
@@ -244,7 +270,7 @@ export default function Home() {
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
               <div className="lg:col-span-4">
                 <div className="lg:sticky lg:top-28">
-                  <motion.div variants={fadeUp} custom={0}><span className="eyebrow">What we do</span></motion.div>
+                  <motion.div variants={fadeUp} custom={0}><span className="eyebrow">01 / What we do</span></motion.div>
                   <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>
                     Four practices, one accountable partner.
                   </motion.h2>
@@ -265,7 +291,7 @@ export default function Home() {
                           <span className="row-title block text-[1.35rem] sm:text-[1.6rem] font-bold leading-tight" style={{ color: open ? "var(--rose-ink)" : "var(--ink)" }}>{p.title}</span>
                           <span className="block text-sm text-faint mt-1">{p.sub}</span>
                         </span>
-                        <span className="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-full" style={{ border: "1px solid var(--line)", color: "var(--ink-soft)" }}>
+                        <span className="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-md" style={{ border: "1px solid var(--line)", color: "var(--ink-soft)" }}>
                           {open ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                         </span>
                       </button>
@@ -290,7 +316,7 @@ export default function Home() {
                                   {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="btn-pill btn-secondary" style={{ padding: "0.6rem 1.25rem", fontSize: "0.85rem" }}>{p.linkLabel} <ExternalLink className="w-3.5 h-3.5" /></a>}
                                 </div>
                               </div>
-                              <div className="relative rounded-2xl overflow-hidden min-h-52" style={{ boxShadow: "var(--shadow-md)" }}>
+                              <div className="relative rounded-md overflow-hidden min-h-52 framed">
                                 <img src={p.img} alt={p.title} className="absolute inset-0 w-full h-full object-cover" />
                               </div>
                             </div>
@@ -305,54 +331,52 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ PARTNERSHIP ═══════════════════════════════════════════ */}
+        {/* ══ PARTNERSHIPS ══════════════════════════════════════════ */}
         <Section id="partnership" className="py-24 bg-paper-2">
           <div className="container">
-            <div className="grid lg:grid-cols-12 gap-12 items-center">
-              <div className="lg:col-span-6">
-                <motion.div variants={fadeUp} custom={0}><span className="eyebrow">Strategic partnership</span></motion.div>
-                <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>
-                  The only certified <span className="text-rose">Ataccama</span> partner in MENA.
-                </motion.h2>
-                <motion.p variants={fadeUp} custom={2} className="lead mt-6">
-                  We bring the industry's leading unified data management platform — governance, quality, catalog, and
-                  MDM — to enterprises that can't afford to get their data wrong.
-                </motion.p>
-                <motion.div variants={stagger} className="mt-8">
-                  {[
-                    { t: "Unified governance", d: "One platform for catalog, lineage & policy." },
-                    { t: "Data quality at scale", d: "Automated rules across every source." },
-                    { t: "Master data management", d: "A single, trusted version of the truth." },
-                    { t: "Regulatory compliance", d: "Audit-ready for MENA & global frameworks." },
-                  ].map((b, i) => (
-                    <motion.div key={b.t} variants={fadeUp} custom={i} className="flex items-start gap-4 py-4" style={{ borderTop: "1px solid var(--line)" }}>
-                      <Check className="w-5 h-5 mt-0.5 shrink-0" style={{ color: "var(--rose-ink)" }} />
-                      <div>
-                        <span className="font-semibold" style={{ color: "var(--ink)" }}>{b.t}</span>
-                        <span className="text-soft"> — {b.d}</span>
-                      </div>
-                    </motion.div>
-                  ))}
-                </motion.div>
-                <motion.div variants={fadeUp} custom={4} className="flex flex-wrap gap-3 mt-8">
-                  <button onClick={() => scrollTo("contact")} className="btn-pill btn-primary">Talk to a specialist <ArrowRight className="h-4 w-4" /></button>
-                  <a href="https://www.ataccama.com/platform" target="_blank" rel="noopener noreferrer" className="btn-pill btn-secondary">Explore Ataccama One <ExternalLink className="w-3.5 h-3.5" /></a>
-                </motion.div>
-              </div>
-
-              <motion.div variants={fadeUp} custom={2} className="lg:col-span-6">
-                <div className="relative rounded-[1.4rem] overflow-hidden" style={{ aspectRatio: "4/3.2", boxShadow: "var(--shadow-lg)" }}>
-                  <img src={DATA_IMG} alt="Ataccama data governance" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 50%, rgba(20,12,18,0.5) 100%)" }} />
-                  <div className="absolute left-5 bottom-5 right-5 flex items-center gap-2.5 flex-wrap">
-                    <img src="/alpha-pro-mena-icon.png" alt="Alpha Pro MENA" className="h-6 w-auto" />
-                    <span className="font-bold text-white text-sm">Alpha Pro MENA</span>
-                    <span className="text-white/50">×</span>
-                    <span className="font-bold text-sm" style={{ color: "#c9a6ff" }}>Ataccama</span>
-                  </div>
-                </div>
-              </motion.div>
+            <div className="max-w-2xl mb-12">
+              <motion.div variants={fadeUp} custom={0}><span className="eyebrow">02 / Strategic alliances</span></motion.div>
+              <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>
+                Partnerships that raise the bar.
+              </motion.h2>
+              <motion.p variants={fadeUp} custom={2} className="lead mt-5">
+                We combine best-in-class platforms with world-class advisory — so enterprises get governed data and
+                trusted financial expertise from a single partner.
+              </motion.p>
             </div>
+
+            <motion.div variants={stagger} className="grid md:grid-cols-2 vrules framed">
+              {PARTNERS.map((p, i) => (
+                <motion.div key={p.name} variants={fadeUp} custom={i} className="p-8 lg:p-10 flex flex-col">
+                  <div className="flex items-center justify-between mb-6">
+                    <span className="idx" style={{ fontSize: "0.8rem" }}>{`0${i + 1}`}</span>
+                    <span className="inline-flex items-center gap-2 mono text-[0.7rem] uppercase tracking-wider" style={{ color: p.accent }}>
+                      <span className="w-2 h-2 rounded-full" style={{ background: p.accent }} /> {p.role}
+                    </span>
+                  </div>
+                  <div className="text-[2rem] font-extrabold tracking-tight leading-none" style={{ color: "var(--ink)" }}>{p.name}</div>
+                  <div className="text-rose font-semibold mt-2 text-[15px]">{p.positioning}</div>
+                  <p className="text-soft mt-4 leading-relaxed text-[15px]">{p.desc}</p>
+                  <div className="mt-6">
+                    {p.highlights.map((h) => (
+                      <div key={h} className="flex items-center gap-3 py-3 text-[14px] text-soft" style={{ borderTop: "1px solid var(--line)" }}>
+                        <Check className="w-4 h-4 shrink-0" style={{ color: p.accent }} /> {h}
+                      </div>
+                    ))}
+                  </div>
+                  <a href={p.link} target="_blank" rel="noopener noreferrer" className="link-row inline-flex items-center gap-1.5 mt-6 text-sm font-semibold self-start" style={{ color: "var(--ink)" }}>
+                    {p.linkLabel} <ArrowRight className="w-4 h-4 row-arrow" />
+                  </a>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            <motion.div variants={fadeUp} custom={2} className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <span className="text-[15px] text-soft">Interested in partnering with Alpha Pro MENA?</span>
+              <button onClick={() => scrollTo("contact")} className="link-row inline-flex items-center gap-1.5 text-sm font-semibold text-rose">
+                Become a partner <ArrowRight className="w-4 h-4 row-arrow" />
+              </button>
+            </motion.div>
           </div>
         </Section>
 
@@ -361,7 +385,7 @@ export default function Home() {
           <div className="container">
             <div className="grid lg:grid-cols-12 gap-12">
               <div className="lg:col-span-5">
-                <motion.div variants={fadeUp} custom={0}><span className="eyebrow">About Alpha Pro MENA</span></motion.div>
+                <motion.div variants={fadeUp} custom={0}><span className="eyebrow">03 / About</span></motion.div>
                 <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>
                   Built for the MENA enterprise.
                 </motion.h2>
@@ -401,7 +425,7 @@ export default function Home() {
             <div className="grid lg:grid-cols-12 gap-12">
               <div className="lg:col-span-4">
                 <div className="lg:sticky lg:top-28">
-                  <motion.div variants={fadeUp} custom={0}><span className="eyebrow">Our process</span></motion.div>
+                  <motion.div variants={fadeUp} custom={0}><span className="eyebrow">04 / Our process</span></motion.div>
                   <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>How we work.</motion.h2>
                   <motion.p variants={fadeUp} custom={2} className="lead mt-5">
                     A structured, transparent engagement model built for enterprise clients who demand clarity.
@@ -430,7 +454,7 @@ export default function Home() {
         <Section id="team" className="py-24 bg-paper">
           <div className="container">
             <div className="max-w-2xl mb-12">
-              <motion.div variants={fadeUp} custom={0}><span className="eyebrow">Our departments</span></motion.div>
+              <motion.div variants={fadeUp} custom={0}><span className="eyebrow">05 / Departments</span></motion.div>
               <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>Contact our departments.</motion.h2>
               <motion.p variants={fadeUp} custom={2} className="lead mt-5">Each practice area has a dedicated specialist team — reach the one that matches your needs.</motion.p>
             </div>
@@ -475,7 +499,7 @@ export default function Home() {
           <div className="container">
             <div className="grid lg:grid-cols-12 gap-12 items-start">
               <div className="lg:col-span-5">
-                <motion.div variants={fadeUp} custom={0}><span className="eyebrow">Get in touch</span></motion.div>
+                <motion.div variants={fadeUp} custom={0}><span className="eyebrow">06 / Get in touch</span></motion.div>
                 <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>Let's talk enterprise.</motion.h2>
                 <motion.p variants={fadeUp} custom={2} className="lead mt-6">
                   Tell us about your challenge. Our team responds within one business day with a tailored approach.
@@ -566,6 +590,7 @@ export default function Home() {
                     <li key={item.id}><button onClick={() => scrollTo(item.id)} className="text-[15px] text-soft hover:text-rose transition-colors">{item.label}</button></li>
                   ))}
                   <li><a href="https://www.ataccama.com/platform" target="_blank" rel="noopener noreferrer" className="text-[15px] text-soft hover:text-rose transition-colors inline-flex items-center gap-1">Ataccama One <ExternalLink className="w-3 h-3" /></a></li>
+                  <li><a href="https://www.bakertilly.com" target="_blank" rel="noopener noreferrer" className="text-[15px] text-soft hover:text-rose transition-colors inline-flex items-center gap-1">Baker Tilly <ExternalLink className="w-3 h-3" /></a></li>
                 </ul>
               </div>
             </div>
