@@ -199,7 +199,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* ══ HERO ══════════════════════════════════════════════════ */}
-        <section id="hero" className="relative overflow-hidden" style={{ paddingTop: "8.5rem", paddingBottom: "4rem" }}>
+        <section id="hero" className="relative overflow-hidden hero-wash" style={{ paddingTop: "8.5rem", paddingBottom: "4rem" }}>
           <div className="absolute inset-0 dot-field dot-field-fade pointer-events-none" />
           <div className="container container-wide relative z-10">
             <div className="flex items-center justify-between pb-8 mb-10" style={{ borderBottom: "1px solid var(--line)" }}>
@@ -249,7 +249,7 @@ export default function Home() {
         </div>
 
         {/* ══ STATS ─ horizontal band, no boxes ═════════════════════ */}
-        <Section className="bg-paper">
+        <Section className="bg-paper-2" style={{ borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)" }}>
           <div className="container">
             <motion.div variants={stagger} className="grid grid-cols-2 md:grid-cols-4 vrules py-12">
               {STATS.map((s, i) => (
@@ -381,7 +381,7 @@ export default function Home() {
         </Section>
 
         {/* ══ ABOUT + VALUES ════════════════════════════════════════ */}
-        <Section id="about" className="py-24 bg-paper">
+        <Section id="about" className="py-24 bg-tint-rose">
           <div className="container">
             <div className="grid lg:grid-cols-12 gap-12">
               <div className="lg:col-span-5">
@@ -565,7 +565,7 @@ export default function Home() {
         </Section>
 
         {/* ══ FOOTER ════════════════════════════════════════════════ */}
-        <footer className="bg-paper-2" style={{ borderTop: "1px solid var(--line)" }}>
+        <footer className="bg-paper-3" style={{ borderTop: "1px solid var(--line)" }}>
           <div className="container py-16">
             <div className="grid md:grid-cols-4 gap-10 mb-12">
               <div className="md:col-span-2">
