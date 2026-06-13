@@ -54,7 +54,9 @@
   --rose-line: rgba(255,30,87,0.28);
 
   --paper:     #FBFAF8;
-  --paper-2:   #F2F0EA;
+  --paper-2:   #ECE7DC;   /* deeper warm sand — visible alternation */
+  --paper-3:   #E2DCCE;   /* deeper still — footer / accents */
+  --tint-rose: #FAEDEF;   /* soft rose-tinted section */
   --surface:   #FFFFFF;
   --ink:       #14131A;     /* near-black, high contrast */
   --ink-soft:  #4E4C57;
@@ -259,8 +261,18 @@
 /* ─── Surfaces ───────────────────────────────────────────────────── */
 .bg-paper   { background: var(--paper); }
 .bg-paper-2 { background: var(--paper-2); }
+.bg-paper-3 { background: var(--paper-3); }
+.bg-tint-rose { background: var(--tint-rose); }
 .bg-surface { background: var(--surface); }
 .framed { border: 1px solid var(--line); background: var(--surface); }
+
+/* Warm hero wash so the top isn't a flat white sheet */
+.hero-wash {
+  background:
+    radial-gradient(1100px 520px at 78% -8%, rgba(255,30,87,0.07), transparent 60%),
+    radial-gradient(900px 600px at 8% 110%, rgba(20,19,26,0.05), transparent 60%),
+    linear-gradient(180deg, var(--paper) 0%, #F6F2E9 100%);
+}
 
 .dot-field { background-image: radial-gradient(rgba(20,19,26,0.08) 1px, transparent 1px); background-size: 22px 22px; }
 .dot-field-fade {
