@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import {
   ArrowRight, X, ExternalLink, Check, Plus, Minus,
   Database, Brain, Cpu, Building2, Globe,
-  TrendingUp, Shield, Users, Zap,
+  TrendingUp, Shield, Users, Zap, Phone, Mail, MapPin,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -506,15 +506,18 @@ export default function Home() {
                 </motion.p>
                 <motion.div variants={fadeUp} custom={3} className="mt-9">
                   {[
-                    { icon: <Zap className="w-4 h-4" />, label: "Fast response", val: "Within 1 business day" },
-                    { icon: <Shield className="w-4 h-4" />, label: "Confidential", val: "All enquiries are NDA-ready" },
-                    { icon: <Globe className="w-4 h-4" />, label: "Location", val: "MENA Region" },
+                    { icon: <Phone className="w-4 h-4" />, label: "Phone", val: "+962 79 186 4006", href: "tel:+962791864006" },
+                    { icon: <Mail className="w-4 h-4" />, label: "Email", val: "info@alphapromena.com", href: "mailto:info@alphapromena.com" },
+                    { icon: <MapPin className="w-4 h-4" />, label: "Location", val: "Amman, Jordan · Saudi Arabia", href: null },
+                    { icon: <Zap className="w-4 h-4" />, label: "Response", val: "Within 1 business day", href: null },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-4 py-4" style={{ borderTop: "1px solid var(--line)" }}>
                       <span style={{ color: "var(--rose-ink)" }}>{item.icon}</span>
                       <div className="flex-1 flex items-baseline justify-between gap-3">
                         <span className="text-xs uppercase tracking-wider text-faint font-semibold">{item.label}</span>
-                        <span className="font-semibold" style={{ color: "var(--ink)" }}>{item.val}</span>
+                        {item.href
+                          ? <a href={item.href} className="link-row font-semibold text-right" style={{ color: "var(--ink)" }}>{item.val}</a>
+                          : <span className="font-semibold text-right" style={{ color: "var(--ink)" }}>{item.val}</span>}
                       </div>
                     </div>
                   ))}
@@ -574,6 +577,11 @@ export default function Home() {
                   The region's leading multi-practice AI and data firm — intelligence, governance, and engineering
                   excellence for enterprises across MENA.
                 </p>
+                <div className="mt-5 flex flex-col gap-2 text-[15px]">
+                  <a href="tel:+962791864006" className="link-row inline-flex items-center gap-2 text-soft"><Phone className="w-4 h-4" style={{ color: "var(--rose-ink)" }} /> +962 79 186 4006</a>
+                  <a href="mailto:info@alphapromena.com" className="link-row inline-flex items-center gap-2 text-soft"><Mail className="w-4 h-4" style={{ color: "var(--rose-ink)" }} /> info@alphapromena.com</a>
+                  <span className="inline-flex items-center gap-2 text-soft"><MapPin className="w-4 h-4" style={{ color: "var(--rose-ink)" }} /> Amman, Jordan · Saudi Arabia</span>
+                </div>
               </div>
               <div>
                 <div className="text-sm font-semibold mb-4" style={{ color: "var(--ink)" }}>Services</div>
