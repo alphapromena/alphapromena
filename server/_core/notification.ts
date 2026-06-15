@@ -4,13 +4,15 @@ import { ENV } from "./env";
 export type NotificationPayload = {
   title: string;
   content: string;
+  html?: string;
+  replyTo?: string;
 };
 
 export async function notifyOwner(payload: NotificationPayload): Promise<boolean> {
-  const { title, content } = payload;
+  const { title, content, html, replyTo } = payload;
 
-  if (!ENV.resendApiKey || !ENV.notificationEmailTo) {
-    console.log(`[Notification] (logging only — Resend not configured)\n${title}\n${content}`);
+  if (!ENV.resendApiKey || ENV.notificationEmailTo.length === 0) {
+    console.log(`[Notification] (logging only — Resend not configured)\nTo: ${ENV.notificationEmailTo.join(", ")}\n${title}\n${content}`);
     return true;
   }
 
@@ -21,6 +23,8 @@ export async function notifyOwner(payload: NotificationPayload): Promise<boolean
       to: ENV.notificationEmailTo,
       subject: title,
       text: content,
+      ...(html ? { html } : {}),
+      ...(replyTo ? { replyTo } : {}),
     });
 
     if (result.error) {

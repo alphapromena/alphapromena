@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ENV } from "./_core/env";
 import { notifyOwner } from "./_core/notification";
+import { renderLeadEmail, renderLeadText, type LeadField } from "./_core/email-template";
 import { publicProcedure, router } from "./_core/trpc";
 import { insertContactSubmission } from "./db";
 
@@ -57,9 +58,20 @@ export const appRouter = router({
           message: input.message,
         });
 
+        const heading = "New website lead";
+        const fields: LeadField[] = [
+          { label: "Name", value: input.name },
+          { label: "Company", value: input.company || "—" },
+          { label: "Email", value: input.email, href: `mailto:${input.email}` },
+          { label: "Inquiry", value: input.inquiryType },
+          { label: "Received", value: new Date().toUTCString() },
+        ];
+
         await notifyOwner({
-          title: `New Contact Inquiry: ${input.inquiryType}`,
-          content: `From: ${input.name} (${input.company || "No company"})\nEmail: ${input.email}\nType: ${input.inquiryType}\n\n${input.message}`,
+          title: `New lead — ${input.inquiryType} — ${input.name}`,
+          content: renderLeadText({ heading, badge: input.inquiryType, fields, message: input.message }),
+          html: renderLeadEmail({ heading, badge: input.inquiryType, fields, message: input.message, replyEmail: input.email }),
+          replyTo: input.email,
         });
 
         await deliverWebhook(input);
@@ -82,9 +94,22 @@ export const appRouter = router({
           message: input.message,
         });
 
+        const heading = `New ${input.department} inquiry`;
+        const fields: LeadField[] = [
+          { label: "Name", value: fullName },
+          { label: "Company", value: input.company || "—" },
+          { label: "Email", value: input.email, href: `mailto:${input.email}` },
+          { label: "Phone", value: input.phone || "—", href: input.phone ? `tel:${input.phone}` : null },
+          { label: "Job Title", value: input.jobTitle || "—" },
+          { label: "Department", value: input.department },
+          { label: "Received", value: new Date().toUTCString() },
+        ];
+
         await notifyOwner({
-          title: `Department Inquiry — ${input.department}`,
-          content: `From: ${fullName} (${input.company || "No company"})\nEmail: ${input.email}\nPhone: ${input.phone || "N/A"}\nJob Title: ${input.jobTitle || "N/A"}\nDepartment: ${input.department}\n\n${input.message}`,
+          title: `New lead — ${input.department} — ${fullName}`,
+          content: renderLeadText({ heading, badge: input.department, fields, message: input.message }),
+          html: renderLeadEmail({ heading, badge: input.department, fields, message: input.message, replyEmail: input.email }),
+          replyTo: input.email,
         });
 
         await deliverWebhook({
