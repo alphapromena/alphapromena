@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { NavbarDropdown } from "@/components/ui/navbar-dropdown";
+import { SiteFooter } from "@/components/ui/site-footer";
 
 /* ── Assets ─────────────────────────────────────────────────────── */
 const HERO_BG     = "https://d2xsxph8kpxj0f.cloudfront.net/310519663453434320/SdwMsFUUv95cDxwRJ6Hwjt/hero-dark-cinematic-V6ChsH2WWVArr5voDyBZy9.webp";
@@ -567,49 +568,10 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ FOOTER ════════════════════════════════════════════════ */}
-        <footer className="bg-paper-3" style={{ borderTop: "1px solid var(--line)" }}>
-          <div className="container py-16">
-            <div className="grid md:grid-cols-4 gap-10 mb-12">
-              <div className="md:col-span-2">
-                <img src="/alpha-pro-mena-logo-full.png" alt="Alpha Pro MENA" className="h-9 w-auto" />
-                <p className="text-soft text-[15px] leading-relaxed max-w-xs mt-4">
-                  The region's leading multi-practice AI and data firm — intelligence, governance, and engineering
-                  excellence for enterprises across MENA.
-                </p>
-                <div className="mt-5 flex flex-col gap-2 text-[15px]">
-                  <a href="tel:+962791864006" className="link-row inline-flex items-center gap-2 text-soft"><Phone className="w-4 h-4" style={{ color: "var(--rose-ink)" }} /> +962 79 186 4006</a>
-                  <a href="mailto:info@alphapromena.com" className="link-row inline-flex items-center gap-2 text-soft"><Mail className="w-4 h-4" style={{ color: "var(--rose-ink)" }} /> info@alphapromena.com</a>
-                  <span className="inline-flex items-center gap-2 text-soft"><MapPin className="w-4 h-4" style={{ color: "var(--rose-ink)" }} /> Amman, Jordan · Saudi Arabia</span>
-                </div>
-              </div>
-              <div>
-                <div className="text-sm font-semibold mb-4" style={{ color: "var(--ink)" }}>Services</div>
-                <ul className="flex flex-col gap-2.5">
-                  {["Data & Governance", "AI Consulting", "Custom AI & Platform", "Banking & Finance"].map(item => (
-                    <li key={item}><button onClick={() => scrollTo("practices")} className="text-[15px] text-soft hover:text-rose transition-colors">{item}</button></li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <div className="text-sm font-semibold mb-4" style={{ color: "var(--ink)" }}>Company</div>
-                <ul className="flex flex-col gap-2.5">
-                  {[{ label: "Partnership", id: "partnership" }, { label: "About", id: "about" }, { label: "Contact", id: "contact" }].map(item => (
-                    <li key={item.id}><button onClick={() => scrollTo(item.id)} className="text-[15px] text-soft hover:text-rose transition-colors">{item.label}</button></li>
-                  ))}
-                  <li><a href="https://www.ataccama.com/platform" target="_blank" rel="noopener noreferrer" className="text-[15px] text-soft hover:text-rose transition-colors inline-flex items-center gap-1">Ataccama One <ExternalLink className="w-3 h-3" /></a></li>
-                  <li><a href="https://www.bakertilly.com" target="_blank" rel="noopener noreferrer" className="text-[15px] text-soft hover:text-rose transition-colors inline-flex items-center gap-1">Baker Tilly <ExternalLink className="w-3 h-3" /></a></li>
-                </ul>
-              </div>
-            </div>
-            <div className="rule mb-7" />
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-              <p className="text-sm text-faint">© {new Date().getFullYear()} Alpha Pro MENA. All rights reserved.</p>
-              <p className="text-sm text-faint">Enterprise AI & Data Solutions · MENA Region</p>
-            </div>
-          </div>
-        </footer>
       </main>
+
+      {/* ══ FOOTER ════════════════════════════════════════════════ */}
+      <SiteFooter />
 
       {/* ══ PARTNERSHIP POPUP ═════════════════════════════════════ */}
       <AnimatePresence>

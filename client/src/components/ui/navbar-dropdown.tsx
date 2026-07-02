@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronDown, ArrowRight, Menu, X } from 'lucide-react';
+import { useLocation } from 'wouter';
 
 interface NavbarDropdownProps {
   isLight?: boolean;
@@ -41,6 +42,11 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [location] = useLocation();
+  // On the home page, use in-page hash anchors (smooth-scroll). On any
+  // other route (e.g. /privacy, /terms) prefix with "/" so the links
+  // navigate back to the home page and then scroll to the section.
+  const prefix = location === '/' ? '' : '/';
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -63,7 +69,7 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
     >
       <div className="relative mx-auto max-w-[1320px] px-6 lg:px-10 h-16 flex items-center justify-between gap-6">
         {/* Logo */}
-        <a href="#hero" className="flex items-center shrink-0">
+        <a href={`${prefix}#hero`} className="flex items-center shrink-0">
           <img src="/alpha-pro-mena-logo-full.png" alt="Alpha Pro MENA" className="h-8 w-auto" loading="eager" />
         </a>
 
@@ -77,7 +83,7 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
               onMouseLeave={() => setOpenDropdown(null)}
             >
               <a
-                href={`#${item.id === 'services' ? 'practices' : item.id}`}
+                href={`${prefix}#${item.id === 'services' ? 'practices' : item.id}`}
                 className="inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[14px] font-medium transition-colors"
                 style={{ color: openDropdown === item.id ? 'var(--ink)' : 'var(--ink-soft)' }}
               >
@@ -100,7 +106,7 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
                   {item.links.map((link) => (
                     <a
                       key={link.text}
-                      href={link.href}
+                      href={`${prefix}${link.href}`}
                       className="block px-3 py-2 rounded-xl text-[13.5px] font-medium transition-colors"
                       style={{ color: 'var(--ink-soft)' }}
                       onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink)'; e.currentTarget.style.background = 'var(--paper-2)'; }}
@@ -117,7 +123,7 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
 
         {/* CTA + hamburger */}
         <div className="flex items-center gap-3">
-          <a href="#contact" className="btn-pill btn-primary hidden md:inline-flex" style={{ padding: '0.55rem 1.15rem', fontSize: '0.85rem' }}>
+          <a href={`${prefix}#contact`} className="btn-pill btn-primary hidden md:inline-flex" style={{ padding: '0.55rem 1.15rem', fontSize: '0.85rem' }}>
             Get in Touch <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
           </a>
           <button
@@ -138,7 +144,7 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
             {navItems.map((item) => (
               <a
                 key={item.id}
-                href={`#${item.id === 'services' ? 'practices' : item.id}`}
+                href={`${prefix}#${item.id === 'services' ? 'practices' : item.id}`}
                 className="flex items-center justify-between py-3.5 text-[15px] font-semibold border-b"
                 style={{ color: 'var(--ink)', borderColor: 'var(--line-soft)' }}
                 onClick={closeMobile}
@@ -147,7 +153,7 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
                 <ArrowRight className="h-4 w-4" style={{ color: 'var(--rose-ink)' }} />
               </a>
             ))}
-            <a href="#contact" className="btn-pill btn-primary mt-5 w-full" onClick={closeMobile}>
+            <a href={`${prefix}#contact`} className="btn-pill btn-primary mt-5 w-full" onClick={closeMobile}>
               Get in Touch <ArrowRight className="h-4 w-4" strokeWidth={2.4} />
             </a>
           </div>

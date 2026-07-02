@@ -338,3 +338,84 @@
   .animate-marquee, .float-y { animation: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* ─── Policy / legal document typography ─────────────────────────── */
+.policy-prose {
+  max-width: 78ch;
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+  line-height: 1.72;
+  letter-spacing: -0.006em;
+}
+.policy-prose > :first-child { margin-top: 0; }
+.policy-prose h1 {
+  color: var(--ink);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 3.2vw, 2.15rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.2rem;
+}
+.policy-prose h2 {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin: 2.6rem 0 0.9rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+}
+.policy-prose h3 {
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 1.08rem;
+  letter-spacing: -0.01em;
+  margin: 1.8rem 0 0.6rem;
+}
+.policy-prose p { margin: 0 0 1.1rem; }
+.policy-prose strong { color: var(--ink); font-weight: 600; }
+.policy-prose a {
+  color: var(--rose-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+.policy-prose a:hover { color: var(--rose); }
+.policy-prose ul,
+.policy-prose ol { margin: 0 0 1.2rem; padding-left: 1.35rem; }
+.policy-prose ul { list-style: disc; }
+.policy-prose ol { list-style: decimal; }
+.policy-prose li { margin: 0.4rem 0; padding-left: 0.2rem; }
+.policy-prose li::marker { color: var(--ink-faint); }
+.policy-prose hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 2.2rem 0;
+}
+.policy-prose code {
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+  background: var(--paper-2);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+}
+.policy-prose blockquote {
+  margin: 1.2rem 0;
+  padding-left: 1.1rem;
+  border-left: 3px solid var(--rose-line);
+  color: var(--ink-soft);
+}
+.policy-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.2rem 0;
+  font-size: 0.95rem;
+}
+.policy-prose th,
+.policy-prose td {
+  border: 1px solid var(--line);
+  padding: 0.55rem 0.8rem;
+  text-align: left;
+}
+.policy-prose th { color: var(--ink); font-weight: 600; background: var(--paper-2); }
