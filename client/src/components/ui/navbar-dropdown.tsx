@@ -2,11 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { ChevronDown, ArrowRight, Menu, X } from 'lucide-react';
 import { useLocation } from 'wouter';
 
-interface NavbarDropdownProps {
-  isLight?: boolean;
-  onThemeToggle?: () => void;
-}
-
 const navItems = [
   {
     label: 'Services',
@@ -38,39 +33,76 @@ const navItems = [
   { label: 'Contact', id: 'contact', links: [] as { text: string; href: string }[] },
 ];
 
-export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
+export const NavbarDropdown: React.FC = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [overHero, setOverHero] = useState(true);
   const [location] = useLocation();
+  const onHome = location === '/';
   // On the home page, use in-page hash anchors (smooth-scroll). On any
   // other route (e.g. /privacy, /terms) prefix with "/" so the links
   // navigate back to the home page and then scroll to the section.
-  const prefix = location === '/' ? '' : '/';
+  const prefix = onHome ? '' : '/';
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+    const compute = () => {
+      const y = window.scrollY;
+      setScrolled(y > 12);
+      if (!onHome) { setOverHero(false); return; }
+      const hero = document.getElementById('hero');
+      const bottom = hero ? hero.offsetTop + hero.offsetHeight - 72 : window.innerHeight - 72;
+      setOverHero(y < bottom);
+    };
+    compute();
+    window.addEventListener('scroll', compute, { passive: true });
+    window.addEventListener('resize', compute);
+    return () => {
+      window.removeEventListener('scroll', compute);
+      window.removeEventListener('resize', compute);
+    };
+  }, [onHome]);
 
   const closeMobile = () => setMobileOpen(false);
 
+  // Dark treatment while floating over the dark hero (not when the mobile
+  // sheet is open, which uses a solid light panel).
+  const dark = overHero && !mobileOpen;
+  const navBg = mobileOpen
+    ? 'var(--paper)'
+    : dark
+      ? (scrolled ? 'rgba(14,13,19,0.62)' : 'transparent')
+      : (scrolled ? 'rgba(251,250,247,0.82)' : 'rgba(251,250,247,0.5)');
+  const navBorder = mobileOpen
+    ? '1px solid var(--line)'
+    : dark
+      ? (scrolled ? '1px solid rgba(255,255,255,0.10)' : '1px solid transparent')
+      : (scrolled ? '1px solid var(--line)' : '1px solid transparent');
+  const linkColor = dark ? 'rgba(255,255,255,0.80)' : 'var(--ink-soft)';
+  const linkStrong = dark ? '#ffffff' : 'var(--ink)';
+  const iconColor = dark ? '#ffffff' : 'var(--ink)';
+
   return (
     <nav
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="fixed top-0 left-0 right-0 transition-all duration-300"
       style={{
-        background: scrolled ? 'rgba(251,250,247,0.82)' : 'rgba(251,250,247,0.5)',
-        backdropFilter: 'blur(14px) saturate(160%)',
-        WebkitBackdropFilter: 'blur(14px) saturate(160%)',
-        borderBottom: scrolled ? '1px solid var(--line)' : '1px solid transparent',
+        zIndex: 'var(--z-nav)' as unknown as number,
+        background: navBg,
+        backdropFilter: dark && !scrolled ? 'none' : 'blur(14px) saturate(160%)',
+        WebkitBackdropFilter: dark && !scrolled ? 'none' : 'blur(14px) saturate(160%)',
+        borderBottom: navBorder,
       }}
     >
       <div className="relative mx-auto max-w-[1320px] px-6 lg:px-10 h-16 flex items-center justify-between gap-6">
         {/* Logo */}
         <a href={`${prefix}#hero`} className="flex items-center shrink-0">
-          <img src="/alpha-pro-mena-logo-full.png" alt="Alpha Pro MENA" className="h-8 w-auto" loading="eager" />
+          <img
+            src="/alpha-pro-mena-logo-full.png"
+            alt="Alpha Pro MENA"
+            className="h-8 w-auto transition-[filter] duration-300"
+            style={{ filter: dark ? 'brightness(0) invert(1)' : 'none' }}
+            loading="eager"
+          />
         </a>
 
         {/* Desktop links */}
@@ -85,7 +117,7 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
               <a
                 href={`${prefix}#${item.id === 'services' ? 'practices' : item.id}`}
                 className="inline-flex items-center gap-1 rounded-full px-3.5 py-2 text-[14px] font-medium transition-colors"
-                style={{ color: openDropdown === item.id ? 'var(--ink)' : 'var(--ink-soft)' }}
+                style={{ color: openDropdown === item.id ? linkStrong : linkColor }}
               >
                 {item.label}
                 {item.links.length > 0 && (
@@ -100,8 +132,8 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
 
               {openDropdown === item.id && item.links.length > 0 && (
                 <div
-                  className="absolute left-0 mt-1 w-60 rounded-2xl p-2 z-50"
-                  style={{ background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: 'var(--shadow-lg)' }}
+                  className="absolute left-0 mt-1 w-60 rounded-2xl p-2"
+                  style={{ zIndex: 'var(--z-nav)' as unknown as number, background: 'var(--surface)', border: '1px solid var(--line)', boxShadow: 'var(--shadow-lg)' }}
                 >
                   {item.links.map((link) => (
                     <a
@@ -128,7 +160,7 @@ export const NavbarDropdown: React.FC<NavbarDropdownProps> = () => {
           </a>
           <button
             className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl transition-colors"
-            style={{ color: 'var(--ink)', background: mobileOpen ? 'var(--paper-2)' : 'transparent' }}
+            style={{ color: iconColor, background: mobileOpen ? 'var(--paper-2)' : 'transparent' }}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >

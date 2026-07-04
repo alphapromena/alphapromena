@@ -53,10 +53,10 @@
   --rose-soft: #FFEAF0;
   --rose-line: rgba(255,30,87,0.28);
 
-  --paper:     #FBFAF8;
-  --paper-2:   #ECE7DC;   /* deeper warm sand — visible alternation */
-  --paper-3:   #E2DCCE;   /* deeper still — footer / accents */
-  --tint-rose: #FAEDEF;   /* soft rose-tinted section */
+  --paper:     #FBFAFB;   /* near-white, faintly cool */
+  --paper-2:   #F1EFF3;   /* light cool grey, whisper of mauve */
+  --paper-3:   #E8E5EC;   /* deeper cool grey — footer / accents */
+  --tint-rose: #FBEEF2;   /* soft rose-tinted section */
   --surface:   #FFFFFF;
   --ink:       #14131A;     /* near-black, high contrast */
   --ink-soft:  #4E4C57;
@@ -68,7 +68,7 @@
   --shadow-md: 0 10px 26px -16px rgba(20,19,26,0.18);
   --shadow-lg: 0 24px 50px -28px rgba(20,19,26,0.22);
 
-  --background:         oklch(0.99 0.004 80);
+  --background:         oklch(0.99 0.002 300);
   --foreground:         oklch(0.20 0.012 300);
   --card:               oklch(1 0 0);
   --card-foreground:    oklch(0.20 0.012 300);
@@ -76,16 +76,16 @@
   --popover-foreground: oklch(0.20 0.012 300);
   --primary:            oklch(0.62 0.24 13);
   --primary-foreground: oklch(1 0 0);
-  --secondary:          oklch(0.96 0.006 80);
+  --secondary:          oklch(0.965 0.004 300);
   --secondary-foreground: oklch(0.24 0.012 300);
-  --muted:              oklch(0.96 0.006 80);
+  --muted:              oklch(0.965 0.004 300);
   --muted-foreground:   oklch(0.50 0.012 300);
   --accent:             oklch(0.95 0.03 13);
   --accent-foreground:  oklch(0.45 0.16 13);
   --destructive:        oklch(0.62 0.24 13);
   --destructive-foreground: oklch(1 0 0);
-  --border:             oklch(0.88 0.006 80);
-  --input:              oklch(0.88 0.006 80);
+  --border:             oklch(0.90 0.004 300);
+  --input:              oklch(0.90 0.004 300);
   --ring:               oklch(0.62 0.24 13);
   --chart-1: oklch(0.62 0.24 13);
   --chart-2: oklch(0.70 0.16 25);
@@ -142,7 +142,7 @@
 
   ::-webkit-scrollbar { width: 11px; }
   ::-webkit-scrollbar-track { background: var(--paper-2); }
-  ::-webkit-scrollbar-thumb { background: #d3d0c7; border-radius: 0; border: 3px solid var(--paper-2); }
+  ::-webkit-scrollbar-thumb { background: #cdcad4; border-radius: 0; border: 3px solid var(--paper-2); }
 }
 
 /* ─── Layout ─────────────────────────────────────────────────────── */
@@ -271,7 +271,7 @@
   background:
     radial-gradient(1100px 520px at 78% -8%, rgba(255,30,87,0.07), transparent 60%),
     radial-gradient(900px 600px at 8% 110%, rgba(20,19,26,0.05), transparent 60%),
-    linear-gradient(180deg, var(--paper) 0%, #F6F2E9 100%);
+    linear-gradient(180deg, var(--paper) 0%, #EFEDF3 100%);
 }
 
 .dot-field { background-image: radial-gradient(rgba(20,19,26,0.08) 1px, transparent 1px); background-size: 22px 22px; }
@@ -419,3 +419,150 @@
   text-align: left;
 }
 .policy-prose th { color: var(--ink); font-weight: 600; background: var(--paper-2); }
+
+/* ══════════════════════════════════════════════════════════════════
+   Modern tech redesign — dark hero + refined light surfaces
+   (adds to the palette above; keeps rose / ink / paper identity)
+   ══════════════════════════════════════════════════════════════════ */
+
+:root {
+  --ink-950: #0E0D13;   /* deepest, for hero base */
+  --ink-900: #14131A;   /* core ink */
+  --z-nav: 50;
+  --z-overlay: 60;
+  --z-toast: 70;
+}
+
+/* ─── Dark hero shell ────────────────────────────────────────────── */
+.hero-dark {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #F4F2F7;
+  background:
+    radial-gradient(1200px 720px at 74% 16%, rgba(255,30,87,0.20), transparent 60%),
+    radial-gradient(900px 620px at 14% 96%, rgba(108,43,217,0.12), transparent 60%),
+    linear-gradient(180deg, var(--ink-950) 0%, var(--ink-900) 58%, #100F17 100%);
+}
+.hero-dark h1 { color: #fff; }
+
+/* Faint engineering grid, faded at the edges */
+.grid-lines {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px);
+  background-size: 58px 58px;
+  -webkit-mask-image: radial-gradient(ellipse 92% 82% at 52% 26%, #000 38%, transparent 84%);
+  mask-image: radial-gradient(ellipse 92% 82% at 52% 26%, #000 38%, transparent 84%);
+}
+
+/* CSS fallback glow shown behind / instead of the WebGL canvas */
+.core-glow {
+  background: radial-gradient(circle at 50% 50%, rgba(255,30,87,0.55) 0%, rgba(255,30,87,0.18) 26%, transparent 62%);
+  filter: blur(6px);
+}
+
+/* Seam that melts the dark hero into the light content below */
+.hero-seam {
+  background: linear-gradient(180deg, transparent 0%, rgba(251,250,247,0.0) 40%, var(--paper) 100%);
+}
+
+/* Text tones on dark */
+.on-dark        { color: #F4F2F7; }
+.on-dark-soft   { color: rgba(244,242,247,0.66); }
+.on-dark-faint  { color: rgba(244,242,247,0.42); }
+
+/* Mono spec label */
+.spec {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* Chips / pills on dark */
+.chip-dark {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.42rem 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(244,242,247,0.82);
+  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Ghost button for dark surfaces */
+.btn-ghost-light {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.btn-ghost-light:hover { background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.34); }
+
+.btn-pill:hover { transform: translateY(-1px); }
+.btn-pill:active { transform: translateY(0); }
+
+/* ─── Refined light surfaces ─────────────────────────────────────── */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.panel-hover:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(20,19,26,0.22);
+  transform: translateY(-3px);
+}
+
+/* Section index chip — used only where a sequence is real (process) */
+.seq-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  color: var(--rose-ink);
+}
+
+/* Kicker: a single, quiet section label (not on every section) */
+.kicker {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.kicker::before { content: ''; width: 18px; height: 1px; background: var(--rose); }
+
+/* Rose accent glow ring for feature tiles */
+.tile-rose {
+  color: var(--rose-ink);
+  background: var(--rose-soft);
+  border: 1px solid var(--rose-line);
+  border-radius: calc(var(--radius) + 2px);
+}
+
+/* Subtle conic sheen for the CTA band */
+.band-rose { position: relative; overflow: hidden; }
+.band-rose::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(700px 300px at 85% -20%, rgba(255,255,255,0.22), transparent 60%);
+  pointer-events: none;
+}
+
+/* Hero entrance — CSS keyframes (compositor-driven, immune to main-thread
+   jank from parsing the WebGL bundle, unlike JS-driven reveals). */
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-in { opacity: 0; animation: heroIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-pill:hover, .panel-hover:hover { transform: none; }
+  .hero-in { animation: none; opacity: 1; transform: none; }
+}

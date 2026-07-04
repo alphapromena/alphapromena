@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, lazy, Suspense } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { trpc } from "@/lib/trpc";
 import { useForm } from "react-hook-form";
@@ -16,6 +16,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { NavbarDropdown } from "@/components/ui/navbar-dropdown";
 import { SiteFooter } from "@/components/ui/site-footer";
+
+const HeroCanvas = lazy(() => import("@/components/hero-canvas"));
 
 /* ── Assets ─────────────────────────────────────────────────────── */
 const HERO_BG     = "https://d2xsxph8kpxj0f.cloudfront.net/310519663453434320/SdwMsFUUv95cDxwRJ6Hwjt/hero-dark-cinematic-V6ChsH2WWVArr5voDyBZy9.webp";
@@ -61,7 +63,7 @@ function Section({ id, children, className = "", style }: { id?: string; childre
 /* ── Data ───────────────────────────────────────────────────────── */
 const PRACTICES = [
   {
-    id: "data", n: "01",
+    id: "data",
     title: "Data Governance & Intelligence",
     sub: "Powered by Ataccama One",
     body: "Alpha Pro MENA is Ataccama's only certified Solution Partner across the Middle East and North Africa. We help enterprises take full control of their data estate — from cataloguing and lineage to quality enforcement and regulatory compliance — by deploying the industry's leading data governance platform.",
@@ -71,7 +73,7 @@ const PRACTICES = [
     icon: <Database className="w-5 h-5" />,
   },
   {
-    id: "ai-consulting", n: "02",
+    id: "ai-consulting",
     title: "AI Consulting & Audits",
     sub: "Strategy. Readiness. Accountability.",
     body: "Before you build, you need clarity. Our AI consulting practice delivers executive-level strategy, AI readiness assessments, model audits, and ethical AI governance frameworks — so your AI investments are grounded, defensible, and aligned with business outcomes.",
@@ -80,7 +82,7 @@ const PRACTICES = [
     icon: <Brain className="w-5 h-5" />,
   },
   {
-    id: "ai-implementation", n: "03",
+    id: "ai-implementation",
     title: "Custom AI Solutions & Platform Development",
     sub: "From prototype to production — end to end.",
     body: "We design, build, and deploy custom AI and machine learning solutions alongside the full-stack platforms that power them. From NLP pipelines and computer vision to cloud-native backends, high-performance APIs, and polished React frontends — production-grade software that scales.",
@@ -89,7 +91,7 @@ const PRACTICES = [
     icon: <Cpu className="w-5 h-5" />,
   },
   {
-    id: "banking", n: "04",
+    id: "banking",
     title: "Banking & Financial Services",
     sub: "Precision solutions for regulated industries.",
     body: "Financial institutions face unique pressures: regulatory scrutiny, legacy infrastructure, and the relentless pace of fintech disruption. We deliver AI-powered risk models, fraud detection systems, regulatory reporting automation, and intelligent customer-experience platforms.",
@@ -167,6 +169,13 @@ export default function Home() {
   const [openPractice, setOpenPractice] = useState(0);
   const [partnerShown, setPartnerShown] = useState(false);
   const [partnerOpen, setPartnerOpen] = useState(false);
+  // Defer the heavy WebGL hero until after the hero text has revealed, so
+  // parsing/initialising three.js can't stall the entrance animation.
+  const [show3D, setShow3D] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setShow3D(true), 1000);
+    return () => window.clearTimeout(id);
+  }, []);
 
   useEffect(() => {
     if (partnerShown) return;
@@ -199,48 +208,56 @@ export default function Home() {
       <NavbarDropdown />
 
       <main className="flex-1">
-        {/* ══ HERO ══════════════════════════════════════════════════ */}
-        <section id="hero" className="relative overflow-hidden hero-wash" style={{ paddingTop: "8.5rem", paddingBottom: "4rem" }}>
-          <div className="absolute inset-0 dot-field dot-field-fade pointer-events-none" />
-          <div className="container container-wide relative z-10">
-            <div className="flex items-center justify-between pb-8 mb-10" style={{ borderBottom: "1px solid var(--line)" }}>
-              <span className="seclabel">Alpha Pro MENA</span>
-              <span className="seclabel hidden sm:inline">Enterprise AI · Data · Advisory</span>
-              <span className="seclabel">MENA</span>
-            </div>
-            <div className="grid lg:grid-cols-12 gap-10 items-end">
-              <div className="lg:col-span-7">
-                <motion.div variants={fadeUp} custom={0}><span className="eyebrow">Enterprise AI & Data — MENA</span></motion.div>
-                <motion.h1 variants={fadeUp} custom={1} className="display mt-7 balance" style={{ fontSize: "clamp(2.8rem, 7vw, 5.6rem)" }}>
-                  We build the <span className="text-rose">intelligence</span> behind your enterprise.
-                </motion.h1>
-                <motion.p variants={fadeUp} custom={2} className="lead mt-7 max-w-xl">
-                  The region's leading multi-practice AI and data firm — data governance, AI consulting, custom
-                  implementation, and banking solutions for enterprises that demand excellence.
-                </motion.p>
-                <motion.div variants={fadeUp} custom={3} className="mt-9 flex flex-wrap items-center gap-3">
-                  <button onClick={() => scrollTo("practices")} className="btn-pill btn-primary">Explore our services <ArrowRight className="h-4 w-4" /></button>
-                  <button onClick={() => scrollTo("contact")} className="btn-pill btn-secondary">Book a free discovery</button>
-                </motion.div>
-              </div>
+        {/* ══ HERO ─ dark, WebGL core ═══════════════════════════════ */}
+        <section id="hero" className="hero-dark relative flex flex-col justify-center" style={{ minHeight: "100svh", paddingTop: "6.5rem", paddingBottom: "3rem" }}>
+          {/* engineering grid */}
+          <div className="absolute inset-0 grid-lines pointer-events-none" />
+          {/* CSS glow fallback (always behind the canvas) */}
+          <div className="absolute pointer-events-none core-glow" style={{ right: "-6%", top: "42%", width: "56%", aspectRatio: "1", transform: "translateY(-50%)", opacity: 0.75 }} />
+          {/* WebGL sphere (deferred so it can't stall the hero reveal) */}
+          <div className="absolute inset-0 pointer-events-none" style={{ opacity: show3D ? 1 : 0, transition: "opacity 1.2s ease" }}>
+            {show3D && <Suspense fallback={null}><HeroCanvas /></Suspense>}
+          </div>
+          {/* readability scrim */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg, rgba(12,11,17,0.9) 0%, rgba(12,11,17,0.62) 44%, rgba(12,11,17,0.12) 74%, transparent 100%)" }} />
 
-              <motion.div variants={fadeUp} custom={2} className="lg:col-span-5">
-                <div className="relative rounded-md overflow-hidden framed" style={{ aspectRatio: "4/3.4", boxShadow: "var(--shadow-md)" }}>
-                  <img src={DATA_IMG} alt="Enterprise data intelligence" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 52%, rgba(16,10,16,0.5) 100%)" }} />
-                  <div className="absolute left-3 bottom-3">
-                    <span className="chip" style={{ background: "rgba(255,255,255,0.92)" }}><Shield className="w-3.5 h-3.5" style={{ color: "var(--rose-ink)" }} /> Ataccama One · Baker Tilly</span>
-                  </div>
-                </div>
-              </motion.div>
+          <div className="container container-wide relative w-full" style={{ zIndex: 1 }}>
+            <div className="hero-in flex flex-wrap items-center gap-2.5 mb-7" style={{ animationDelay: "0ms" }}>
+              <span className="chip-dark"><span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--rose)" }} /> Enterprise AI · Data · Advisory</span>
+              <span className="chip-dark">MENA Region</span>
+            </div>
+
+            <h1 className="display balance hero-in" style={{ fontSize: "clamp(2.7rem, 6.6vw, 5.4rem)", maxWidth: "16ch", color: "#ffffff", animationDelay: "80ms" }}>
+              We build the <span className="text-rose">intelligence</span> behind your enterprise.
+            </h1>
+
+            <p className="lead mt-7 max-w-xl hero-in" style={{ color: "rgba(244,242,247,0.68)", animationDelay: "160ms" }}>
+              The region's leading multi-practice AI and data firm — data governance, AI consulting, custom
+              implementation, and banking solutions for enterprises that demand excellence.
+            </p>
+
+            <div className="mt-9 flex flex-wrap items-center gap-3 hero-in" style={{ animationDelay: "240ms" }}>
+              <button onClick={() => scrollTo("practices")} className="btn-pill btn-primary">Explore our services <ArrowRight className="h-4 w-4" /></button>
+              <button onClick={() => scrollTo("contact")} className="btn-pill btn-ghost-light">Book a free discovery</button>
+            </div>
+
+            <div className="mt-11 flex items-center gap-4 flex-wrap hero-in" style={{ animationDelay: "320ms" }}>
+              <span className="spec on-dark-faint">Trusted platforms</span>
+              <span className="h-4 w-px" style={{ background: "rgba(255,255,255,0.16)" }} />
+              <span className="text-[15px] font-semibold on-dark">Ataccama One</span>
+              <span className="on-dark-faint">·</span>
+              <span className="text-[15px] font-semibold on-dark">Baker Tilly</span>
             </div>
           </div>
+
+          {/* seam into the light content */}
+          <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ height: "7rem", background: "linear-gradient(180deg, transparent, var(--paper))" }} />
         </section>
 
         {/* ══ CAPABILITY STRIP ══════════════════════════════════════ */}
-        <div className="border-y" style={{ borderColor: "var(--line)" }}>
+        <div style={{ borderBottom: "1px solid var(--line)" }}>
           <div className="container py-5 flex items-center gap-6">
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-faint shrink-0 hidden sm:inline">Capabilities</span>
+            <span className="spec text-faint shrink-0 hidden sm:inline">Capabilities</span>
             <div className="overflow-hidden marquee-mask flex-1">
               <div className="animate-marquee flex gap-10 w-max">
                 {[...CAPS, ...CAPS].map((t, i) => <span key={i} className="text-sm font-medium whitespace-nowrap text-soft">{t}</span>)}
@@ -249,8 +266,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* ══ STATS ─ horizontal band, no boxes ═════════════════════ */}
-        <Section className="bg-paper-2" style={{ borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)" }}>
+        {/* ══ STATS ─ horizontal band ═══════════════════════════════ */}
+        <Section className="bg-paper-2" style={{ borderBottom: "1px solid var(--line)" }}>
           <div className="container">
             <motion.div variants={stagger} className="grid grid-cols-2 md:grid-cols-4 vrules py-12">
               {STATS.map((s, i) => (
@@ -265,13 +282,13 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ PRACTICES ─ editorial accordion ═══════════════════════ */}
+        {/* ══ PRACTICES ─ accordion ═════════════════════════════════ */}
         <Section id="practices" className="py-24 bg-paper" style={{ borderTop: "1px solid var(--line)" }}>
           <div className="container">
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
               <div className="lg:col-span-4">
                 <div className="lg:sticky lg:top-28">
-                  <motion.div variants={fadeUp} custom={0}><span className="eyebrow">01 / What we do</span></motion.div>
+                  <motion.div variants={fadeUp} custom={0}><span className="kicker">What we do</span></motion.div>
                   <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>
                     Four practices, one accountable partner.
                   </motion.h2>
@@ -287,7 +304,9 @@ export default function Home() {
                   return (
                     <motion.div key={p.id} variants={fadeUp} custom={i} className="list-row">
                       <button className="list-row-head" onClick={() => setOpenPractice(open ? -1 : i)} aria-expanded={open}>
-                        <span className="idx" style={{ fontSize: "1.1rem", color: open ? "var(--rose-ink)" : "var(--ink-faint)" }}>{p.n}</span>
+                        <span className="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-md transition-colors" style={{ background: open ? "var(--rose)" : "var(--rose-soft)", color: open ? "#fff" : "var(--rose-ink)" }}>
+                          {p.icon}
+                        </span>
                         <span className="flex-1">
                           <span className="row-title block text-[1.35rem] sm:text-[1.6rem] font-bold leading-tight" style={{ color: open ? "var(--rose-ink)" : "var(--ink)" }}>{p.title}</span>
                           <span className="block text-sm text-faint mt-1">{p.sub}</span>
@@ -336,7 +355,7 @@ export default function Home() {
         <Section id="partnership" className="py-24 bg-paper-2">
           <div className="container">
             <div className="max-w-2xl mb-12">
-              <motion.div variants={fadeUp} custom={0}><span className="eyebrow">02 / Strategic alliances</span></motion.div>
+              <motion.div variants={fadeUp} custom={0}><span className="kicker">Strategic alliances</span></motion.div>
               <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>
                 Partnerships that raise the bar.
               </motion.h2>
@@ -346,12 +365,11 @@ export default function Home() {
               </motion.p>
             </div>
 
-            <motion.div variants={stagger} className="grid md:grid-cols-2 vrules framed">
+            <motion.div variants={stagger} className="grid md:grid-cols-2 gap-6">
               {PARTNERS.map((p, i) => (
-                <motion.div key={p.name} variants={fadeUp} custom={i} className="p-8 lg:p-10 flex flex-col">
+                <motion.div key={p.name} variants={fadeUp} custom={i} className="panel panel-hover p-8 lg:p-10 flex flex-col">
                   <div className="flex items-center justify-between mb-6">
-                    <span className="idx" style={{ fontSize: "0.8rem" }}>{`0${i + 1}`}</span>
-                    <span className="inline-flex items-center gap-2 mono text-[0.7rem] uppercase tracking-wider" style={{ color: p.accent }}>
+                    <span className="inline-flex items-center gap-2 spec" style={{ color: p.accent }}>
                       <span className="w-2 h-2 rounded-full" style={{ background: p.accent }} /> {p.role}
                     </span>
                   </div>
@@ -386,7 +404,7 @@ export default function Home() {
           <div className="container">
             <div className="grid lg:grid-cols-12 gap-12">
               <div className="lg:col-span-5">
-                <motion.div variants={fadeUp} custom={0}><span className="eyebrow">03 / About</span></motion.div>
+                <motion.div variants={fadeUp} custom={0}><span className="kicker">About</span></motion.div>
                 <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>
                   Built for the MENA enterprise.
                 </motion.h2>
@@ -410,8 +428,8 @@ export default function Home() {
               <motion.div variants={stagger} className="lg:col-span-7 grid sm:grid-cols-2 gap-x-10 gap-y-9 lg:pl-6">
                 {VALUES.map((v, i) => (
                   <motion.div key={v.title} variants={fadeUp} custom={i}>
-                    <span style={{ color: "var(--rose-ink)" }}>{v.icon}</span>
-                    <div className="font-semibold mt-3" style={{ color: "var(--ink)" }}>{v.title}</div>
+                    <span className="icon-tile">{v.icon}</span>
+                    <div className="font-semibold mt-3.5" style={{ color: "var(--ink)" }}>{v.title}</div>
                     <p className="text-soft text-[15px] mt-1.5 leading-relaxed">{v.body}</p>
                   </motion.div>
                 ))}
@@ -420,16 +438,16 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ PROCESS ═══════════════════════════════════════════════ */}
+        {/* ══ PROCESS ─ real numbered sequence ══════════════════════ */}
         <Section id="how-we-work" className="py-24 bg-paper-2">
           <div className="container">
             <div className="grid lg:grid-cols-12 gap-12">
               <div className="lg:col-span-4">
                 <div className="lg:sticky lg:top-28">
-                  <motion.div variants={fadeUp} custom={0}><span className="eyebrow">04 / Our process</span></motion.div>
-                  <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>How we work.</motion.h2>
+                  <motion.div variants={fadeUp} custom={0}><span className="kicker">How we work</span></motion.div>
+                  <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>A structured engagement.</motion.h2>
                   <motion.p variants={fadeUp} custom={2} className="lead mt-5">
-                    A structured, transparent engagement model built for enterprise clients who demand clarity.
+                    A transparent, six-stage model built for enterprise clients who demand clarity at every step.
                   </motion.p>
                   <motion.div variants={fadeUp} custom={3} className="mt-7">
                     <button onClick={() => scrollTo("contact")} className="btn-pill btn-primary">Start your engagement <ArrowRight className="h-4 w-4" /></button>
@@ -439,7 +457,7 @@ export default function Home() {
               <motion.div variants={stagger} className="lg:col-span-8">
                 {PROCESS.map((p, i) => (
                   <motion.div key={p.step} variants={fadeUp} custom={i} className="flex gap-6 py-6" style={{ borderTop: "1px solid var(--line)" }}>
-                    <span className="idx shrink-0" style={{ fontSize: "1.6rem", width: "2.4rem" }}>{p.step}</span>
+                    <span className="seq-num shrink-0" style={{ fontSize: "1.6rem", width: "2.4rem" }}>{p.step}</span>
                     <div>
                       <div className="text-lg font-bold" style={{ color: "var(--ink)" }}>{p.label}</div>
                       <p className="text-soft text-[15px] mt-1.5 leading-relaxed max-w-lg">{p.desc}</p>
@@ -451,23 +469,23 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ DEPARTMENTS ─ columns with vertical rules ═════════════ */}
+        {/* ══ DEPARTMENTS ═══════════════════════════════════════════ */}
         <Section id="team" className="py-24 bg-paper">
           <div className="container">
             <div className="max-w-2xl mb-12">
-              <motion.div variants={fadeUp} custom={0}><span className="eyebrow">05 / Departments</span></motion.div>
-              <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>Contact our departments.</motion.h2>
-              <motion.p variants={fadeUp} custom={2} className="lead mt-5">Each practice area has a dedicated specialist team — reach the one that matches your needs.</motion.p>
+              <motion.div variants={fadeUp} custom={0}><span className="kicker">Departments</span></motion.div>
+              <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>Reach the right team.</motion.h2>
+              <motion.p variants={fadeUp} custom={2} className="lead mt-5">Each practice area has a dedicated specialist team — contact the one that matches your needs.</motion.p>
             </div>
-            <motion.div variants={stagger} className="grid md:grid-cols-3 vrules" style={{ borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)" }}>
+            <motion.div variants={stagger} className="grid md:grid-cols-3 gap-6">
               {DEPARTMENTS.map((d, i) => (
-                <motion.div key={d.title} variants={fadeUp} custom={i} className="py-9 md:px-8 first:md:pl-0 flex flex-col">
-                  <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider" style={{ color: d.accent }}>
+                <motion.div key={d.title} variants={fadeUp} custom={i} className="panel panel-hover p-8 flex flex-col">
+                  <span className="inline-flex items-center gap-2 spec" style={{ color: d.accent }}>
                     <span className="w-2 h-2 rounded-full" style={{ background: d.accent }} /> {d.tag}
                   </span>
                   <h3 className="text-xl font-bold mt-4" style={{ color: "var(--ink)" }}>{d.title}</h3>
                   <p className="text-soft text-[15px] mt-2.5 leading-relaxed flex-1">{d.desc}</p>
-                  <button onClick={() => scrollTo("contact")} className="link-row inline-flex items-center gap-1.5 mt-5 text-sm font-semibold self-start" style={{ color: d.accent }}>
+                  <button onClick={() => scrollTo("contact")} className="link-row inline-flex items-center gap-1.5 mt-6 text-sm font-semibold self-start" style={{ color: d.accent }}>
                     Get in touch <ArrowRight className="w-4 h-4 row-arrow" />
                   </button>
                 </motion.div>
@@ -476,9 +494,9 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ CTA ─ bold full-bleed band ════════════════════════════ */}
+        {/* ══ CTA ═══════════════════════════════════════════════════ */}
         <Section className="band-rose">
-          <div className="container py-20 sm:py-24">
+          <div className="container py-20 sm:py-24 relative" style={{ zIndex: 1 }}>
             <div className="grid lg:grid-cols-12 gap-8 items-center">
               <motion.h2 variants={fadeUp} custom={0} className="display lg:col-span-8 balance text-white" style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}>
                 Let's build something exceptional together.
@@ -495,12 +513,12 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ CONTACT ─ underline fields ════════════════════════════ */}
+        {/* ══ CONTACT ═══════════════════════════════════════════════ */}
         <Section id="contact" className="py-24 bg-paper">
           <div className="container">
             <div className="grid lg:grid-cols-12 gap-12 items-start">
               <div className="lg:col-span-5">
-                <motion.div variants={fadeUp} custom={0}><span className="eyebrow">06 / Get in touch</span></motion.div>
+                <motion.div variants={fadeUp} custom={0}><span className="kicker">Get in touch</span></motion.div>
                 <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>Let's talk enterprise.</motion.h2>
                 <motion.p variants={fadeUp} custom={2} className="lead mt-6">
                   Tell us about your challenge. Our team responds within one business day with a tailored approach.
@@ -515,7 +533,7 @@ export default function Home() {
                     <div key={item.label} className="flex items-center gap-4 py-4" style={{ borderTop: "1px solid var(--line)" }}>
                       <span style={{ color: "var(--rose-ink)" }}>{item.icon}</span>
                       <div className="flex-1 flex items-baseline justify-between gap-3">
-                        <span className="text-xs uppercase tracking-wider text-faint font-semibold">{item.label}</span>
+                        <span className="spec text-faint">{item.label}</span>
                         {item.href
                           ? <a href={item.href} className="link-row font-semibold text-right" style={{ color: "var(--ink)" }}>{item.val}</a>
                           : <span className="font-semibold text-right" style={{ color: "var(--ink)" }}>{item.val}</span>}
@@ -525,24 +543,24 @@ export default function Home() {
                 </motion.div>
               </div>
 
-              <motion.form variants={fadeUp} custom={2} onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 grid sm:grid-cols-2 gap-x-8 gap-y-7">
+              <motion.form variants={fadeUp} custom={2} onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 panel p-8 lg:p-10 grid sm:grid-cols-2 gap-x-8 gap-y-7">
                 <div className="flex flex-col gap-2">
-                  <Label className="text-xs font-semibold uppercase tracking-wider text-faint">Full Name</Label>
+                  <Label className="spec text-faint">Full Name</Label>
                   <Input {...register("name")} placeholder="Jane Smith" className="field-underline h-11 text-[15px]" />
                   {errors.name && <span className="text-xs text-rose">{errors.name.message}</span>}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-xs font-semibold uppercase tracking-wider text-faint">Company</Label>
+                  <Label className="spec text-faint">Company</Label>
                   <Input {...register("company")} placeholder="Acme Corp" className="field-underline h-11 text-[15px]" />
                   {errors.company && <span className="text-xs text-rose">{errors.company.message}</span>}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-xs font-semibold uppercase tracking-wider text-faint">Email Address</Label>
+                  <Label className="spec text-faint">Email Address</Label>
                   <Input {...register("email")} type="email" placeholder="jane@company.com" className="field-underline h-11 text-[15px]" />
                   {errors.email && <span className="text-xs text-rose">{errors.email.message}</span>}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-xs font-semibold uppercase tracking-wider text-faint">Inquiry Type</Label>
+                  <Label className="spec text-faint">Inquiry Type</Label>
                   <Select onValueChange={val => setValue("inquiryType", val)}>
                     <SelectTrigger className="field-underline h-11 text-[15px]"><SelectValue placeholder="Select a service area..." /></SelectTrigger>
                     <SelectContent>
@@ -554,7 +572,7 @@ export default function Home() {
                   {errors.inquiryType && <span className="text-xs text-rose">{errors.inquiryType.message}</span>}
                 </div>
                 <div className="flex flex-col gap-2 sm:col-span-2">
-                  <Label className="text-xs font-semibold uppercase tracking-wider text-faint">Message</Label>
+                  <Label className="spec text-faint">Message</Label>
                   <Textarea {...register("message")} placeholder="Tell us about your challenge or project..." rows={3} className="field-underline text-[15px] resize-none" />
                   {errors.message && <span className="text-xs text-rose">{errors.message.message}</span>}
                 </div>
@@ -578,7 +596,7 @@ export default function Home() {
         {partnerOpen && (
           <motion.div
             key="partner-badge" initial={{ opacity: 0, y: 24, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 16, scale: 0.96 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} className="fixed bottom-6 right-6 z-50" style={{ maxWidth: 300 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} className="fixed bottom-6 right-6" style={{ maxWidth: 300, zIndex: "var(--z-overlay)" as unknown as number }}
           >
             <div className="relative rounded-2xl overflow-hidden" style={{ background: "var(--surface)", border: "1px solid var(--line)", boxShadow: "var(--shadow-lg)" }}>
               <button onClick={() => setPartnerOpen(false)} className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center z-10" style={{ background: "var(--paper-2)", color: "var(--ink-soft)" }} aria-label="Dismiss">
