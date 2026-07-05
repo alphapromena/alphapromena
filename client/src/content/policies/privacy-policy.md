@@ -13,10 +13,10 @@ By using the Service, you agree to the practices described in this Privacy Polic
 
 Alpha Pro MENA is a registered legal organization.
 
-- **Legal name:** [Full registered legal name of Alpha Pro MENA]
-- **Registered address:** [Registered address]
+- **Legal name:** Alpha Pro MENA
+- **Registered address:** Amman, Jordan
 - **Website:** https://alphapromena.com
-- **Contact for privacy matters:** privacy@alphapromena.com
+- **Contact for privacy matters:** info@alphapromena.com
 
 ## 2. What the Service Does
 
@@ -103,7 +103,7 @@ Depending on your jurisdiction, you may have the right to:
 - Object to or restrict certain processing.
 - Withdraw consent at any time, including disconnecting your LinkedIn account.
 
-To exercise any of these rights, contact us at **privacy@alphapromena.com**. We respond to verified requests within 30 days. You may also delete uploaded documents, drafts, and feedback directly within the Service.
+To exercise any of these rights, contact us at **info@alphapromena.com**. We respond to verified requests within 30 days. You may also delete uploaded documents, drafts, and feedback directly within the Service.
 
 ## 10. Security
 
@@ -126,6 +126,6 @@ We may update this Privacy Policy from time to time. Material changes will be co
 For questions about this Privacy Policy or our data practices:
 
 **Alpha Pro MENA**
-[Registered address]
-Email: privacy@alphapromena.com
+Amman, Jordan
+Email: info@alphapromena.com
 Website: https://alphapromena.com

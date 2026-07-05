@@ -82,11 +82,11 @@ We may modify the Service or these Terms. Material changes to the Terms will be 
 
 ## 15. Governing Law and Disputes
 
-These Terms are governed by the laws of [governing jurisdiction, e.g., the Hashemite Kingdom of Jordan], without regard to conflict of law rules. Disputes will be resolved in the courts of [venue], unless otherwise agreed in a signed customer agreement.
+These Terms are governed by the laws of the Hashemite Kingdom of Jordan, without regard to conflict of law rules. Disputes will be resolved in the courts of Amman, Jordan, unless otherwise agreed in a signed customer agreement.
 
 ## 16. Contact
 
 **Alpha Pro MENA**
-[Registered address]
-Email: legal@alphapromena.com
+Amman, Jordan
+Email: info@alphapromena.com
 Website: https://alphapromena.com

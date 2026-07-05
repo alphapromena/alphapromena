@@ -554,6 +554,94 @@
   pointer-events: none;
 }
 
+/* ─── Dark content band (echoes the hero, breaks the flat-light body) ── */
+.band-dark {
+  position: relative;
+  isolation: isolate;
+  color: #F4F2F7;
+  overflow: hidden;
+  background:
+    radial-gradient(820px 460px at 82% 6%, rgba(255,30,87,0.16), transparent 60%),
+    radial-gradient(700px 500px at 10% 100%, rgba(108,43,217,0.12), transparent 62%),
+    linear-gradient(180deg, #100F17 0%, var(--ink-900) 60%, #100F17 100%);
+}
+.band-dark .stat-num { color: #fff; }
+.band-dark .vrules > * + * { border-left-color: rgba(255,255,255,0.10); }
+@media (max-width: 767px) {
+  .band-dark .vrules > * + * { border-top-color: rgba(255,255,255,0.10); }
+}
+
+/* ─── Reveal band — transparent dark "window" onto the fixed 3D scene ── */
+.reveal-band { position: relative; color: #F4F2F7; isolation: isolate; }
+.reveal-band::before {
+  content: '';
+  position: absolute; inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(12,11,17,0.42), rgba(12,11,17,0.30));
+}
+.reveal-band .stat-num { color: #fff; }
+.reveal-band .vrules > * + * { border-left-color: rgba(255,255,255,0.12); }
+@media (max-width: 767px) {
+  .reveal-band .vrules > * + * { border-top-color: rgba(255,255,255,0.12); }
+}
+
+/* Fixed 3D backdrop base (dark, sits behind the whole page) */
+.scene-base {
+  background:
+    radial-gradient(1000px 720px at 74% 22%, rgba(255,30,87,0.15), transparent 60%),
+    radial-gradient(820px 620px at 12% 88%, rgba(108,43,217,0.10), transparent 62%),
+    linear-gradient(180deg, #0E0D13 0%, #14131A 55%, #100F17 100%);
+}
+
+/* ─── Values spec grid — hairline cells, hover lifts to white ────────── */
+.spec-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.spec-cell {
+  background: var(--tint-rose);
+  padding: 1.65rem 1.5rem;
+  transition: background 0.22s ease;
+}
+.spec-cell:hover { background: var(--surface); }
+
+/* ─── Process timeline — a spine with numbered nodes ────────────────── */
+.timeline { position: relative; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 1.15rem; top: 0.4rem; bottom: 0.4rem;
+  width: 1px;
+  background: linear-gradient(180deg, var(--rose-line), var(--line) 70%, transparent);
+}
+.tl-node {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 2.3rem; height: 2.3rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.82rem; font-weight: 600;
+  color: var(--rose-ink);
+  background: var(--surface);
+  border: 1px solid var(--rose-line);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.tl-item:hover .tl-node { background: var(--rose); color: #fff; border-color: var(--rose); }
+
+/* ─── Faint node/dot texture for light section corners ──────────────── */
+.dot-corner {
+  background-image: radial-gradient(rgba(20,19,26,0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 100% 0%, #000, transparent 70%);
+  mask-image: radial-gradient(ellipse 60% 60% at 100% 0%, #000, transparent 70%);
+}
+
 /* Hero entrance — CSS keyframes (compositor-driven, immune to main-thread
    jank from parsing the WebGL bundle, unlike JS-driven reveals). */
 @keyframes heroIn {

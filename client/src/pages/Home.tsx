@@ -17,7 +17,7 @@ import { Label } from "@/components/ui/label";
 import { NavbarDropdown } from "@/components/ui/navbar-dropdown";
 import { SiteFooter } from "@/components/ui/site-footer";
 
-const HeroCanvas = lazy(() => import("@/components/hero-canvas"));
+const SceneCanvas = lazy(() => import("@/components/scene-canvas"));
 
 /* ── Assets ─────────────────────────────────────────────────────── */
 const HERO_BG     = "https://d2xsxph8kpxj0f.cloudfront.net/310519663453434320/SdwMsFUUv95cDxwRJ6Hwjt/hero-dark-cinematic-V6ChsH2WWVArr5voDyBZy9.webp";
@@ -204,22 +204,26 @@ export default function Home() {
   const onSubmit = (data: ContactForm) => submitContact.mutate(data);
 
   return (
-    <div className="min-h-screen flex flex-col bg-paper" style={{ color: "var(--ink)" }}>
+    <div className="min-h-screen flex flex-col" style={{ color: "var(--ink)" }}>
+      {/* Fixed, scroll-reactive 3D backdrop behind the whole page.
+          Light sections paint over it; reveal-band sections expose it. */}
+      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: -10 }} aria-hidden="true">
+        <div className="absolute inset-0 scene-base" />
+        <div className="absolute pointer-events-none core-glow" style={{ right: "-4%", top: "34%", width: "48%", aspectRatio: "1", transform: "translateY(-50%)", opacity: 0.7 }} />
+        <div className="absolute inset-0" style={{ opacity: show3D ? 1 : 0, transition: "opacity 1.2s ease" }}>
+          {show3D && <Suspense fallback={null}><SceneCanvas /></Suspense>}
+        </div>
+      </div>
+
       <NavbarDropdown />
 
       <main className="flex-1">
         {/* ══ HERO ─ dark, WebGL core ═══════════════════════════════ */}
-        <section id="hero" className="hero-dark relative flex flex-col justify-center" style={{ minHeight: "100svh", paddingTop: "6.5rem", paddingBottom: "3rem" }}>
-          {/* engineering grid */}
+        <section id="hero" className="relative flex flex-col justify-center" style={{ minHeight: "100svh", paddingTop: "6.5rem", paddingBottom: "3rem", color: "#F4F2F7" }}>
+          {/* engineering grid over the fixed 3D backdrop */}
           <div className="absolute inset-0 grid-lines pointer-events-none" />
-          {/* CSS glow fallback (always behind the canvas) */}
-          <div className="absolute pointer-events-none core-glow" style={{ right: "-6%", top: "42%", width: "56%", aspectRatio: "1", transform: "translateY(-50%)", opacity: 0.75 }} />
-          {/* WebGL sphere (deferred so it can't stall the hero reveal) */}
-          <div className="absolute inset-0 pointer-events-none" style={{ opacity: show3D ? 1 : 0, transition: "opacity 1.2s ease" }}>
-            {show3D && <Suspense fallback={null}><HeroCanvas /></Suspense>}
-          </div>
-          {/* readability scrim */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg, rgba(12,11,17,0.9) 0%, rgba(12,11,17,0.62) 44%, rgba(12,11,17,0.12) 74%, transparent 100%)" }} />
+          {/* readability scrim (keeps the headline legible over the 3D) */}
+          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg, rgba(12,11,17,0.88) 0%, rgba(12,11,17,0.55) 44%, rgba(12,11,17,0.08) 74%, transparent 100%)" }} />
 
           <div className="container container-wide relative w-full" style={{ zIndex: 1 }}>
             <div className="hero-in flex flex-wrap items-center gap-2.5 mb-7" style={{ animationDelay: "0ms" }}>
@@ -249,33 +253,32 @@ export default function Home() {
               <span className="text-[15px] font-semibold on-dark">Baker Tilly</span>
             </div>
           </div>
-
-          {/* seam into the light content */}
-          <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ height: "7rem", background: "linear-gradient(180deg, transparent, var(--paper))" }} />
         </section>
 
-        {/* ══ CAPABILITY STRIP ══════════════════════════════════════ */}
-        <div style={{ borderBottom: "1px solid var(--line)" }}>
-          <div className="container py-5 flex items-center gap-6">
-            <span className="spec text-faint shrink-0 hidden sm:inline">Capabilities</span>
+        {/* ══ CAPABILITY STRIP ─ stays in the dark zone ═════════════ */}
+        <div className="reveal-band" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+          <div className="container py-5 flex items-center gap-6 relative z-[1]">
+            <span className="spec on-dark-faint shrink-0 hidden sm:inline">Capabilities</span>
             <div className="overflow-hidden marquee-mask flex-1">
               <div className="animate-marquee flex gap-10 w-max">
-                {[...CAPS, ...CAPS].map((t, i) => <span key={i} className="text-sm font-medium whitespace-nowrap text-soft">{t}</span>)}
+                {[...CAPS, ...CAPS].map((t, i) => <span key={i} className="text-sm font-medium whitespace-nowrap" style={{ color: "rgba(244,242,247,0.72)" }}>{t}</span>)}
               </div>
             </div>
           </div>
         </div>
 
-        {/* ══ STATS ─ horizontal band ═══════════════════════════════ */}
-        <Section className="bg-paper-2" style={{ borderBottom: "1px solid var(--line)" }}>
-          <div className="container">
-            <motion.div variants={stagger} className="grid grid-cols-2 md:grid-cols-4 vrules py-12">
+        {/* ══ STATS ─ reveal window onto the scrolling 3D ═══════════ */}
+        <Section className="reveal-band">
+          <div className="absolute inset-0 grid-lines pointer-events-none" style={{ opacity: 0.5 }} />
+          <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ height: "5rem", background: "linear-gradient(180deg, transparent, var(--paper))", zIndex: 2 }} />
+          <div className="container relative z-[1]">
+            <motion.div variants={stagger} className="grid grid-cols-2 md:grid-cols-4 vrules py-16">
               {STATS.map((s, i) => (
                 <motion.div key={s.label} variants={fadeUp} custom={i} className="px-0 md:px-8 py-4 first:pl-0 md:first:pl-0">
-                  <div className="mono" style={{ fontSize: "clamp(2.3rem, 5vw, 3.4rem)", fontWeight: 600, letterSpacing: "-0.03em", color: "var(--ink)" }}>
+                  <div className="mono stat-num" style={{ fontSize: "clamp(2.4rem, 5vw, 3.6rem)", fontWeight: 600, letterSpacing: "-0.03em" }}>
                     <Counter to={s.value} suffix={s.suffix} prefix={s.prefix} />
                   </div>
-                  <div className="text-[14px] text-soft mt-2">{s.label}</div>
+                  <div className="text-[14px] mt-2 on-dark-soft">{s.label}</div>
                 </motion.div>
               ))}
             </motion.div>
@@ -283,8 +286,9 @@ export default function Home() {
         </Section>
 
         {/* ══ PRACTICES ─ accordion ═════════════════════════════════ */}
-        <Section id="practices" className="py-24 bg-paper" style={{ borderTop: "1px solid var(--line)" }}>
-          <div className="container">
+        <Section id="practices" className="py-24 bg-paper relative overflow-hidden">
+          <div className="absolute inset-0 dot-corner pointer-events-none" />
+          <div className="container relative">
             <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
               <div className="lg:col-span-4">
                 <div className="lg:sticky lg:top-28">
@@ -425,12 +429,12 @@ export default function Home() {
                 </motion.div>
               </div>
 
-              <motion.div variants={stagger} className="lg:col-span-7 grid sm:grid-cols-2 gap-x-10 gap-y-9 lg:pl-6">
+              <motion.div variants={stagger} className="lg:col-span-7 spec-grid sm:grid-cols-2">
                 {VALUES.map((v, i) => (
-                  <motion.div key={v.title} variants={fadeUp} custom={i}>
+                  <motion.div key={v.title} variants={fadeUp} custom={i} className="spec-cell">
                     <span className="icon-tile">{v.icon}</span>
                     <div className="font-semibold mt-3.5" style={{ color: "var(--ink)" }}>{v.title}</div>
-                    <p className="text-soft text-[15px] mt-1.5 leading-relaxed">{v.body}</p>
+                    <p className="text-soft text-[14px] mt-1.5 leading-relaxed">{v.body}</p>
                   </motion.div>
                 ))}
               </motion.div>
@@ -454,11 +458,11 @@ export default function Home() {
                   </motion.div>
                 </div>
               </div>
-              <motion.div variants={stagger} className="lg:col-span-8">
+              <motion.div variants={stagger} className="lg:col-span-8 timeline">
                 {PROCESS.map((p, i) => (
-                  <motion.div key={p.step} variants={fadeUp} custom={i} className="flex gap-6 py-6" style={{ borderTop: "1px solid var(--line)" }}>
-                    <span className="seq-num shrink-0" style={{ fontSize: "1.6rem", width: "2.4rem" }}>{p.step}</span>
-                    <div>
+                  <motion.div key={p.step} variants={fadeUp} custom={i} className="tl-item flex gap-5 py-5">
+                    <span className="tl-node">{p.step}</span>
+                    <div className="pt-1">
                       <div className="text-lg font-bold" style={{ color: "var(--ink)" }}>{p.label}</div>
                       <p className="text-soft text-[15px] mt-1.5 leading-relaxed max-w-lg">{p.desc}</p>
                     </div>
@@ -494,18 +498,19 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ CTA ═══════════════════════════════════════════════════ */}
-        <Section className="band-rose">
-          <div className="container py-20 sm:py-24 relative" style={{ zIndex: 1 }}>
+        {/* ══ CTA ─ reveal window, dark with the glowing core ═══════ */}
+        <Section className="reveal-band">
+          <div className="absolute inset-0 grid-lines pointer-events-none" style={{ opacity: 0.4 }} />
+          <div className="container py-24 sm:py-28 relative z-[1]">
             <div className="grid lg:grid-cols-12 gap-8 items-center">
-              <motion.h2 variants={fadeUp} custom={0} className="display lg:col-span-8 balance text-white" style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)" }}>
+              <motion.h2 variants={fadeUp} custom={0} className="display lg:col-span-8 balance" style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)", color: "#fff" }}>
                 Let's build something exceptional together.
               </motion.h2>
               <motion.div variants={fadeUp} custom={1} className="lg:col-span-4 lg:text-right">
-                <p className="text-white/85 mb-6 lg:max-w-xs lg:ml-auto leading-relaxed">
+                <p className="mb-6 lg:max-w-xs lg:ml-auto leading-relaxed" style={{ color: "rgba(244,242,247,0.72)" }}>
                   Starting an AI strategy or scaling a data platform — we'll help you move faster and further.
                 </p>
-                <button onClick={() => scrollTo("contact")} className="btn-pill mx-0 lg:ml-auto" style={{ background: "#fff", color: "var(--rose-ink)" }}>
+                <button onClick={() => scrollTo("contact")} className="btn-pill btn-primary mx-0 lg:ml-auto">
                   Start the conversation <ArrowRight className="h-4 w-4" />
                 </button>
               </motion.div>

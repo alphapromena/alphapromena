@@ -2,17 +2,19 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 /**
- * WebGL hero visual: a rotating geodesic wireframe sphere with a glowing
- * rose core and an orbiting particle shell. Rendered on a transparent
- * canvas so the dark hero background shows through.
+ * Persistent, scroll-reactive WebGL scene rendered on a fixed, full-viewport
+ * transparent canvas that sits behind the whole page. A geodesic wireframe
+ * sphere with a glowing rose core and an orbiting particle shell rotates,
+ * drifts and dollies as the page scrolls, so it reads as one continuous 3D
+ * object that travels with the reader. Light sections paint over it; dark
+ * "window" bands are transparent and reveal it.
  *
- * - Reacts to pointer movement with a subtle parallax.
- * - Honors prefers-reduced-motion (renders a single static frame).
- * - Pauses when the tab is hidden or the canvas scrolls out of view.
- * - Disposes all GPU resources on unmount. Silently no-ops if the browser
- *   can't create a WebGL context (the parent shows a CSS glow fallback).
+ * - Pointer parallax + scroll-driven camera/rotation.
+ * - Honors prefers-reduced-motion (single static frame).
+ * - Pauses when the tab is hidden. Disposes all GPU resources on unmount.
+ * - No-ops if WebGL is unavailable (a CSS glow fallback stays visible).
  */
-export default function HeroCanvas() {
+export default function SceneCanvas() {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,11 +27,11 @@ export default function HeroCanvas() {
     try {
       renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
     } catch {
-      return; // WebGL unavailable → parent fallback glow stays visible
+      return;
     }
 
-    const width = () => mount.clientWidth || 1;
-    const height = () => mount.clientHeight || 1;
+    const width = () => window.innerWidth;
+    const height = () => window.innerHeight;
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(width(), height());
@@ -55,7 +57,6 @@ export default function HeroCanvas() {
     );
     world.add(wire);
 
-    // Vertices as glowing nodes (mostly paper, a few rose)
     const nodePositions = sphereGeo.attributes.position;
     const nodeColors: number[] = [];
     const rose = new THREE.Color(ROSE);
@@ -80,7 +81,6 @@ export default function HeroCanvas() {
     );
     world.add(core);
 
-    // Soft additive bloom sprite behind the core
     const glowTex = makeGlowTexture();
     const glow = new THREE.Sprite(
       new THREE.SpriteMaterial({ map: glowTex, color: ROSE, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }),
@@ -89,10 +89,10 @@ export default function HeroCanvas() {
     world.add(glow);
 
     // ── Orbiting particle shell ─────────────────────────────────────
-    const COUNT = 620;
+    const COUNT = 640;
     const pPos = new Float32Array(COUNT * 3);
     for (let i = 0; i < COUNT; i++) {
-      const r = 2.5 + Math.random() * 1.7;
+      const r = 2.5 + Math.random() * 1.9;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       pPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
@@ -115,87 +115,71 @@ export default function HeroCanvas() {
     const onPointer = (e: PointerEvent) => {
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
-      target.x = 0.4 + ny * 0.28;
-      target.y = 0.4 + nx * 0.5;
+      target.x = 0.4 + ny * 0.22;
+      target.y = 0.4 + nx * 0.4;
     };
     if (!reduceMotion) window.addEventListener("pointermove", onPointer, { passive: true });
 
-    // ── Render loop (paused when hidden / off-screen) ───────────────
+    // ── Scroll progress (0 at top → 1 at bottom) ───────────────────
+    let scrollP = 0;
+    const readScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      scrollP = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+    };
+    readScroll();
+    window.addEventListener("scroll", readScroll, { passive: true });
+
+    // ── Render loop ─────────────────────────────────────────────────
     let raf = 0;
-    let visible = true;
     const clock = new THREE.Clock();
 
     const renderFrame = () => {
       const t = clock.getElapsedTime();
       cur.x += (target.x - cur.x) * 0.05;
       cur.y += (target.y - cur.y) * 0.05;
-      world.rotation.x = cur.x;
-      world.rotation.y = cur.y + t * 0.08;
+      // scroll drives extra rotation, a downward drift and a slow dolly-out
+      world.rotation.x = cur.x + scrollP * 0.6;
+      world.rotation.y = cur.y + t * 0.07 + scrollP * 1.4;
+      world.position.y = -scrollP * 1.6;
+      camera.position.z = 6.2 + scrollP * 1.6;
       particles.rotation.y = -t * 0.03;
-      particles.rotation.x = t * 0.02;
+      particles.rotation.x = t * 0.02 + scrollP * 0.4;
+      particles.position.y = -scrollP * 1.6;
       const pulse = 1 + Math.sin(t * 1.6) * 0.06;
       core.scale.setScalar(pulse);
-      glow.material.opacity = 0.72 + Math.sin(t * 1.6) * 0.14;
+      glow.material.opacity = 0.7 + Math.sin(t * 1.6) * 0.14;
       renderer.render(scene, camera);
     };
 
-    const loop = () => {
-      renderFrame();
-      raf = requestAnimationFrame(loop);
-    };
+    let running = false;
+    const loop = () => { renderFrame(); raf = requestAnimationFrame(loop); };
+    const start = () => { if (!running) { running = true; clock.start(); raf = requestAnimationFrame(loop); } };
+    const stop = () => { running = false; if (raf) cancelAnimationFrame(raf); raf = 0; };
 
-    const start = () => {
-      if (raf || !visible) return;
-      clock.start();
-      raf = requestAnimationFrame(loop);
-    };
-    const stop = () => {
-      if (raf) cancelAnimationFrame(raf);
-      raf = 0;
-    };
-
-    if (reduceMotion) {
-      renderFrame(); // single static frame
-    } else {
-      start();
-    }
-
-    // Pause when scrolled out of view
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        visible = entry.isIntersecting;
-        if (reduceMotion) return;
-        if (visible) start();
-        else stop();
-      },
-      { threshold: 0 },
-    );
-    io.observe(mount);
+    if (reduceMotion) renderFrame();
+    else start();
 
     const onVisibility = () => {
       if (reduceMotion) return;
-      if (document.hidden) stop();
-      else if (visible) start();
+      if (document.hidden) stop(); else start();
     };
     document.addEventListener("visibilitychange", onVisibility);
 
-    // ── Resize ──────────────────────────────────────────────────────
     const onResize = () => {
       camera.aspect = width() / height();
       camera.updateProjectionMatrix();
       renderer.setSize(width(), height());
+      readScroll();
       if (reduceMotion) renderFrame();
     };
-    const ro = new ResizeObserver(onResize);
-    ro.observe(mount);
+    window.addEventListener("resize", onResize);
 
-    // ── Cleanup ─────────────────────────────────────────────────────
     return () => {
       stop();
-      io.disconnect();
-      ro.disconnect();
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("scroll", readScroll);
+      window.removeEventListener("resize", onResize);
       sphereGeo.dispose();
       wire.geometry.dispose();
       (wire.material as THREE.Material).dispose();
