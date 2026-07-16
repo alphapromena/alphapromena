@@ -837,3 +837,124 @@
   .v2-card--hover:hover { transform: none; }
   .v2-node--active { animation: none; }
 }
+
+/* ─── Shell: navbar ──────────────────────────────────────────────── */
+.v2-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color var(--dur-med) var(--ease),
+    border-color var(--dur-med) var(--ease);
+}
+.v2-nav--scrolled {
+  background: rgba(10, 14, 22, 0.85);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom-color: var(--line);
+}
+.v2-wordmark {
+  font-family: var(--font-display);
+  font-stretch: 122%;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  color: var(--sand-100);
+  white-space: nowrap;
+}
+.v2-nav-link {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sand-400);
+  transition: color var(--dur-fast) var(--ease);
+}
+.v2-nav-link:hover { color: var(--sand-100); }
+.v2-nav-link:focus-visible {
+  outline: none;
+  color: var(--sand-100);
+  box-shadow: 0 0 0 1px var(--brass-500), 0 0 0 4px var(--brass-glow);
+  border-radius: 2px;
+}
+
+/* Full-screen mobile menu */
+.v2-menu {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-nav) + 1);
+  background: rgba(7, 10, 16, 0.98);
+  display: flex;
+  flex-direction: column;
+}
+.v2-menu-link {
+  font-family: var(--font-mono);
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sand-100);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--line);
+  transition: color var(--dur-fast) var(--ease);
+}
+.v2-menu-link:hover { color: var(--brass-400); }
+.v2-menu-link:focus-visible {
+  outline: none;
+  color: var(--brass-400);
+  box-shadow: inset 0 -2px 0 var(--brass-500);
+}
+
+/* ─── Shell: hero ────────────────────────────────────────────────── */
+.v2-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/v2/hero-lineage.png");
+  background-size: cover;
+  background-position: center right;
+}
+/* Left-to-right ink scrim (85% → 20%) keeps the left third readable,
+   plus a bottom seam into the page background. */
+.v2-hero-scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(7, 10, 16, 0.55) 0%, transparent 22%),
+    linear-gradient(180deg, transparent 72%, var(--ink-950) 100%),
+    linear-gradient(90deg, rgba(7, 10, 16, 0.85) 0%, rgba(7, 10, 16, 0.62) 42%, rgba(7, 10, 16, 0.2) 100%);
+}
+
+/* Hero load sequence — line masks + fades, orchestrated via --d delays */
+.v2-reveal-line { display: block; overflow: hidden; }
+.v2-reveal-line > span {
+  display: block;
+  transform: translateY(112%);
+  animation: v2-line-up 0.6s var(--ease) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes v2-line-up { to { transform: translateY(0); } }
+.v2-fade {
+  opacity: 0;
+  animation: v2-fade 0.5s var(--ease) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes v2-fade { to { opacity: 1; } }
+
+/* ─── Shell: lineage thread (static in Phase 2) ──────────────────── */
+.v2-thread {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-reveal-line > span { animation: none; transform: none; }
+  .v2-fade { animation: none; opacity: 1; }
+}

@@ -14,8 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { NavbarDropdown } from "@/components/ui/navbar-dropdown";
-import { SiteFooter } from "@/components/ui/site-footer";
+import { FooterV2, HeroV2, NavbarV2 } from "@/components/ui-v2";
 
 const SceneCanvas = lazy(() => import("@/components/scene-canvas"));
 
@@ -215,45 +214,11 @@ export default function Home() {
         </div>
       </div>
 
-      <NavbarDropdown />
+      <NavbarV2 />
 
       <main className="flex-1">
-        {/* ══ HERO ─ dark, WebGL core ═══════════════════════════════ */}
-        <section id="hero" className="relative flex flex-col justify-center" style={{ minHeight: "100svh", paddingTop: "6.5rem", paddingBottom: "3rem", color: "#F4F2F7" }}>
-          {/* engineering grid over the fixed 3D backdrop */}
-          <div className="absolute inset-0 grid-lines pointer-events-none" />
-          {/* readability scrim (keeps the headline legible over the 3D) */}
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg, rgba(12,11,17,0.88) 0%, rgba(12,11,17,0.55) 44%, rgba(12,11,17,0.08) 74%, transparent 100%)" }} />
-
-          <div className="container container-wide relative w-full" style={{ zIndex: 1 }}>
-            <div className="hero-in flex flex-wrap items-center gap-2.5 mb-7" style={{ animationDelay: "0ms" }}>
-              <span className="chip-dark"><span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--rose)" }} /> Enterprise AI · Data · Advisory</span>
-              <span className="chip-dark">MENA Region</span>
-            </div>
-
-            <h1 className="display balance hero-in" style={{ fontSize: "clamp(2.7rem, 6.6vw, 5.4rem)", maxWidth: "16ch", color: "#ffffff", animationDelay: "80ms" }}>
-              We build the <span className="text-rose">intelligence</span> behind your enterprise.
-            </h1>
-
-            <p className="lead mt-7 max-w-xl hero-in" style={{ color: "rgba(244,242,247,0.68)", animationDelay: "160ms" }}>
-              The region's leading multi-practice AI and data firm — data governance, AI consulting, custom
-              implementation, and banking solutions for enterprises that demand excellence.
-            </p>
-
-            <div className="mt-9 flex flex-wrap items-center gap-3 hero-in" style={{ animationDelay: "240ms" }}>
-              <button onClick={() => scrollTo("practices")} className="btn-pill btn-primary">Explore our services <ArrowRight className="h-4 w-4" /></button>
-              <button onClick={() => scrollTo("contact")} className="btn-pill btn-ghost-light">Book a free discovery</button>
-            </div>
-
-            <div className="mt-11 flex items-center gap-4 flex-wrap hero-in" style={{ animationDelay: "320ms" }}>
-              <span className="spec on-dark-faint">Trusted platforms</span>
-              <span className="h-4 w-px" style={{ background: "rgba(255,255,255,0.16)" }} />
-              <span className="text-[15px] font-semibold on-dark">Ataccama One</span>
-              <span className="on-dark-faint">·</span>
-              <span className="text-[15px] font-semibold on-dark">Baker Tilly</span>
-            </div>
-          </div>
-        </section>
+        {/* ══ HERO ─ Lineage shell (Phase 2) ════════════════════════ */}
+        <HeroV2 />
 
         {/* ══ CAPABILITY STRIP ─ stays in the dark zone ═════════════ */}
         <div className="reveal-band" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
@@ -594,7 +559,7 @@ export default function Home() {
       </main>
 
       {/* ══ FOOTER ════════════════════════════════════════════════ */}
-      <SiteFooter />
+      <FooterV2 />
 
       {/* ══ PARTNERSHIP POPUP ═════════════════════════════════════ */}
       <AnimatePresence>

@@ -1,6 +1,5 @@
 import { Streamdown } from "streamdown";
-import { NavbarDropdown } from "@/components/ui/navbar-dropdown";
-import { SiteFooter } from "@/components/ui/site-footer";
+import { FooterV2, NavbarV2 } from "@/components/ui-v2";
 
 interface PolicyPageProps {
   /** Small mono eyebrow label shown above the title, e.g. "Legal · Privacy". */
@@ -19,7 +18,7 @@ interface PolicyPageProps {
 export function PolicyPage({ eyebrow, title, markdown }: PolicyPageProps) {
   return (
     <div className="min-h-screen flex flex-col bg-paper" style={{ color: "var(--ink)" }}>
-      <NavbarDropdown />
+      <NavbarV2 />
 
       <main className="flex-1">
         {/* Header band */}
@@ -40,7 +39,7 @@ export function PolicyPage({ eyebrow, title, markdown }: PolicyPageProps) {
         </section>
       </main>
 
-      <SiteFooter />
+      <FooterV2 />
     </div>
   );
 }

@@ -208,3 +208,14 @@
 - [x] ui-v2 primitives: Section, Eyebrow (catalog index), Button/ButtonLink (brass, ghost, brass-glow focus ring), CardV2 (hairline, 2px hover lift), LineageNode (12px, single pulse, reduced-motion safe)
 - [x] Temporary /dev-tokens route renders palette swatches with hex, full type scale, spacing, motion, and every primitive — delete in Phase 6
 - [x] pnpm check clean, pnpm build passes
+
+## Round 27.2: shell (Phase 2)
+- [x] NavbarV2: fixed, transparent over hero, ink-900/85 backdrop blur + hairline after 40px scroll; Archivo wordmark; mono links (Practices, Partnerships, Process, Contact) + brass "Book a call"; mobile full-screen overlay menu with focus trap, Escape close, scroll lock
+- [x] HeroV2: full-viewport, H1 option B ("The data partner for the Gulf's most regulated institutions."), eyebrow ATACCAMA CERTIFIED PARTNER · MENA & GCC, subline, brass + ghost CTAs, mono trust strip on the fold line
+- [x] Hero load sequence: thread draws 700ms, headline line-mask reveals with 80ms stagger, trust strip fades last (~1.55s total); everything instant under prefers-reduced-motion
+- [x] LineageThread component: SVG layer with waypoints API, vertical-biased cubic path, brass gradient stroke, origin node, draw-in animation, debounced resize recompute — scroll mapping comes in Phase 4
+- [x] Hero background wired to /assets/v2/hero-lineage.png under the ink-950 L-to-R scrim (85%→20%); renders as quiet ink gradient until asset A1 is committed (client/public/assets/v2/ created)
+- [x] FooterV2: three columns (wordmark + description + certified-partner line; mono nav; email + Amman + LinkedIn), hairline bottom bar with copyright, Privacy/Terms, built-in-Amman line
+- [x] Policy pages switched to the new shell; old navbar-dropdown.tsx, site-footer.tsx, and unused alpha-pro-logo.tsx deleted
+- [x] All mid-page v1 sections untouched and functional; pnpm check clean, pnpm build passes
+- [ ] Confirm the LinkedIn company URL used in the footer (linkedin.com/company/alphapromena)
