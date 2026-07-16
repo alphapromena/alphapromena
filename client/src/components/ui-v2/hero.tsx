@@ -2,7 +2,6 @@ import { useCallback } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "./button";
 import { Eyebrow } from "./eyebrow";
-import { LineageThread } from "./lineage-thread";
 
 /* Hard line breaks so each headline line can reveal through its own mask. */
 const HEADLINE_LINES = ["The data partner", "for the Gulf's most", "regulated institutions."];
@@ -26,7 +25,6 @@ export function HeroV2() {
     <section id="hero" className="relative flex flex-col overflow-hidden" style={{ minHeight: "100svh", background: "var(--ink-950)" }}>
       <div className="v2-hero-bg" aria-hidden="true" />
       <div className="v2-hero-scrim" aria-hidden="true" />
-      <LineageThread waypoints={["thread-origin"]} />
 
       <div className="v2-container relative flex-1 flex flex-col justify-center" style={{ zIndex: 1, paddingTop: "104px", paddingBottom: "48px" }}>
         <div style={{ maxWidth: "640px" }}>

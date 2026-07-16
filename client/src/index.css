@@ -556,14 +556,27 @@ textarea.v2-field { resize: vertical; min-height: 120px; }
 .v2-swap { animation: v2-swap-in var(--dur-med) var(--ease); }
 @keyframes v2-swap-in { from { opacity: 0; } to { opacity: 1; } }
 
-/* ─── Shell: lineage thread (static in Phase 2/3) ────────────────── */
+/* ─── Lineage thread — fixed scroll-synced layer (Phase 4) ───────── */
+/* position: fixed + pointer-events: none + zero layout size = CLS 0.
+   The inner <g> is translated by -scrollY; only transform and
+   stroke-dashoffset change per frame. */
 .v2-thread {
-  position: absolute;
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 0;
+  z-index: 2;
+}
+.v2-thread-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: v2-svg-pulse var(--dur-slow) var(--ease) 1;
+}
+@keyframes v2-svg-pulse {
+  0%   { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(3.2); opacity: 0; }
 }
 
 /* ─── Section backgrounds (assets A2–A4) ─────────────────────────── */
@@ -593,4 +606,5 @@ textarea.v2-field { resize: vertical; min-height: 120px; }
   .v2-reveal-line > span { animation: none; transform: none; }
   .v2-fade { animation: none; opacity: 1; }
   .v2-swap { animation: none; }
+  .v2-thread-pulse { animation: none; } /* base opacity 0 keeps it hidden */
 }

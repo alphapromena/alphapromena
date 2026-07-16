@@ -234,5 +234,15 @@
 - [x] pnpm check clean, pnpm build passes, all routes/modules compile under vite dev
 - [ ] Form e2e submit not verifiable locally (no vercel CLI / DATABASE_URL in this environment); server code is untouched from v1 — verify the full pipeline on the Vercel preview in Phase 6 step 3
 
+## Round 27.4: lineage motion (Phase 4)
+- [x] LineageThread rewritten as a position-fixed, pointer-events-none SVG layer: path computed in document coordinates through the 9 existing waypoint ids (thread-origin, process-node-0..5, contact-node, cta-node), inner <g> translated by -scrollY so scroll tracking is transform-only
+- [x] stroke-dashoffset mapped to a trigger line at viewport center + 12% lead via a precomputed length↔y lookup (binary search per frame, no DOM reads in the hot path); recompute on debounced resize + ResizeObserver on body (catches accordion toggles / async reflow)
+- [x] Nodes activate (brass fill + single pulse) when their waypoint passes the trigger line and stay active; activation state lives in Home and drives the DOM LineageNodes; origin node pulses in the SVG at intro completion; cta terminal node is part of the same sequence
+- [x] Hero load sequence unified: the Phase 2 draw is now the thread's own 700ms intro tween (origin → hero exit), after which scroll mapping takes over via max(introFloor, scrollTarget) — no double-trigger, thread never retracts above the hero
+- [x] Process section's DOM connector spans removed (the SVG thread is the line now)
+- [x] prefers-reduced-motion: thread fully drawn, all nodes active on load, no intro/pulses/dashoffset mapping (translate still tracks scroll — positioning, not animation)
+- [x] CLS 0 by construction: fixed layer, no layout size, no layout-affecting properties animated (transform / opacity / dashoffset only; node pulse is paint-only box-shadow); per-frame scripting is O(log n) — see PR notes for the frame budget
+- [x] pnpm check clean, pnpm build passes, all modules compile under vite dev
+
 ## Notes for Phase 6 proofread
 - [ ] Headline: decide between "the Gulf's" and "the region's" most regulated institutions — eyebrow and Ataccama certification are MENA-wide, headline currently says Gulf

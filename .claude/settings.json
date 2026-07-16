@@ -8,7 +8,12 @@
       "Bash(curl -s \"http://localhost:5173/src/index.css\" -o /dev/null -w \"index.css transform: %{http_code}\\\\n\")",
       "Bash(curl -s \"http://localhost:5173/src/components/ui-v2/index.ts\" -o /dev/null -w \"ui-v2 transform: %{http_code}\\\\n\")",
       "Bash(curl -s \"http://localhost:5173/src/components/policy-page.tsx\" -o /dev/null -w \"policy-page transform: %{http_code}\\\\n\")",
-      "Bash(git commit -m 'feat\\(redesign\\): practices, partnerships, process, values, contact *)"
+      "Bash(git commit -m 'feat\\(redesign\\): practices, partnerships, process, values, contact *)",
+      "Bash(curl -s \"http://localhost:5173/src/pages/Home.tsx\" -o /dev/null -w \"Home: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/components/ui-v2/lineage-thread.tsx\" -o /dev/null -w \"lineage-thread: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/components/ui-v2/hero.tsx\" -o /dev/null -w \"hero: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/index.css\" -o /dev/null -w \"css: %{http_code}\\\\n\")",
+      "Bash(git commit -m 'feat\\(redesign\\): scroll-driven lineage thread and hero sequence *)"
     ]
   }
 }

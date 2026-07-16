@@ -12,9 +12,23 @@ import {
   FooterV2,
   HeroV2,
   LineageNode,
+  LineageThread,
   NavbarV2,
   Section,
 } from "@/components/ui-v2";
+
+/* The thread's route through the page, in document order (Phase 4). */
+const WAYPOINTS = [
+  "thread-origin",
+  "process-node-0",
+  "process-node-1",
+  "process-node-2",
+  "process-node-3",
+  "process-node-4",
+  "process-node-5",
+  "contact-node",
+  "cta-node",
+];
 
 /* ── Content ────────────────────────────────────────────────────── */
 
@@ -162,6 +176,18 @@ export default function Home() {
   const [activePractice, setActivePractice] = useState(0);
   const [mobileOpen, setMobileOpen] = useState<number>(0);
 
+  /* Waypoints light up as the thread head passes them, and stay lit. */
+  const [litNodes, setLitNodes] = useState<ReadonlySet<string>>(new Set());
+  const onNodeActivate = useCallback((id: string) => {
+    setLitNodes((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      return next;
+    });
+  }, []);
+  const lit = useCallback((id: string) => litNodes.has(id), [litNodes]);
+
   const scrollTo = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
@@ -184,6 +210,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--ink-950)" }}>
+      <LineageThread waypoints={WAYPOINTS} onActivate={onNodeActivate} />
       <NavbarV2 />
 
       <main className="flex-1">
@@ -326,17 +353,10 @@ export default function Home() {
               </div>
             </div>
             <div className="lg:col-span-8">
+              {/* The SVG thread is the connecting line between these nodes. */}
               {PROCESS.map((p, i) => (
                 <div key={p.step} className="flex gap-6">
-                  <div className="flex flex-col items-center">
-                    <LineageNode id={`process-node-${i}`} active={i === 0} />
-                    {i < PROCESS.length - 1 && (
-                      <span
-                        className="flex-1"
-                        style={{ width: "1px", background: i === 0 ? "linear-gradient(180deg, var(--brass-500), var(--line))" : "var(--line)" }}
-                      />
-                    )}
-                  </div>
+                  <LineageNode id={`process-node-${i}`} active={lit(`process-node-${i}`)} className="mt-1" />
                   <div className={i < PROCESS.length - 1 ? "pb-12" : ""} style={{ marginTop: "-4px" }}>
                     <p style={{ ...monoLabel, color: "var(--brass-500)" }}>{p.step}</p>
                     <h3 className="v2-h3 mt-2">{p.label}</h3>
@@ -370,7 +390,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-12 gap-12 items-start">
             <div className="lg:col-span-5">
               <div className="flex items-center gap-4">
-                <LineageNode id="contact-node" />
+                <LineageNode id="contact-node" active={lit("contact-node")} />
                 <Eyebrow>Open a record</Eyebrow>
               </div>
               <h2 className="v2-h2 mt-5">Start the conversation.</h2>
@@ -476,7 +496,7 @@ export default function Home() {
           <div className="v2-container relative z-[1] py-24 sm:py-28">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
               <div className="flex items-center gap-5">
-                <LineageNode id="cta-node" active />
+                <LineageNode id="cta-node" active={lit("cta-node")} />
                 <h2 className="v2-h2" style={{ maxWidth: "18ch" }}>Start with a discovery call.</h2>
               </div>
               <Button variant="brass" onClick={() => scrollTo("contact")} className="shrink-0">
