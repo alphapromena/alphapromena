@@ -253,6 +253,12 @@
 - [x] /dev-tokens route and DevTokens.tsx deleted
 - [x] pnpm check clean, pnpm build passes, all routes + fonts + sitemap/robots serve under vite dev
 
+## Round 27.5a.1: route-level code splitting
+- [x] Privacy and Terms route-split via React.lazy + Suspense (ink-950 fallback), so the pre-rendered legal HTML stays out of the homepage bundle: main 535.73 kB (162.55 gzip) → 519.21 kB (157.35 gzip); lazy chunks Privacy 9.63 kB, Terms 7.46 kB, shared policy-page 1.36 kB
+- [x] Main bundle composition (source-map-explorer): react-dom 176.8 kB (34.9%), zod 44.9, app code 41.2, tanstack query 38.6, sonner 32.9, tailwind-merge 24.2, react-hook-form 23.0, trpc client+react+server 42.4, superjson 15.0, floating-ui+radix tooltip ~30
+- [ ] Follow-up candidate: sonner (32.9 kB) — nothing calls toast() since the Phase 3 success-panel redesign; the Toaster could be removed entirely
+- [x] pnpm check clean, pnpm build passes
+
 ## Phase 5b (blocked on v2 assets)
 - [ ] sharp AVIF/WebP pipeline for everything in client/public/assets/v2/
 - [ ] <picture> srcset at 960/1440/2560 widths for section backgrounds + hero
@@ -262,4 +268,4 @@
 
 ## Notes for Phase 6 proofread
 - [ ] Headline: decide between "the Gulf's" and "the region's" most regulated institutions — eyebrow and Ataccama certification are MENA-wide, headline currently says Gulf
-- [ ] Policy docs are written for AlphaBeacon (the LinkedIn content product), not the marketing site — confirm that is intended for alphapromena.com/privacy and /terms
+- [ ] OPEN QUESTION (awaiting Abdallah): policy docs are written for AlphaBeacon on purpose — LinkedIn's API app review requires publicly hosted privacy policy + terms URLs and this domain likely hosts them for the pending LinkedIn OAuth review. Do NOT rewrite or move /privacy and /terms; doing so could break the review. Leave both pages exactly as they are until confirmed.

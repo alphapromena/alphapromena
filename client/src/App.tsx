@@ -1,12 +1,15 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Home from "./pages/Home";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
+
+/* Route-split: the legal pages carry their pre-rendered HTML documents,
+   which almost no visitor loads — keep them out of the main chunk. */
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
 
 /**
  * Reset scroll to the top on client-side route changes (e.g. clicking a
@@ -25,13 +28,15 @@ function ScrollToTop() {
 
 function Router() {
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/privacy"} component={Privacy} />
-      <Route path={"/terms"} component={Terms} />
-      <Route path={"/404"} component={NotFound} />
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<div className="min-h-screen" style={{ background: "var(--ink-950)" }} />}>
+      <Switch>
+        <Route path={"/"} component={Home} />
+        <Route path={"/privacy"} component={Privacy} />
+        <Route path={"/terms"} component={Terms} />
+        <Route path={"/404"} component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 

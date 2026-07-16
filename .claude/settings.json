@@ -21,7 +21,8 @@
       "Bash(pnpm dlx *)",
       "Bash(grep -E \"^latin-\\(4|5\\)00\\\\.css$\")",
       "Bash(node \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Claude-Projects-alphapromena-alphapromena\\\\f380d129-3d2f-4ac3-bd6c-c42f74577756\\\\scratchpad\\\\contrast-check.mjs\")",
-      "Bash(git commit -m 'chore\\(redesign\\): drop markdown runtime, SEO, accessibility pass *)"
+      "Bash(git commit -m 'chore\\(redesign\\): drop markdown runtime, SEO, accessibility pass *)",
+      "Bash(node -e ' *)"
     ]
   }
 }
