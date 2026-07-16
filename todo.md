@@ -189,3 +189,12 @@
 - [x] Updated Banking department card description to remove Baker Tilly reference
 - [x] Footer: removed placeholder social icon links (LI, TW, GH)
 - [x] Department email display: gradient-card uses plain mailto:Sales@Alphapromena.com — no obfuscation
+
+## Round 27.0: redesign baseline (Lineage v2, Phase 0)
+- [x] Branch redesign/v2 created from main; main tagged pre-redesign-v2
+- [x] REDESIGN_V2_PLAN.md committed to repo root
+- [x] tsconfig problems resolved: IDE diagnostics were caused by missing node_modules (pnpm install fixes); real bug fixed — tsBuildInfoFile wrote into node_modules/typescript (a pnpm store symlink), moved to node_modules/.cache/tsbuildinfo
+- [x] Dead components deleted (verified zero live imports): AIChatBox.tsx, Map.tsx, gradient-card.tsx, department-contact-card.tsx, ComponentShowcase.tsx
+- [x] Test script removed from package.json (less work than a smoke test); vitest.config.ts and vitest devDependency removed with it
+- [x] pnpm check clean, pnpm build passes
+- [ ] Noted for Phase 5: policy-page.tsx renders static markdown via Streamdown, pulling mermaid/cytoscape/shiki chunks (~4MB of lazy chunks, 1.6MB main bundle) — replace with a lightweight markdown renderer
