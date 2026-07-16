@@ -49,8 +49,9 @@ export function FooterV2() {
               info@alphapromena.com
             </a>
             <span className="v2-small">Amman, Jordan</span>
+            {/* Parent firm's page. Swap to a dedicated Alpha Pro MENA page once one exists. */}
             <a
-              href="https://www.linkedin.com/company/alphapromena"
+              href="https://www.linkedin.com/company/alpha-pro-consulting"
               target="_blank"
               rel="noopener noreferrer"
               className="v2-nav-link"

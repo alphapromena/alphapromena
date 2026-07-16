@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git pull *)"
+      "Bash(git pull *)",
+      "Bash(pnpm dev *)",
+      "Bash(curl -s http://localhost:5173/ -o /dev/null -w \"root: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/pages/Home.tsx\" -o /dev/null -w \"Home.tsx transform: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/index.css\" -o /dev/null -w \"index.css transform: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/components/ui-v2/index.ts\" -o /dev/null -w \"ui-v2 transform: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/components/policy-page.tsx\" -o /dev/null -w \"policy-page transform: %{http_code}\\\\n\")",
+      "Bash(git commit -m 'feat\\(redesign\\): practices, partnerships, process, values, contact *)"
     ]
   }
 }

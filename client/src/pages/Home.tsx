@@ -1,596 +1,493 @@
-import { useEffect, useRef, useState, useCallback, lazy, Suspense } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useCallback, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { toast } from "sonner";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import {
-  ArrowRight, X, ExternalLink, Check, Plus, Minus,
-  Database, Brain, Cpu, Building2, Globe,
-  TrendingUp, Shield, Users, Zap, Phone, Mail, MapPin,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import { FooterV2, HeroV2, NavbarV2 } from "@/components/ui-v2";
+  Button,
+  ButtonLink,
+  CardV2,
+  Eyebrow,
+  FooterV2,
+  HeroV2,
+  LineageNode,
+  NavbarV2,
+  Section,
+} from "@/components/ui-v2";
 
-const SceneCanvas = lazy(() => import("@/components/scene-canvas"));
+/* ── Content ────────────────────────────────────────────────────── */
 
-/* ── Assets ─────────────────────────────────────────────────────── */
-const HERO_BG     = "https://d2xsxph8kpxj0f.cloudfront.net/310519663453434320/SdwMsFUUv95cDxwRJ6Hwjt/hero-dark-cinematic-V6ChsH2WWVArr5voDyBZy9.webp";
-const BANKING_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663453434320/SdwMsFUUv95cDxwRJ6Hwjt/banking-finance-visual-RHzeNFLAucjXwQSP2VhPcg.webp";
-const DATA_IMG    = "https://d2xsxph8kpxj0f.cloudfront.net/310519663453434320/SdwMsFUUv95cDxwRJ6Hwjt/data-governance-visual-bDPCBPBmZbZaGw7DULtTUs.webp";
-const DEV_IMG     = "https://d2xsxph8kpxj0f.cloudfront.net/310519663453434320/SdwMsFUUv95cDxwRJ6Hwjt/fullstack-dev-visual-HAc54YqGJnrqHAgCfyzEC.webp";
-
-/* ── Motion ─────────────────────────────────────────────────────── */
-const fadeUp = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i = 0) => ({ opacity: 1, y: 0, transition: { duration: 0.6, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] } }),
-};
-const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } };
-
-function Counter({ to, suffix = "", prefix = "" }: { to: number; suffix?: string; prefix?: string }) {
-  const [val, setVal] = useState(0);
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
-  useEffect(() => {
-    if (!inView) return;
-    const start = performance.now(); const dur = 1400; let raf = 0;
-    const tick = (now: number) => {
-      const p = Math.min((now - start) / dur, 1);
-      setVal(to * (1 - Math.pow(1 - p, 3)));
-      if (p < 1) raf = requestAnimationFrame(tick); else setVal(to);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, to]);
-  return <span ref={ref}>{prefix}{Math.round(val).toLocaleString()}{suffix}</span>;
-}
-
-function Section({ id, children, className = "", style }: { id?: string; children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-70px" });
-  return (
-    <motion.section id={id} ref={ref} initial="hidden" animate={inView ? "visible" : "hidden"} variants={stagger} className={className} style={style}>
-      {children}
-    </motion.section>
-  );
-}
-
-/* ── Data ───────────────────────────────────────────────────────── */
 const PRACTICES = [
   {
     id: "data",
+    index: "01",
     title: "Data Governance & Intelligence",
     sub: "Powered by Ataccama One",
-    body: "Alpha Pro MENA is Ataccama's only certified Solution Partner across the Middle East and North Africa. We help enterprises take full control of their data estate — from cataloguing and lineage to quality enforcement and regulatory compliance — by deploying the industry's leading data governance platform.",
-    img: DATA_IMG,
-    link: "https://www.ataccama.com/platform", linkLabel: "Explore Ataccama One",
-    features: ["Data Catalog & Lineage", "Data Quality Rules", "Master Data Management", "Regulatory Compliance", "Data Mesh Architecture", "Metadata Management"],
-    icon: <Database className="w-5 h-5" />,
+    body: "Ataccama's only certified Solution Partner across MENA. We deploy Ataccama One to catalogue, govern, and enforce quality across your entire data estate, from lineage to regulatory compliance.",
+    chips: ["Data catalog & lineage", "Data quality", "Master data", "Regulatory compliance"],
+    formValue: "Data Governance & Intelligence",
   },
   {
-    id: "ai-consulting",
-    title: "AI Consulting & Audits",
-    sub: "Strategy. Readiness. Accountability.",
-    body: "Before you build, you need clarity. Our AI consulting practice delivers executive-level strategy, AI readiness assessments, model audits, and ethical AI governance frameworks — so your AI investments are grounded, defensible, and aligned with business outcomes.",
-    img: HERO_BG, link: null, linkLabel: null,
-    features: ["AI Strategy & Roadmapping", "Readiness Assessments", "Model Audits & Explainability", "Ethical AI Frameworks", "Risk & Compliance Reviews", "Executive Workshops"],
-    icon: <Brain className="w-5 h-5" />,
-  },
-  {
-    id: "ai-implementation",
-    title: "Custom AI Solutions & Platform Development",
-    sub: "From prototype to production — end to end.",
-    body: "We design, build, and deploy custom AI and machine learning solutions alongside the full-stack platforms that power them. From NLP pipelines and computer vision to cloud-native backends, high-performance APIs, and polished React frontends — production-grade software that scales.",
-    img: DEV_IMG, link: null, linkLabel: null,
-    features: ["Custom ML Development", "NLP & Conversational AI", "Computer Vision", "MLOps & Lifecycle", "Cloud-Native Architecture", "React / Next.js Frontends"],
-    icon: <Cpu className="w-5 h-5" />,
+    id: "ai",
+    index: "02",
+    title: "Enterprise AI & Platform Development",
+    sub: "From audit to production",
+    body: "Strategy first, then production. We run AI readiness assessments and model audits, then design, build, and operate custom AI systems and the platforms that power them.",
+    chips: ["AI strategy & audits", "Custom ML development", "MLOps & lifecycle", "Cloud-native platforms"],
+    formValue: "Enterprise AI & Platform Development",
   },
   {
     id: "banking",
-    title: "Banking & Financial Services",
-    sub: "Precision solutions for regulated industries.",
-    body: "Financial institutions face unique pressures: regulatory scrutiny, legacy infrastructure, and the relentless pace of fintech disruption. We deliver AI-powered risk models, fraud detection systems, regulatory reporting automation, and intelligent customer-experience platforms.",
-    img: BANKING_IMG, link: null, linkLabel: null,
-    features: ["Credit Risk & Scoring", "Fraud Detection & AML", "Regulatory Reporting", "Core Banking Integration", "Open Banking APIs", "Customer Intelligence"],
-    icon: <Building2 className="w-5 h-5" />,
+    index: "03",
+    title: "Banking & Finance Advisory",
+    sub: "For regulated institutions",
+    body: "Precision solutions for banks, insurers, and financial institutions. We deliver risk models, fraud detection, regulatory reporting, and core banking integrations built for supervisory scrutiny.",
+    chips: ["Credit risk & scoring", "Fraud detection & AML", "Regulatory reporting", "Open banking APIs"],
+    formValue: "Banking & Finance Advisory",
   },
-];
-
-const STATS = [
-  { value: 50, suffix: "+", label: "Enterprise clients" },
-  { value: 98, suffix: "%", label: "Client retention" },
-  { value: 1, prefix: "#", suffix: "", label: "Ataccama partner, MENA" },
-  { value: 24, suffix: "/7", label: "Managed support" },
-];
-
-const VALUES = [
-  { icon: <Shield className="w-5 h-5" />, title: "Trust & Integrity", body: "The highest standards of transparency and accountability in every engagement." },
-  { icon: <Brain className="w-5 h-5" />, title: "Deep Expertise", body: "Years of domain knowledge across AI, data, finance, and engineering." },
-  { icon: <Zap className="w-5 h-5" />, title: "Execution Speed", body: "Fast without cutting corners — production outcomes on enterprise timelines." },
-  { icon: <Users className="w-5 h-5" />, title: "Client Partnership", body: "We embed with your teams and measure success by your outcomes." },
-  { icon: <Globe className="w-5 h-5" />, title: "MENA Focus", body: "Regional knowledge, regulatory awareness, and a network built over years." },
-  { icon: <TrendingUp className="w-5 h-5" />, title: "Innovation First", body: "At the frontier of AI and data — so clients always have what's next." },
-];
-
-const PROCESS = [
-  { step: "01", label: "Discovery & Scoping", desc: "A structured session to understand your data landscape, AI maturity, and objectives." },
-  { step: "02", label: "Strategy & Roadmap", desc: "A tailored roadmap with milestones, technology recommendations, and ROI projections." },
-  { step: "03", label: "Design & Architecture", desc: "We architect data models, AI pipelines, integrations, and governance up front." },
-  { step: "04", label: "Build & Implement", desc: "Engineering teams ship in sprints, with continuous visibility and weekly reviews." },
-  { step: "05", label: "Validate & Go Live", desc: "Rigorous UAT, performance testing, and a managed go-live ensure readiness." },
-  { step: "06", label: "Support & Evolve", desc: "Ongoing support, monitoring, and continuous improvement as you scale." },
-];
-
-const DEPARTMENTS = [
-  { accent: "#6C2BD9", tag: "Ataccama One Partner", title: "Data Governance & Intelligence", desc: "Govern, understand, and trust your data at scale — unifying metadata, enforcing quality, ensuring compliance." },
-  { accent: "#0B5FFF", tag: "Find your solution", title: "Banking, Finance & Partnerships", desc: "Specialist advisory for regulated institutions — compliance, risk modelling, and digital transformation." },
-  { accent: "#FF1E57", tag: "Free discovery", title: "AI Solutions & Consulting", desc: "End-to-end AI — strategy, custom model development, MLOps, and production deployment for the enterprise." },
 ];
 
 const PARTNERS = [
   {
     name: "Ataccama",
-    accent: "#6C2BD9",
-    role: "Data & Governance",
-    positioning: "Only certified Solution Partner in MENA",
-    desc: "We deploy Ataccama One — the industry's leading unified data management platform — for governance, quality, catalog, and master data management across the region's most demanding enterprises.",
-    highlights: ["Unified governance & catalog", "Automated data quality at scale", "Audit-ready compliance"],
-    link: "https://www.ataccama.com/platform", linkLabel: "Explore Ataccama One",
+    record: "Region / MENA · Status / Certified Solution Partner · Scope / Data governance",
+    sentence:
+      "We deploy Ataccama One, the unified data management platform, for governance, quality, catalog, and master data across the region's most demanding enterprises.",
+    link: "https://www.ataccama.com/platform",
+    linkLabel: "Explore Ataccama One",
   },
   {
     name: "Baker Tilly",
-    accent: "#0E8A8A",
-    role: "Audit, Tax & Advisory",
-    positioning: "Strategic alliance across MENA",
-    desc: "In alliance with Baker Tilly — one of the world's leading networks of independent audit, tax, and advisory firms — we pair our AI and data engineering with deep assurance and financial advisory expertise for regulated institutions.",
-    highlights: ["Audit & assurance depth", "Tax & regulatory advisory", "Financial transformation"],
-    link: "https://www.bakertilly.com", linkLabel: "Explore Baker Tilly",
+    record: "Region / MENA · Status / Strategic alliance · Scope / Audit, tax & advisory",
+    sentence:
+      "In alliance with Baker Tilly, we pair AI and data engineering with assurance and financial advisory depth for regulated institutions.",
+    link: "https://www.bakertilly.com",
+    linkLabel: "Explore Baker Tilly",
   },
 ];
 
-const CAPS = ["Data Governance", "AI Strategy & Audits", "Machine Learning", "MLOps", "Fraud Detection", "Regulatory Reporting", "Data Quality", "Master Data Management", "Cloud-Native Platforms"];
+const PROCESS = [
+  { step: "STEP 01", label: "Discovery", desc: "A structured session to understand your data landscape, AI maturity, and objectives." },
+  { step: "STEP 02", label: "Roadmap", desc: "A tailored roadmap with milestones, technology recommendations, and ROI projections." },
+  { step: "STEP 03", label: "Architecture", desc: "Data models, AI pipelines, integrations, and governance designed up front." },
+  { step: "STEP 04", label: "Sprints", desc: "Engineering ships in sprints with continuous visibility and weekly reviews." },
+  { step: "STEP 05", label: "UAT & go-live", desc: "Rigorous testing and a managed go-live ensure production readiness." },
+  { step: "STEP 06", label: "Support", desc: "Ongoing support, monitoring, and continuous improvement as you scale." },
+];
+
+const VALUES = [
+  { title: "Trust and integrity", line: "The highest standards of transparency and accountability in every engagement." },
+  { title: "Deep expertise", line: "Years of domain knowledge across AI, data, finance, and engineering." },
+  { title: "Execution speed", line: "Fast without cutting corners. Production outcomes on enterprise timelines." },
+  { title: "Client partnership", line: "We embed with your teams and measure success by your outcomes." },
+  { title: "MENA focus", line: "Regional knowledge, regulatory awareness, and a network built over years." },
+  { title: "Innovation first", line: "At the frontier of AI and data, so clients always have what is next." },
+];
+
+const ROUTING = [
+  { label: "Data governance", practice: "Data Governance & Intelligence" },
+  { label: "Banking & finance", practice: "Banking & Finance Advisory" },
+  { label: "Enterprise AI", practice: "Enterprise AI & Platform Development" },
+];
+
+const PRACTICE_OPTIONS = [...PRACTICES.map((p) => p.formValue), "General inquiry"];
 
 const contactSchema = z.object({
-  name:        z.string().min(2, "Name is required"),
-  company:     z.string().min(1, "Company is required"),
-  email:       z.email("Valid email required"),
-  inquiryType: z.string().min(1, "Please select an inquiry type"),
-  message:     z.string().min(10, "Message must be at least 10 characters"),
+  name: z.string().min(2, "Name is required"),
+  company: z.string().min(1, "Company is required"),
+  email: z.email("Valid email required"),
+  inquiryType: z.string().min(1, "Select a practice"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
 });
 type ContactForm = z.infer<typeof contactSchema>;
 
-/* ═══════════════════════════════════════════════════════════════════ */
-export default function Home() {
-  const [openPractice, setOpenPractice] = useState(0);
-  const [partnerShown, setPartnerShown] = useState(false);
-  const [partnerOpen, setPartnerOpen] = useState(false);
-  // Defer the heavy WebGL hero until after the hero text has revealed, so
-  // parsing/initialising three.js can't stall the entrance animation.
-  const [show3D, setShow3D] = useState(false);
-  useEffect(() => {
-    const id = window.setTimeout(() => setShow3D(true), 1000);
-    return () => window.clearTimeout(id);
-  }, []);
+/* ── Helpers ────────────────────────────────────────────────────── */
 
-  useEffect(() => {
-    if (partnerShown) return;
-    const el = document.getElementById("practices");
-    if (!el) return;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => { setPartnerOpen(true); setPartnerShown(true); }, 900);
-        observer.disconnect();
-      }
-    }, { threshold: 0.2 });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [partnerShown]);
+const monoLabel: React.CSSProperties = {
+  fontFamily: "var(--font-mono)",
+  fontSize: "var(--text-mono)",
+  fontWeight: 500,
+  letterSpacing: "0.08em",
+  textTransform: "uppercase",
+};
+
+/** Lazy section background under an ink gradient; hides itself if the
+    asset is not committed yet (same graceful pattern as the hero). */
+function SectionBg({ src }: { src: string }) {
+  return (
+    <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+      <img
+        src={src}
+        alt=""
+        loading="lazy"
+        className="absolute inset-0 w-full h-full object-cover"
+        onError={(e) => {
+          e.currentTarget.style.display = "none";
+        }}
+      />
+      <div className="v2-bg-scrim" />
+    </div>
+  );
+}
+
+function PracticeDetail({
+  practice,
+  onEnquire,
+}: {
+  practice: (typeof PRACTICES)[number];
+  onEnquire: (formValue: string) => void;
+}) {
+  return (
+    <div>
+      <p style={{ ...monoLabel, color: "var(--brass-500)" }}>{practice.sub}</p>
+      <p className="v2-body mt-4" style={{ maxWidth: "52ch" }}>{practice.body}</p>
+      <div className="flex flex-wrap gap-2 mt-6">
+        {practice.chips.map((c) => (
+          <span key={c} className="v2-chip">{c}</span>
+        ))}
+      </div>
+      <div className="mt-8">
+        <Button variant="ghost" onClick={() => onEnquire(practice.formValue)}>
+          Get in touch <ArrowRight className="w-4 h-4" />
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+
+export default function Home() {
+  const [activePractice, setActivePractice] = useState(0);
+  const [mobileOpen, setMobileOpen] = useState<number>(0);
 
   const scrollTo = useCallback((id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
-  const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm<ContactForm>({ resolver: zodResolver(contactSchema) });
-  const submitContact = trpc.contact.submit.useMutation({
-    onSuccess: () => { toast.success("Message sent! We'll be in touch shortly."); reset(); },
-    onError: () => toast.error("Something went wrong. Please try again."),
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<ContactForm>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: { inquiryType: "" },
   });
+  const submitContact = trpc.contact.submit.useMutation();
   const onSubmit = (data: ContactForm) => submitContact.mutate(data);
 
-  return (
-    <div className="min-h-screen flex flex-col" style={{ color: "var(--ink)" }}>
-      {/* Fixed, scroll-reactive 3D backdrop behind the whole page.
-          Light sections paint over it; reveal-band sections expose it. */}
-      <div className="fixed inset-0 pointer-events-none" style={{ zIndex: -10 }} aria-hidden="true">
-        <div className="absolute inset-0 scene-base" />
-        <div className="absolute pointer-events-none core-glow" style={{ right: "-4%", top: "34%", width: "48%", aspectRatio: "1", transform: "translateY(-50%)", opacity: 0.7 }} />
-        <div className="absolute inset-0" style={{ opacity: show3D ? 1 : 0, transition: "opacity 1.2s ease" }}>
-          {show3D && <Suspense fallback={null}><SceneCanvas /></Suspense>}
-        </div>
-      </div>
+  /* Practice CTAs land on the form with the practice preselected. */
+  const enquire = useCallback(
+    (formValue: string) => {
+      setValue("inquiryType", formValue, { shouldValidate: false });
+      scrollTo("contact");
+    },
+    [setValue, scrollTo],
+  );
 
+  return (
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--ink-950)" }}>
       <NavbarV2 />
 
       <main className="flex-1">
-        {/* ══ HERO ─ Lineage shell (Phase 2) ════════════════════════ */}
         <HeroV2 />
 
-        {/* ══ CAPABILITY STRIP ─ stays in the dark zone ═════════════ */}
-        <div className="reveal-band" style={{ borderTop: "1px solid rgba(255,255,255,0.08)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
-          <div className="container py-5 flex items-center gap-6 relative z-[1]">
-            <span className="spec on-dark-faint shrink-0 hidden sm:inline">Capabilities</span>
-            <div className="overflow-hidden marquee-mask flex-1">
-              <div className="animate-marquee flex gap-10 w-max">
-                {[...CAPS, ...CAPS].map((t, i) => <span key={i} className="text-sm font-medium whitespace-nowrap" style={{ color: "rgba(244,242,247,0.72)" }}>{t}</span>)}
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* ══ PRACTICES ═══════════════════════════════════════════ */}
+        <Section id="practices" className="overflow-hidden">
+          <SectionBg src="/assets/v2/bg-practices.png" />
+          <div className="relative z-[1]">
+            <Eyebrow index="CATALOG / 01">Practices</Eyebrow>
+            <h2 className="v2-h2 mt-5" style={{ maxWidth: "24ch" }}>
+              Three practices, one accountable partner.
+            </h2>
 
-        {/* ══ STATS ─ reveal window onto the scrolling 3D ═══════════ */}
-        <Section className="reveal-band">
-          <div className="absolute inset-0 grid-lines pointer-events-none" style={{ opacity: 0.5 }} />
-          <div className="absolute bottom-0 left-0 right-0 pointer-events-none" style={{ height: "5rem", background: "linear-gradient(180deg, transparent, var(--paper))", zIndex: 2 }} />
-          <div className="container relative z-[1]">
-            <motion.div variants={stagger} className="grid grid-cols-2 md:grid-cols-4 vrules py-16">
-              {STATS.map((s, i) => (
-                <motion.div key={s.label} variants={fadeUp} custom={i} className="px-0 md:px-8 py-4 first:pl-0 md:first:pl-0">
-                  <div className="mono stat-num" style={{ fontSize: "clamp(2.4rem, 5vw, 3.6rem)", fontWeight: 600, letterSpacing: "-0.03em" }}>
-                    <Counter to={s.value} suffix={s.suffix} prefix={s.prefix} />
-                  </div>
-                  <div className="text-[14px] mt-2 on-dark-soft">{s.label}</div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </Section>
-
-        {/* ══ PRACTICES ─ accordion ═════════════════════════════════ */}
-        <Section id="practices" className="py-24 bg-paper relative overflow-hidden">
-          <div className="absolute inset-0 dot-corner pointer-events-none" />
-          <div className="container relative">
-            <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
-              <div className="lg:col-span-4">
-                <div className="lg:sticky lg:top-28">
-                  <motion.div variants={fadeUp} custom={0}><span className="kicker">What we do</span></motion.div>
-                  <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>
-                    Four practices, one accountable partner.
-                  </motion.h2>
-                  <motion.p variants={fadeUp} custom={2} className="lead mt-5">
-                    From data strategy to production software — select a practice to explore how we deliver.
-                  </motion.p>
-                </div>
-              </div>
-
-              <motion.div variants={stagger} className="lg:col-span-8">
+            {/* Desktop: index list + swapping detail panel */}
+            <div className="hidden md:grid md:grid-cols-12 gap-12 mt-14">
+              <div className="md:col-span-5" role="tablist" aria-label="Practices">
                 {PRACTICES.map((p, i) => {
-                  const open = openPractice === i;
+                  const active = activePractice === i;
                   return (
-                    <motion.div key={p.id} variants={fadeUp} custom={i} className="list-row">
-                      <button className="list-row-head" onClick={() => setOpenPractice(open ? -1 : i)} aria-expanded={open}>
-                        <span className="shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-md transition-colors" style={{ background: open ? "var(--rose)" : "var(--rose-soft)", color: open ? "#fff" : "var(--rose-ink)" }}>
-                          {p.icon}
-                        </span>
-                        <span className="flex-1">
-                          <span className="row-title block text-[1.35rem] sm:text-[1.6rem] font-bold leading-tight" style={{ color: open ? "var(--rose-ink)" : "var(--ink)" }}>{p.title}</span>
-                          <span className="block text-sm text-faint mt-1">{p.sub}</span>
-                        </span>
-                        <span className="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-md" style={{ border: "1px solid var(--line)", color: "var(--ink-soft)" }}>
-                          {open ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                        </span>
-                      </button>
-                      <AnimatePresence initial={false}>
-                        {open && (
-                          <motion.div
-                            key="body" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }} style={{ overflow: "hidden" }}
-                          >
-                            <div className="grid md:grid-cols-2 gap-8 pb-9 pt-1">
-                              <div>
-                                <p className="text-soft leading-relaxed">{p.body}</p>
-                                <div className="grid grid-cols-2 gap-2.5 mt-6">
-                                  {p.features.map((f) => (
-                                    <div key={f} className="flex items-center gap-2.5 text-[14px] text-soft">
-                                      <Check className="w-4 h-4 shrink-0" style={{ color: "var(--rose-ink)" }} /> {f}
-                                    </div>
-                                  ))}
-                                </div>
-                                <div className="flex flex-wrap gap-3 mt-7">
-                                  <button onClick={() => scrollTo("contact")} className="btn-pill btn-primary" style={{ padding: "0.6rem 1.25rem", fontSize: "0.85rem" }}>Enquire now <ArrowRight className="h-4 w-4" /></button>
-                                  {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="btn-pill btn-secondary" style={{ padding: "0.6rem 1.25rem", fontSize: "0.85rem" }}>{p.linkLabel} <ExternalLink className="w-3.5 h-3.5" /></a>}
-                                </div>
-                              </div>
-                              <div className="relative rounded-md overflow-hidden min-h-52 framed">
-                                <img src={p.img} alt={p.title} className="absolute inset-0 w-full h-full object-cover" />
-                              </div>
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </motion.div>
+                    <button
+                      key={p.id}
+                      role="tab"
+                      aria-selected={active}
+                      id={`practice-tab-${p.id}`}
+                      aria-controls="practice-panel"
+                      className="w-full flex items-center gap-5 text-left py-6"
+                      style={{ borderTop: "1px solid var(--line)" }}
+                      onClick={() => setActivePractice(i)}
+                      onMouseEnter={() => setActivePractice(i)}
+                    >
+                      <LineageNode active={active} />
+                      <span className="mono" style={{ ...monoLabel, color: active ? "var(--brass-500)" : "var(--sand-400)" }}>
+                        {p.index}
+                      </span>
+                      <span
+                        className="v2-h3 transition-colors"
+                        style={{ color: active ? "var(--sand-100)" : "var(--sand-400)", transitionDuration: "var(--dur-fast)" }}
+                      >
+                        {p.title}
+                      </span>
+                    </button>
                   );
                 })}
-              </motion.div>
+              </div>
+              <div
+                className="md:col-span-7 pt-6"
+                id="practice-panel"
+                role="tabpanel"
+                aria-labelledby={`practice-tab-${PRACTICES[activePractice].id}`}
+              >
+                <div key={activePractice} className="v2-swap">
+                  <PracticeDetail practice={PRACTICES[activePractice]} onEnquire={enquire} />
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile: stacked accordion */}
+            <div className="md:hidden mt-10">
+              {PRACTICES.map((p, i) => {
+                const open = mobileOpen === i;
+                return (
+                  <div key={p.id} style={{ borderTop: "1px solid var(--line)" }}>
+                    <button
+                      className="w-full flex items-center gap-4 text-left py-5"
+                      aria-expanded={open}
+                      onClick={() => setMobileOpen(open ? -1 : i)}
+                    >
+                      <LineageNode active={open} />
+                      <span style={{ ...monoLabel, color: open ? "var(--brass-500)" : "var(--sand-400)" }}>{p.index}</span>
+                      <span className="v2-h3 flex-1" style={{ color: open ? "var(--sand-100)" : "var(--sand-400)" }}>
+                        {p.title}
+                      </span>
+                    </button>
+                    {open && (
+                      <div className="v2-swap pb-7">
+                        <PracticeDetail practice={p} onEnquire={enquire} />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </Section>
 
-        {/* ══ PARTNERSHIPS ══════════════════════════════════════════ */}
-        <Section id="partnership" className="py-24 bg-paper-2">
-          <div className="container">
-            <div className="max-w-2xl mb-12">
-              <motion.div variants={fadeUp} custom={0}><span className="kicker">Strategic alliances</span></motion.div>
-              <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>
-                Partnerships that raise the bar.
-              </motion.h2>
-              <motion.p variants={fadeUp} custom={2} className="lead mt-5">
-                We combine best-in-class platforms with world-class advisory — so enterprises get governed data and
-                trusted financial expertise from a single partner.
-              </motion.p>
-            </div>
+        {/* ══ PARTNERSHIPS ════════════════════════════════════════ */}
+        <Section id="partnership" className="overflow-hidden" style={{ background: "var(--ink-900)" }}>
+          <SectionBg src="/assets/v2/bg-banking.png" />
+          <div className="relative z-[1]">
+            <Eyebrow index="REGISTRY">Partnerships</Eyebrow>
+            <h2 className="v2-h2 mt-5" style={{ maxWidth: "22ch" }}>
+              Certified, on the record.
+            </h2>
 
-            <motion.div variants={stagger} className="grid md:grid-cols-2 gap-6">
-              {PARTNERS.map((p, i) => (
-                <motion.div key={p.name} variants={fadeUp} custom={i} className="panel panel-hover p-8 lg:p-10 flex flex-col">
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="inline-flex items-center gap-2 spec" style={{ color: p.accent }}>
-                      <span className="w-2 h-2 rounded-full" style={{ background: p.accent }} /> {p.role}
-                    </span>
+            <div className="grid md:grid-cols-2 gap-6 mt-14">
+              {PARTNERS.map((p) => (
+                <CardV2 key={p.name} interactive className="p-8 lg:p-10 flex flex-col">
+                  <div
+                    style={{
+                      fontFamily: "var(--font-display)",
+                      fontStretch: "122%",
+                      fontWeight: 720,
+                      fontSize: "1.75rem",
+                      letterSpacing: "-0.015em",
+                      color: "var(--sand-100)",
+                    }}
+                  >
+                    {p.name}
                   </div>
-                  <div className="text-[2rem] font-extrabold tracking-tight leading-none" style={{ color: "var(--ink)" }}>{p.name}</div>
-                  <div className="text-rose font-semibold mt-2 text-[15px]">{p.positioning}</div>
-                  <p className="text-soft mt-4 leading-relaxed text-[15px]">{p.desc}</p>
-                  <div className="mt-6">
-                    {p.highlights.map((h) => (
-                      <div key={h} className="flex items-center gap-3 py-3 text-[14px] text-soft" style={{ borderTop: "1px solid var(--line)" }}>
-                        <Check className="w-4 h-4 shrink-0" style={{ color: p.accent }} /> {h}
-                      </div>
-                    ))}
-                  </div>
-                  <a href={p.link} target="_blank" rel="noopener noreferrer" className="link-row inline-flex items-center gap-1.5 mt-6 text-sm font-semibold self-start" style={{ color: "var(--ink)" }}>
-                    {p.linkLabel} <ArrowRight className="w-4 h-4 row-arrow" />
+                  <p className="mt-3" style={{ ...monoLabel, color: "var(--sand-400)", lineHeight: 1.8 }}>
+                    {p.record}
+                  </p>
+                  <p className="v2-body mt-5 flex-1">{p.sentence}</p>
+                  <a
+                    href={p.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="v2-nav-link inline-flex items-center gap-2 mt-7 self-start"
+                  >
+                    {p.linkLabel} <ExternalLink className="w-3.5 h-3.5" />
                   </a>
-                </motion.div>
+                </CardV2>
               ))}
-            </motion.div>
-
-            <motion.div variants={fadeUp} custom={2} className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <span className="text-[15px] text-soft">Interested in partnering with Alpha Pro MENA?</span>
-              <button onClick={() => scrollTo("contact")} className="link-row inline-flex items-center gap-1.5 text-sm font-semibold text-rose">
-                Become a partner <ArrowRight className="w-4 h-4 row-arrow" />
-              </button>
-            </motion.div>
-          </div>
-        </Section>
-
-        {/* ══ ABOUT + VALUES ════════════════════════════════════════ */}
-        <Section id="about" className="py-24 bg-tint-rose">
-          <div className="container">
-            <div className="grid lg:grid-cols-12 gap-12">
-              <div className="lg:col-span-5">
-                <motion.div variants={fadeUp} custom={0}><span className="kicker">About</span></motion.div>
-                <motion.h2 variants={fadeUp} custom={1} className="display mt-5 balance" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>
-                  Built for the MENA enterprise.
-                </motion.h2>
-                <motion.p variants={fadeUp} custom={2} className="lead mt-6">
-                  A multi-practice technology firm headquartered in the MENA region, combining deep expertise across
-                  AI, data, finance, and software engineering to deliver transformative outcomes.
-                </motion.p>
-                <motion.div variants={fadeUp} custom={3} className="mt-8">
-                  {[
-                    { title: "Our mission", body: "To accelerate enterprise transformation across MENA through intelligent technology and trusted partnerships." },
-                    { title: "Our vision", body: "To be the region's most trusted AI and data partner — known for rigour, innovation, and measurable impact." },
-                  ].map((m) => (
-                    <div key={m.title} className="py-5" style={{ borderTop: "1px solid var(--line)" }}>
-                      <div className="font-semibold" style={{ color: "var(--ink)" }}>{m.title}</div>
-                      <p className="text-soft mt-1.5 leading-relaxed text-[15px]">{m.body}</p>
-                    </div>
-                  ))}
-                </motion.div>
-              </div>
-
-              <motion.div variants={stagger} className="lg:col-span-7 spec-grid sm:grid-cols-2">
-                {VALUES.map((v, i) => (
-                  <motion.div key={v.title} variants={fadeUp} custom={i} className="spec-cell">
-                    <span className="icon-tile">{v.icon}</span>
-                    <div className="font-semibold mt-3.5" style={{ color: "var(--ink)" }}>{v.title}</div>
-                    <p className="text-soft text-[14px] mt-1.5 leading-relaxed">{v.body}</p>
-                  </motion.div>
-                ))}
-              </motion.div>
             </div>
           </div>
         </Section>
 
-        {/* ══ PROCESS ─ real numbered sequence ══════════════════════ */}
-        <Section id="how-we-work" className="py-24 bg-paper-2">
-          <div className="container">
-            <div className="grid lg:grid-cols-12 gap-12">
-              <div className="lg:col-span-4">
-                <div className="lg:sticky lg:top-28">
-                  <motion.div variants={fadeUp} custom={0}><span className="kicker">How we work</span></motion.div>
-                  <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>A structured engagement.</motion.h2>
-                  <motion.p variants={fadeUp} custom={2} className="lead mt-5">
-                    A transparent, six-stage model built for enterprise clients who demand clarity at every step.
-                  </motion.p>
-                  <motion.div variants={fadeUp} custom={3} className="mt-7">
-                    <button onClick={() => scrollTo("contact")} className="btn-pill btn-primary">Start your engagement <ArrowRight className="h-4 w-4" /></button>
-                  </motion.div>
-                </div>
-              </div>
-              <motion.div variants={stagger} className="lg:col-span-8 timeline">
-                {PROCESS.map((p, i) => (
-                  <motion.div key={p.step} variants={fadeUp} custom={i} className="tl-item flex gap-5 py-5">
-                    <span className="tl-node">{p.step}</span>
-                    <div className="pt-1">
-                      <div className="text-lg font-bold" style={{ color: "var(--ink)" }}>{p.label}</div>
-                      <p className="text-soft text-[15px] mt-1.5 leading-relaxed max-w-lg">{p.desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </motion.div>
-            </div>
-          </div>
-        </Section>
-
-        {/* ══ DEPARTMENTS ═══════════════════════════════════════════ */}
-        <Section id="team" className="py-24 bg-paper">
-          <div className="container">
-            <div className="max-w-2xl mb-12">
-              <motion.div variants={fadeUp} custom={0}><span className="kicker">Departments</span></motion.div>
-              <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.2rem)" }}>Reach the right team.</motion.h2>
-              <motion.p variants={fadeUp} custom={2} className="lead mt-5">Each practice area has a dedicated specialist team — contact the one that matches your needs.</motion.p>
-            </div>
-            <motion.div variants={stagger} className="grid md:grid-cols-3 gap-6">
-              {DEPARTMENTS.map((d, i) => (
-                <motion.div key={d.title} variants={fadeUp} custom={i} className="panel panel-hover p-8 flex flex-col">
-                  <span className="inline-flex items-center gap-2 spec" style={{ color: d.accent }}>
-                    <span className="w-2 h-2 rounded-full" style={{ background: d.accent }} /> {d.tag}
-                  </span>
-                  <h3 className="text-xl font-bold mt-4" style={{ color: "var(--ink)" }}>{d.title}</h3>
-                  <p className="text-soft text-[15px] mt-2.5 leading-relaxed flex-1">{d.desc}</p>
-                  <button onClick={() => scrollTo("contact")} className="link-row inline-flex items-center gap-1.5 mt-6 text-sm font-semibold self-start" style={{ color: d.accent }}>
-                    Get in touch <ArrowRight className="w-4 h-4 row-arrow" />
-                  </button>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </Section>
-
-        {/* ══ CTA ─ reveal window, dark with the glowing core ═══════ */}
-        <Section className="reveal-band">
-          <div className="absolute inset-0 grid-lines pointer-events-none" style={{ opacity: 0.4 }} />
-          <div className="container py-24 sm:py-28 relative z-[1]">
-            <div className="grid lg:grid-cols-12 gap-8 items-center">
-              <motion.h2 variants={fadeUp} custom={0} className="display lg:col-span-8 balance" style={{ fontSize: "clamp(2.2rem, 5vw, 3.8rem)", color: "#fff" }}>
-                Let's build something exceptional together.
-              </motion.h2>
-              <motion.div variants={fadeUp} custom={1} className="lg:col-span-4 lg:text-right">
-                <p className="mb-6 lg:max-w-xs lg:ml-auto leading-relaxed" style={{ color: "rgba(244,242,247,0.72)" }}>
-                  Starting an AI strategy or scaling a data platform — we'll help you move faster and further.
+        {/* ══ PROCESS ─ steps on the thread ═══════════════════════ */}
+        <Section id="how-we-work">
+          <div className="grid lg:grid-cols-12 gap-12">
+            <div className="lg:col-span-4">
+              <div className="lg:sticky lg:top-28">
+                <Eyebrow index="LINEAGE">Process</Eyebrow>
+                <h2 className="v2-h2 mt-5">A structured engagement.</h2>
+                <p className="v2-body mt-5" style={{ maxWidth: "38ch" }}>
+                  Six stages, each with a clear gate. Enterprise clients see status, spend, and
+                  risk at every step.
                 </p>
-                <button onClick={() => scrollTo("contact")} className="btn-pill btn-primary mx-0 lg:ml-auto">
-                  Start the conversation <ArrowRight className="h-4 w-4" />
-                </button>
-              </motion.div>
-            </div>
-          </div>
-        </Section>
-
-        {/* ══ CONTACT ═══════════════════════════════════════════════ */}
-        <Section id="contact" className="py-24 bg-paper">
-          <div className="container">
-            <div className="grid lg:grid-cols-12 gap-12 items-start">
-              <div className="lg:col-span-5">
-                <motion.div variants={fadeUp} custom={0}><span className="kicker">Get in touch</span></motion.div>
-                <motion.h2 variants={fadeUp} custom={1} className="display mt-5" style={{ fontSize: "clamp(2.1rem, 4vw, 3.3rem)" }}>Let's talk enterprise.</motion.h2>
-                <motion.p variants={fadeUp} custom={2} className="lead mt-6">
-                  Tell us about your challenge. Our team responds within one business day with a tailored approach.
-                </motion.p>
-                <motion.div variants={fadeUp} custom={3} className="mt-9">
-                  {[
-                    { icon: <Phone className="w-4 h-4" />, label: "Phone", val: "+962 79 186 4006", href: "tel:+962791864006" },
-                    { icon: <Mail className="w-4 h-4" />, label: "Email", val: "info@alphapromena.com", href: "mailto:info@alphapromena.com" },
-                    { icon: <MapPin className="w-4 h-4" />, label: "Location", val: "Amman, Jordan · Saudi Arabia", href: null },
-                    { icon: <Zap className="w-4 h-4" />, label: "Response", val: "Within 1 business day", href: null },
-                  ].map((item) => (
-                    <div key={item.label} className="flex items-center gap-4 py-4" style={{ borderTop: "1px solid var(--line)" }}>
-                      <span style={{ color: "var(--rose-ink)" }}>{item.icon}</span>
-                      <div className="flex-1 flex items-baseline justify-between gap-3">
-                        <span className="spec text-faint">{item.label}</span>
-                        {item.href
-                          ? <a href={item.href} className="link-row font-semibold text-right" style={{ color: "var(--ink)" }}>{item.val}</a>
-                          : <span className="font-semibold text-right" style={{ color: "var(--ink)" }}>{item.val}</span>}
-                      </div>
-                    </div>
-                  ))}
-                </motion.div>
               </div>
-
-              <motion.form variants={fadeUp} custom={2} onSubmit={handleSubmit(onSubmit)} className="lg:col-span-7 panel p-8 lg:p-10 grid sm:grid-cols-2 gap-x-8 gap-y-7">
-                <div className="flex flex-col gap-2">
-                  <Label className="spec text-faint">Full Name</Label>
-                  <Input {...register("name")} placeholder="Jane Smith" className="field-underline h-11 text-[15px]" />
-                  {errors.name && <span className="text-xs text-rose">{errors.name.message}</span>}
+            </div>
+            <div className="lg:col-span-8">
+              {PROCESS.map((p, i) => (
+                <div key={p.step} className="flex gap-6">
+                  <div className="flex flex-col items-center">
+                    <LineageNode id={`process-node-${i}`} active={i === 0} />
+                    {i < PROCESS.length - 1 && (
+                      <span
+                        className="flex-1"
+                        style={{ width: "1px", background: i === 0 ? "linear-gradient(180deg, var(--brass-500), var(--line))" : "var(--line)" }}
+                      />
+                    )}
+                  </div>
+                  <div className={i < PROCESS.length - 1 ? "pb-12" : ""} style={{ marginTop: "-4px" }}>
+                    <p style={{ ...monoLabel, color: "var(--brass-500)" }}>{p.step}</p>
+                    <h3 className="v2-h3 mt-2">{p.label}</h3>
+                    <p className="v2-small mt-2" style={{ maxWidth: "52ch" }}>{p.desc}</p>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-2">
-                  <Label className="spec text-faint">Company</Label>
-                  <Input {...register("company")} placeholder="Acme Corp" className="field-underline h-11 text-[15px]" />
-                  {errors.company && <span className="text-xs text-rose">{errors.company.message}</span>}
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label className="spec text-faint">Email Address</Label>
-                  <Input {...register("email")} type="email" placeholder="jane@company.com" className="field-underline h-11 text-[15px]" />
-                  {errors.email && <span className="text-xs text-rose">{errors.email.message}</span>}
-                </div>
-                <div className="flex flex-col gap-2">
-                  <Label className="spec text-faint">Inquiry Type</Label>
-                  <Select onValueChange={val => setValue("inquiryType", val)}>
-                    <SelectTrigger className="field-underline h-11 text-[15px]"><SelectValue placeholder="Select a service area..." /></SelectTrigger>
-                    <SelectContent>
-                      {["Data Governance & Ataccama One", "AI Consulting & Audits", "Custom AI Solutions & Platform Development", "Banking & Finance Solutions", "General Inquiry"].map(opt => (
-                        <SelectItem key={opt} value={opt} className="text-sm">{opt}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  {errors.inquiryType && <span className="text-xs text-rose">{errors.inquiryType.message}</span>}
-                </div>
-                <div className="flex flex-col gap-2 sm:col-span-2">
-                  <Label className="spec text-faint">Message</Label>
-                  <Textarea {...register("message")} placeholder="Tell us about your challenge or project..." rows={3} className="field-underline text-[15px] resize-none" />
-                  {errors.message && <span className="text-xs text-rose">{errors.message.message}</span>}
-                </div>
-                <div className="sm:col-span-2 mt-2">
-                  <button type="submit" disabled={submitContact.isPending} className="btn-pill btn-primary disabled:opacity-60">
-                    {submitContact.isPending ? "Sending..." : <>Send message <ArrowRight className="h-4 w-4" /></>}
-                  </button>
-                </div>
-              </motion.form>
+              ))}
             </div>
           </div>
         </Section>
 
+        {/* ══ VALUES ══════════════════════════════════════════════ */}
+        <Section id="values" style={{ background: "var(--ink-900)" }}>
+          <Eyebrow index="CATALOG / 02">How we work</Eyebrow>
+          <h2 className="v2-h2 mt-5">Six working principles.</h2>
+          <div
+            className="grid sm:grid-cols-2 lg:grid-cols-3 mt-14"
+            style={{ gap: "1px", background: "var(--line)", border: "1px solid var(--line)" }}
+          >
+            {VALUES.map((v) => (
+              <div key={v.title} className="p-7" style={{ background: "var(--ink-900)" }}>
+                <div className="font-medium" style={{ color: "var(--sand-100)" }}>{v.title}</div>
+                <p className="v2-small mt-2">{v.line}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* ══ CONTACT ═════════════════════════════════════════════ */}
+        <Section id="contact">
+          <div className="grid lg:grid-cols-12 gap-12 items-start">
+            <div className="lg:col-span-5">
+              <div className="flex items-center gap-4">
+                <LineageNode id="contact-node" />
+                <Eyebrow>Open a record</Eyebrow>
+              </div>
+              <h2 className="v2-h2 mt-5">Start the conversation.</h2>
+              <p className="v2-body mt-5" style={{ maxWidth: "40ch" }}>
+                Tell us about your challenge. We reply within one business day.
+              </p>
+              <a
+                href="mailto:info@alphapromena.com"
+                className="inline-block mt-6"
+                style={{ ...monoLabel, textTransform: "none", letterSpacing: "0.02em", color: "var(--brass-400)" }}
+              >
+                info@alphapromena.com
+              </a>
+
+              {/* Department routing rows: preselect the practice in the form */}
+              <div className="mt-10">
+                {ROUTING.map((r) => (
+                  <button
+                    key={r.label}
+                    className="w-full flex items-center justify-between gap-4 py-4 text-left group"
+                    style={{ borderTop: "1px solid var(--line)" }}
+                    onClick={() => {
+                      setValue("inquiryType", r.practice, { shouldValidate: false });
+                      document.getElementById("contact-form")?.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }}
+                  >
+                    <span style={{ ...monoLabel, color: "var(--sand-100)" }}>{r.label}</span>
+                    <ArrowRight
+                      className="w-4 h-4 transition-transform group-hover:translate-x-1"
+                      style={{ color: "var(--brass-500)" }}
+                    />
+                  </button>
+                ))}
+                <div style={{ borderTop: "1px solid var(--line)" }} />
+              </div>
+            </div>
+
+            <div className="lg:col-span-7" id="contact-form">
+              {submitContact.isSuccess ? (
+                <CardV2 className="p-10">
+                  <LineageNode active />
+                  <h3 className="v2-h3 mt-5">Message sent.</h3>
+                  <p className="v2-body mt-2">We reply within one business day.</p>
+                </CardV2>
+              ) : (
+                <form onSubmit={handleSubmit(onSubmit)} className="grid sm:grid-cols-2 gap-x-6 gap-y-6" noValidate>
+                  <div className="flex flex-col gap-2">
+                    <label className="v2-label" htmlFor="f-name">Full name</label>
+                    <input id="f-name" className="v2-field" placeholder="Jane Smith" autoComplete="name" {...register("name")} />
+                    {errors.name && <span className="v2-field-error">{errors.name.message}</span>}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="v2-label" htmlFor="f-company">Company</label>
+                    <input id="f-company" className="v2-field" placeholder="Acme Corp" autoComplete="organization" {...register("company")} />
+                    {errors.company && <span className="v2-field-error">{errors.company.message}</span>}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="v2-label" htmlFor="f-email">Email</label>
+                    <input id="f-email" type="email" className="v2-field" placeholder="jane@company.com" autoComplete="email" {...register("email")} />
+                    {errors.email && <span className="v2-field-error">{errors.email.message}</span>}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <label className="v2-label" htmlFor="f-practice">Practice</label>
+                    <select id="f-practice" className="v2-field" {...register("inquiryType")}>
+                      <option value="" disabled>Select a practice</option>
+                      {PRACTICE_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt}>{opt}</option>
+                      ))}
+                    </select>
+                    {errors.inquiryType && <span className="v2-field-error">{errors.inquiryType.message}</span>}
+                  </div>
+                  <div className="flex flex-col gap-2 sm:col-span-2">
+                    <label className="v2-label" htmlFor="f-message">Message</label>
+                    <textarea id="f-message" className="v2-field" rows={4} placeholder="Tell us about your challenge or project" {...register("message")} />
+                    {errors.message && <span className="v2-field-error">{errors.message.message}</span>}
+                  </div>
+                  <div className="sm:col-span-2 flex flex-col gap-3">
+                    <div>
+                      <Button variant="brass" type="submit" disabled={submitContact.isPending}>
+                        {submitContact.isPending ? "Sending" : "Send message"}
+                        {!submitContact.isPending && <ArrowRight className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                    {submitContact.isError && (
+                      <p className="v2-field-error">
+                        Could not send your message. Try again, or email{" "}
+                        <a href="mailto:info@alphapromena.com" style={{ textDecoration: "underline" }}>
+                          info@alphapromena.com
+                        </a>{" "}
+                        directly.
+                      </p>
+                    )}
+                  </div>
+                </form>
+              )}
+            </div>
+          </div>
+        </Section>
+
+        {/* ══ CTA BAND ─ the thread terminates here ═══════════════ */}
+        <section className="relative overflow-hidden" style={{ borderTop: "1px solid var(--line)" }}>
+          <SectionBg src="/assets/v2/bg-ai.png" />
+          <div className="v2-container relative z-[1] py-24 sm:py-28">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+              <div className="flex items-center gap-5">
+                <LineageNode id="cta-node" active />
+                <h2 className="v2-h2" style={{ maxWidth: "18ch" }}>Start with a discovery call.</h2>
+              </div>
+              <Button variant="brass" onClick={() => scrollTo("contact")} className="shrink-0">
+                Book a discovery call <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        </section>
       </main>
 
-      {/* ══ FOOTER ════════════════════════════════════════════════ */}
       <FooterV2 />
-
-      {/* ══ PARTNERSHIP POPUP ═════════════════════════════════════ */}
-      <AnimatePresence>
-        {partnerOpen && (
-          <motion.div
-            key="partner-badge" initial={{ opacity: 0, y: 24, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 16, scale: 0.96 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} className="fixed bottom-6 right-6" style={{ maxWidth: 300, zIndex: "var(--z-overlay)" as unknown as number }}
-          >
-            <div className="relative rounded-2xl overflow-hidden" style={{ background: "var(--surface)", border: "1px solid var(--line)", boxShadow: "var(--shadow-lg)" }}>
-              <button onClick={() => setPartnerOpen(false)} className="absolute top-3 right-3 w-6 h-6 rounded-full flex items-center justify-center z-10" style={{ background: "var(--paper-2)", color: "var(--ink-soft)" }} aria-label="Dismiss">
-                <X className="w-3.5 h-3.5" />
-              </button>
-              <div className="p-5">
-                <span className="tag mb-3"><Shield className="w-3 h-3" /> Exclusive MENA Partner</span>
-                <div className="flex items-center gap-2 mb-3 flex-wrap">
-                  <img src="/alpha-pro-mena-icon.png" alt="Alpha Pro MENA" className="h-5 w-auto" />
-                  <span className="text-sm font-bold" style={{ color: "var(--ink)" }}>Alpha Pro MENA</span>
-                  <span className="text-faint text-sm">×</span>
-                  <span className="text-sm font-bold" style={{ color: "#6C2BD9" }}>Ataccama</span>
-                </div>
-                <p className="text-sm text-soft leading-relaxed mb-4">
-                  Ataccama's only certified Solution Partner across the Middle East and North Africa — enterprise data governance at scale.
-                </p>
-                <a href="https://www.ataccama.com/partners?search=alpha+pro" target="_blank" rel="noopener noreferrer" onClick={() => setPartnerOpen(false)} className="btn-pill btn-primary w-full" style={{ padding: "0.6rem 1rem", fontSize: "0.82rem" }}>
-                  View on Ataccama.com <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

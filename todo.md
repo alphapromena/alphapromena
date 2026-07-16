@@ -218,4 +218,21 @@
 - [x] FooterV2: three columns (wordmark + description + certified-partner line; mono nav; email + Amman + LinkedIn), hairline bottom bar with copyright, Privacy/Terms, built-in-Amman line
 - [x] Policy pages switched to the new shell; old navbar-dropdown.tsx, site-footer.tsx, and unused alpha-pro-logo.tsx deleted
 - [x] All mid-page v1 sections untouched and functional; pnpm check clean, pnpm build passes
-- [ ] Confirm the LinkedIn company URL used in the footer (linkedin.com/company/alphapromena)
+- [x] LinkedIn resolved: footer points to the parent firm's page (linkedin.com/company/alpha-pro-consulting) until a dedicated MENA page exists
+
+## Round 27.3: sections rebuilt (Phase 3)
+- [x] Practices: CATALOG / 01 eyebrow; three entries (Data Governance & Intelligence / Enterprise AI & Platform Development / Banking & Finance Advisory); desktop index list + detail panel swapping on hover/click with 300ms fade; mobile stacked accordion; each detail = 2 sentences + 4 mono chips + ghost "Get in touch" that preselects the practice in the contact form
+- [x] Partnerships: REGISTRY eyebrow; two CardV2 certification records (Ataccama, Baker Tilly) with Archivo names, mono record lines (region / status / scope; no since-year existed in v1 code), one sentence, external link
+- [x] Process: LINEAGE eyebrow; 6 steps on a vertical thread with LineageNodes (ids process-node-0..5 ready for Phase 4), STEP 01–06 mono labels, Archivo h3 titles, one sentence each
+- [x] Values: CATALOG / 02 · HOW WE WORK; 6 values compressed to a hairline 3x2 grid, title + one line, no icons
+- [x] Contact: OPEN A RECORD; left = pitch + direct email + three mono routing rows that preselect the practice; right = form with identical backend logic (tRPC contact.submit, zod, Resend, CRM webhook untouched); inputs restyled ink-800/hairline/brass focus; Practice select added (maps to existing inquiryType field, so no API change); success replaces form with "Message sent. We reply within one business day."; error is inline with a direct email fallback
+- [x] CTA band before footer: "Start with a discovery call." + brass button; thread terminates at a final filled node (id cta-node)
+- [x] Removed: capability marquee, department cards, scroll-triggered Ataccama popup, fixed WebGL backdrop + scene-canvas.tsx, stats/about sections (per plan section list), legacy CSS shim and all v1 utility classes
+- [x] Deleted dead components: blobs, aurora-button, shine-border, service-card; dropped three, @types/three, framer-motion deps (main bundle 1,626 kB → 1,433 kB)
+- [x] Section backgrounds wired with graceful fallbacks: bg-practices.png (Practices), bg-banking.png (Partnerships), bg-ai.png (CTA band) as lazy imgs under 60–80% ink scrims; grain-512.png as fixed 4% tiled overlay in App — all render fine while assets are pending
+- [x] NotFound page restyled to Lineage (was hardcoded light); policy pages moved to v2 primitives; .gitignore now excludes .claude/settings.local.json
+- [x] pnpm check clean, pnpm build passes, all routes/modules compile under vite dev
+- [ ] Form e2e submit not verifiable locally (no vercel CLI / DATABASE_URL in this environment); server code is untouched from v1 — verify the full pipeline on the Vercel preview in Phase 6 step 3
+
+## Notes for Phase 6 proofread
+- [ ] Headline: decide between "the Gulf's" and "the region's" most regulated institutions — eyebrow and Ataccama certification are MENA-wide, headline currently says Gulf

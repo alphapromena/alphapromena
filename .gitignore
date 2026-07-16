@@ -59,6 +59,9 @@ jspm_packages/
 # TypeScript cache
 *.tsbuildinfo
 
+# Machine-local Claude Code permission grants (never push)
+.claude/settings.local.json
+
 # Optional npm cache directory
 .npm
 

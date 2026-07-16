@@ -45,6 +45,9 @@ function App() {
         <Toaster />
         <ScrollToTop />
         <Router />
+        {/* Film grain (asset A6) — tiled at 4%; paints nothing until the
+            texture is committed to /assets/v2/grain-512.png. */}
+        <div className="v2-grain" aria-hidden="true" />
       </TooltipProvider>
     </ErrorBoundary>
   );

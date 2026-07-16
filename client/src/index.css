@@ -104,6 +104,7 @@
   --z-nav: 50;
   --z-overlay: 60;
   --z-toast: 70;
+  --z-grain: 80;
 
   /* shadcn semantic tokens, mapped onto the Lineage palette */
   --background:         var(--ink-950);
@@ -140,33 +141,6 @@
   --sidebar-ring: var(--brass-500);
 }
 
-/* ─── LEGACY SHIM — DELETE IN PHASE 3 ─────────────────────────────
-   The v1 sections (Home, navbar, footer, policy pages) still reference
-   the old token names. They are re-pointed at the Lineage palette so
-   those sections stay functional (dark, readable) until each is rebuilt.
-   No light-theme values survive here — only the old names do. */
-:root {
-  --rose:      var(--brass-500);
-  --rose-ink:  var(--brass-400);
-  --rose-soft: rgba(200, 162, 74, 0.12);
-  --rose-line: rgba(200, 162, 74, 0.30);
-
-  --paper:     var(--ink-950);
-  --paper-2:   var(--ink-900);
-  --paper-3:   var(--ink-900);
-  --tint-rose: var(--ink-900);
-  --surface:   var(--ink-800);
-  --ink:       var(--sand-100);
-  --ink-soft:  var(--sand-400);
-  --ink-faint: #7D7666;
-  --line-soft: rgba(237, 230, 214, 0.06);
-
-  /* Lineage uses no drop shadows */
-  --shadow-sm: none;
-  --shadow-md: none;
-  --shadow-lg: none;
-}
-
 /* ─── Base ───────────────────────────────────────────────────────── */
 @layer base {
   * { @apply border-border outline-ring/50; }
@@ -176,6 +150,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-padding-top: 5.5rem;
+    color-scheme: dark;
   }
 
   body {
@@ -211,126 +186,12 @@
   ::-webkit-scrollbar-thumb { background: #2A3446; border-radius: 0; border: 3px solid var(--ink-900); }
 }
 
-/* ─── Layout ─────────────────────────────────────────────────────── */
-@layer components {
-  .container {
-    width: 100%;
-    max-width: 1180px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-  @media (min-width: 1024px) {
-    .container { padding-left: 2.5rem; padding-right: 2.5rem; }
-  }
-  .container-wide { max-width: 1300px; }
-  .flex { min-width: 0; min-height: 0; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
-/* ─── Type ───────────────────────────────────────────────────────── */
-.display { font-family: var(--font-display); font-stretch: 122%; font-weight: 750; line-height: 1.0; letter-spacing: -0.02em; }
-.balance { text-wrap: balance; }
+/* ─── Shared utilities ───────────────────────────────────────────── */
 .mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
-.text-soft  { color: var(--ink-soft); }
-.text-faint { color: var(--ink-faint); }
-.text-rose  { color: var(--rose-ink); }
-.lead { font-size: 1.06rem; line-height: 1.62; color: var(--ink-soft); letter-spacing: -0.012em; }
-
-/* Mono eyebrow / kicker */
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--rose-ink);
-}
-.eyebrow::before {
-  content: '';
-  width: 14px; height: 1px;
-  background: var(--rose);
-}
-.seclabel {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-
-/* Pills / tags */
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: var(--ink);
-  background: var(--surface);
-  border: 1px solid var(--line);
-}
-.tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.26rem 0.6rem;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--rose-ink);
-  background: var(--rose-soft);
-}
-
-/* ─── Buttons — squared, sharp ───────────────────────────────────── */
-.btn-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  border-radius: var(--radius);
-  font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: -0.01em;
-  padding: 0.72rem 1.35rem;
-  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
-  cursor: pointer;
-}
-.btn-primary { background: var(--brass-500); color: var(--ink-950); }
-.btn-primary:hover { background: var(--brass-400); }
-.btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
-.btn-secondary:hover { border-color: var(--ink); }
-.btn-dark { background: var(--sand-100); color: var(--ink-950); }
-.btn-dark:hover { background: #FFFFFF; }
-
-/* Icon tile (sharp) */
-.icon-tile {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 2.5rem; height: 2.5rem;
-  border-radius: var(--radius);
-  color: var(--rose-ink);
-  background: var(--rose-soft);
-}
-
-/* ─── Surfaces ───────────────────────────────────────────────────── */
-.bg-paper   { background: var(--paper); }
-.bg-paper-2 { background: var(--paper-2); }
-.bg-paper-3 { background: var(--paper-3); }
-.bg-tint-rose { background: var(--tint-rose); }
-.bg-surface { background: var(--surface); }
-.framed { border: 1px solid var(--line); background: var(--surface); }
 
 /* Hero wash — brass breath over ink (used by policy pages) */
 .hero-wash {
@@ -339,120 +200,48 @@
     linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 100%);
 }
 
-.dot-field { background-image: radial-gradient(rgba(237,230,214,0.08) 1px, transparent 1px); background-size: 22px 22px; }
-.dot-field-fade {
-  -webkit-mask-image: radial-gradient(ellipse 75% 60% at 50% 36%, #000 32%, transparent 78%);
-  mask-image: radial-gradient(ellipse 75% 60% at 50% 36%, #000 32%, transparent 78%);
-}
-
-.rule { height: 1px; background: var(--line); }
-.rule-soft { height: 1px; background: var(--line-soft); }
-
-/* Vertical dividers between columns */
-.vrules > * + * { border-left: 1px solid var(--line); }
-@media (max-width: 767px) {
-  .vrules > * + * { border-left: 0; border-top: 1px solid var(--line); }
-}
-
-/* ─── Editorial list / accordion ─────────────────────────────────── */
-.idx { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 500; letter-spacing: 0; color: var(--ink-faint); line-height: 1; }
-
-.list-row { border-top: 1px solid var(--line); transition: background 0.25s ease; }
-.list-row:last-child { border-bottom: 1px solid var(--line); }
-.list-row-head { display: flex; align-items: center; gap: 1.25rem; width: 100%; text-align: left; padding: 1.5rem 0; cursor: pointer; }
-.list-row .row-title { transition: color 0.2s ease; }
-.list-row:hover .row-title { color: var(--rose-ink); }
-
-.link-row { transition: color 0.18s ease; }
-.link-row:hover { color: var(--rose-ink); }
-.link-row .row-arrow { transition: transform 0.2s ease; }
-.link-row:hover .row-arrow { transform: translate(3px,-3px); }
-
-/* ─── Underlined form field ──────────────────────────────────────── */
-.field-underline {
-  border: 0 !important;
-  border-bottom: 1.5px solid var(--line) !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  box-shadow: none !important;
-  transition: border-color 0.18s ease;
-}
-.field-underline:focus, .field-underline:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  border-bottom-color: var(--rose) !important;
-}
-
-/* ─── Bold accent band ───────────────────────────────────────────── */
-.band-rose { background: var(--brass-500); color: var(--ink-950); }
-
-/* ─── Marquee ────────────────────────────────────────────────────── */
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-.animate-marquee { animation: marquee 44s linear infinite; }
-.marquee-mask {
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
-}
-
-@keyframes float-y { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-.float-y { animation: float-y 7s ease-in-out infinite; }
-
-@media (prefers-reduced-motion: reduce) {
-  .animate-marquee, .float-y { animation: none !important; }
-  html { scroll-behavior: auto; }
-}
-
 /* ─── Policy / legal document typography ─────────────────────────── */
 .policy-prose {
   max-width: 78ch;
-  color: var(--ink-soft);
+  color: var(--sand-400);
   font-size: 1.02rem;
   line-height: 1.72;
-  letter-spacing: -0.006em;
 }
 .policy-prose > :first-child { margin-top: 0; }
 .policy-prose h1 {
-  color: var(--ink);
-  font-weight: 800;
+  color: var(--sand-100);
   font-size: clamp(1.7rem, 3.2vw, 2.15rem);
   line-height: 1.12;
-  letter-spacing: -0.03em;
   margin: 0 0 1.2rem;
 }
 .policy-prose h2 {
-  color: var(--ink);
-  font-weight: 700;
+  color: var(--sand-100);
   font-size: 1.35rem;
   line-height: 1.25;
-  letter-spacing: -0.02em;
   margin: 2.6rem 0 0.9rem;
   padding-top: 1.6rem;
   border-top: 1px solid var(--line);
 }
 .policy-prose h3 {
-  color: var(--ink);
-  font-weight: 600;
+  color: var(--sand-100);
   font-size: 1.08rem;
-  letter-spacing: -0.01em;
   margin: 1.8rem 0 0.6rem;
 }
 .policy-prose p { margin: 0 0 1.1rem; }
-.policy-prose strong { color: var(--ink); font-weight: 600; }
+.policy-prose strong { color: var(--sand-100); font-weight: 600; }
 .policy-prose a {
-  color: var(--rose-ink);
+  color: var(--brass-400);
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 1px;
 }
-.policy-prose a:hover { color: var(--rose); }
+.policy-prose a:hover { color: var(--brass-500); }
 .policy-prose ul,
 .policy-prose ol { margin: 0 0 1.2rem; padding-left: 1.35rem; }
 .policy-prose ul { list-style: disc; }
 .policy-prose ol { list-style: decimal; }
 .policy-prose li { margin: 0.4rem 0; padding-left: 0.2rem; }
-.policy-prose li::marker { color: var(--ink-faint); }
+.policy-prose li::marker { color: var(--sand-400); }
 .policy-prose hr {
   border: 0;
   border-top: 1px solid var(--line);
@@ -461,15 +250,15 @@
 .policy-prose code {
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.9em;
-  background: var(--paper-2);
+  background: var(--ink-800);
   padding: 0.1em 0.4em;
   border-radius: 4px;
 }
 .policy-prose blockquote {
   margin: 1.2rem 0;
   padding-left: 1.1rem;
-  border-left: 3px solid var(--rose-line);
-  color: var(--ink-soft);
+  border-left: 3px solid rgba(200,162,74,0.3);
+  color: var(--sand-400);
 }
 .policy-prose table {
   width: 100%;
@@ -483,234 +272,7 @@
   padding: 0.55rem 0.8rem;
   text-align: left;
 }
-.policy-prose th { color: var(--ink); font-weight: 600; background: var(--paper-2); }
-
-/* ══════════════════════════════════════════════════════════════════
-   LEGACY v1 utilities below — kept functional until Phase 3 rebuilds
-   the sections that use them. Colors resolve through the shim above.
-   ══════════════════════════════════════════════════════════════════ */
-
-/* ─── Dark hero shell ────────────────────────────────────────────── */
-.hero-dark {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  color: #F4F2F7;
-  background:
-    radial-gradient(1200px 720px at 74% 16%, rgba(255,30,87,0.20), transparent 60%),
-    radial-gradient(900px 620px at 14% 96%, rgba(108,43,217,0.12), transparent 60%),
-    linear-gradient(180deg, var(--ink-950) 0%, var(--ink-900) 58%, #100F17 100%);
-}
-.hero-dark h1 { color: #fff; }
-
-/* Faint engineering grid, faded at the edges */
-.grid-lines {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.055) 1px, transparent 1px);
-  background-size: 58px 58px;
-  -webkit-mask-image: radial-gradient(ellipse 92% 82% at 52% 26%, #000 38%, transparent 84%);
-  mask-image: radial-gradient(ellipse 92% 82% at 52% 26%, #000 38%, transparent 84%);
-}
-
-/* CSS fallback glow shown behind / instead of the WebGL canvas */
-.core-glow {
-  background: radial-gradient(circle at 50% 50%, rgba(255,30,87,0.55) 0%, rgba(255,30,87,0.18) 26%, transparent 62%);
-  filter: blur(6px);
-}
-
-/* Seam that melts the dark hero into the light content below */
-.hero-seam {
-  background: linear-gradient(180deg, transparent 0%, rgba(251,250,247,0.0) 40%, var(--paper) 100%);
-}
-
-/* Text tones on dark */
-.on-dark        { color: #F4F2F7; }
-.on-dark-soft   { color: rgba(244,242,247,0.66); }
-.on-dark-faint  { color: rgba(244,242,247,0.42); }
-
-/* Mono spec label */
-.spec {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-/* Chips / pills on dark */
-.chip-dark {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  padding: 0.42rem 0.85rem;
-  font-family: var(--font-mono);
-  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
-  color: rgba(244,242,247,0.82);
-  background: rgba(255,255,255,0.045);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 999px;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-}
-
-/* Ghost button for dark surfaces */
-.btn-ghost-light {
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.18);
-}
-.btn-ghost-light:hover { background: rgba(255,255,255,0.13); border-color: rgba(255,255,255,0.34); }
-
-.btn-pill:hover { transform: translateY(-1px); }
-.btn-pill:active { transform: translateY(0); }
-
-/* ─── Refined light surfaces ─────────────────────────────────────── */
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: calc(var(--radius) + 2px);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
-}
-.panel-hover:hover {
-  box-shadow: 0 12px 40px -16px var(--brass-glow);
-  border-color: rgba(200,162,74,0.35);
-  transform: translateY(-3px);
-}
-
-/* Section index chip — used only where a sequence is real (process) */
-.seq-num {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
-  color: var(--rose-ink);
-}
-
-/* Kicker: a single, quiet section label (not on every section) */
-.kicker {
-  display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--ink-faint);
-}
-.kicker::before { content: ''; width: 18px; height: 1px; background: var(--rose); }
-
-/* Rose accent glow ring for feature tiles */
-.tile-rose {
-  color: var(--rose-ink);
-  background: var(--rose-soft);
-  border: 1px solid var(--rose-line);
-  border-radius: calc(var(--radius) + 2px);
-}
-
-/* Subtle conic sheen for the CTA band */
-.band-rose { position: relative; overflow: hidden; }
-.band-rose::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(700px 300px at 85% -20%, rgba(255,255,255,0.22), transparent 60%);
-  pointer-events: none;
-}
-
-/* ─── Dark content band (echoes the hero, breaks the flat-light body) ── */
-.band-dark {
-  position: relative;
-  isolation: isolate;
-  color: #F4F2F7;
-  overflow: hidden;
-  background:
-    radial-gradient(820px 460px at 82% 6%, rgba(255,30,87,0.16), transparent 60%),
-    radial-gradient(700px 500px at 10% 100%, rgba(108,43,217,0.12), transparent 62%),
-    linear-gradient(180deg, #100F17 0%, var(--ink-900) 60%, #100F17 100%);
-}
-.band-dark .stat-num { color: #fff; }
-.band-dark .vrules > * + * { border-left-color: rgba(255,255,255,0.10); }
-@media (max-width: 767px) {
-  .band-dark .vrules > * + * { border-top-color: rgba(255,255,255,0.10); }
-}
-
-/* ─── Reveal band — transparent dark "window" onto the fixed 3D scene ── */
-.reveal-band { position: relative; color: #F4F2F7; isolation: isolate; }
-.reveal-band::before {
-  content: '';
-  position: absolute; inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(12,11,17,0.42), rgba(12,11,17,0.30));
-}
-.reveal-band .stat-num { color: #fff; }
-.reveal-band .vrules > * + * { border-left-color: rgba(255,255,255,0.12); }
-@media (max-width: 767px) {
-  .reveal-band .vrules > * + * { border-top-color: rgba(255,255,255,0.12); }
-}
-
-/* Fixed 3D backdrop base (dark, sits behind the whole page) */
-.scene-base {
-  background:
-    radial-gradient(1000px 720px at 74% 22%, rgba(255,30,87,0.15), transparent 60%),
-    radial-gradient(820px 620px at 12% 88%, rgba(108,43,217,0.10), transparent 62%),
-    linear-gradient(180deg, #0E0D13 0%, #14131A 55%, #100F17 100%);
-}
-
-/* ─── Values spec grid — hairline cells, hover lifts to white ────────── */
-.spec-grid {
-  display: grid;
-  gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
-}
-.spec-cell {
-  background: var(--tint-rose);
-  padding: 1.65rem 1.5rem;
-  transition: background 0.22s ease;
-}
-.spec-cell:hover { background: var(--surface); }
-
-/* ─── Process timeline — a spine with numbered nodes ────────────────── */
-.timeline { position: relative; }
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 1.15rem; top: 0.4rem; bottom: 0.4rem;
-  width: 1px;
-  background: linear-gradient(180deg, var(--rose-line), var(--line) 70%, transparent);
-}
-.tl-node {
-  position: relative;
-  z-index: 1;
-  flex-shrink: 0;
-  width: 2.3rem; height: 2.3rem;
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
-  font-size: 0.82rem; font-weight: 600;
-  color: var(--rose-ink);
-  background: var(--surface);
-  border: 1px solid var(--rose-line);
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-.tl-item:hover .tl-node { background: var(--brass-500); color: var(--ink-950); border-color: var(--brass-500); }
-
-/* ─── Faint node/dot texture for light section corners ──────────────── */
-.dot-corner {
-  background-image: radial-gradient(rgba(237,230,214,0.10) 1px, transparent 1px);
-  background-size: 20px 20px;
-  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 100% 0%, #000, transparent 70%);
-  mask-image: radial-gradient(ellipse 60% 60% at 100% 0%, #000, transparent 70%);
-}
-
-/* Hero entrance — CSS keyframes (compositor-driven, immune to main-thread
-   jank from parsing the WebGL bundle, unlike JS-driven reveals). */
-@keyframes heroIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.hero-in { opacity: 0; animation: heroIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) both; }
-
-@media (prefers-reduced-motion: reduce) {
-  .btn-pill:hover, .panel-hover:hover { transform: none; }
-  .hero-in { animation: none; opacity: 1; transform: none; }
-}
+.policy-prose th { color: var(--sand-100); font-weight: 600; background: var(--ink-800); }
 
 /* ══════════════════════════════════════════════════════════════════
    LINEAGE v2 — primitives (components in client/src/components/ui-v2/)
@@ -833,9 +395,55 @@
   100% { box-shadow: 0 0 0 14px rgba(200, 162, 74, 0); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .v2-card--hover:hover { transform: none; }
-  .v2-node--active { animation: none; }
+/* Capability chip: mono record tag */
+.v2-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sand-400);
+  background: var(--ink-800);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+/* Form fields: ink-800 surface, hairline border, brass focus ring */
+.v2-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--sand-400);
+}
+.v2-field {
+  width: 100%;
+  background: var(--ink-800);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--sand-100);
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  padding: 10px 14px;
+  transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.v2-field::placeholder { color: rgba(169, 160, 140, 0.5); }
+.v2-field:focus, .v2-field:focus-visible {
+  outline: none;
+  border-color: var(--brass-500);
+  box-shadow: 0 0 0 3px var(--brass-glow);
+}
+textarea.v2-field { resize: vertical; min-height: 120px; }
+.v2-field-error {
+  font-size: 0.8125rem;
+  color: var(--destructive);
 }
 
 /* ─── Shell: navbar ──────────────────────────────────────────────── */
@@ -944,7 +552,11 @@
 }
 @keyframes v2-fade { to { opacity: 1; } }
 
-/* ─── Shell: lineage thread (static in Phase 2) ──────────────────── */
+/* Detail panel swap (practices) */
+.v2-swap { animation: v2-swap-in var(--dur-med) var(--ease); }
+@keyframes v2-swap-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* ─── Shell: lineage thread (static in Phase 2/3) ────────────────── */
 .v2-thread {
   position: absolute;
   inset: 0;
@@ -954,7 +566,31 @@
   z-index: 0;
 }
 
+/* ─── Section backgrounds (assets A2–A4) ─────────────────────────── */
+/* Images are lazy <img loading="lazy"> elements hidden onError, under
+   an ink-950 gradient at 60–80%. See SectionBg in Home.tsx. */
+.v2-bg-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--ink-950) 0%, rgba(7, 10, 16, 0.7) 45%, var(--ink-950) 100%);
+}
+
+/* ─── Grain overlay (asset A6) — fixed, tiled, 4% ────────────────── */
+.v2-grain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  background-image: url("/assets/v2/grain-512.png");
+  background-repeat: repeat;
+  background-size: 512px 512px;
+  opacity: 0.04;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .v2-card--hover:hover { transform: none; }
+  .v2-node--active { animation: none; }
   .v2-reveal-line > span { animation: none; transform: none; }
   .v2-fade { animation: none; opacity: 1; }
+  .v2-swap { animation: none; }
 }
