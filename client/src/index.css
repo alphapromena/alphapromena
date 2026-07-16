@@ -9,6 +9,17 @@
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 2px);
   --radius-xl: calc(var(--radius) + 6px);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+  --color-ink-950: var(--ink-950);
+  --color-ink-900: var(--ink-900);
+  --color-ink-800: var(--ink-800);
+  --color-line: var(--line);
+  --color-sand-100: var(--sand-100);
+  --color-sand-400: var(--sand-400);
+  --color-brass-500: var(--brass-500);
+  --color-brass-400: var(--brass-400);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -43,63 +54,117 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* ─── Tokens — sharp light ───────────────────────────────────────── */
+/* ═══ Tokens — "Lineage" (dark-first, single theme) ═══════════════ */
 :root {
-  --radius: 0.4rem;
+  --radius: 8px;
+
+  /* Fonts */
+  --font-display: 'Archivo Variable', system-ui, sans-serif;
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --rose:      #FF1E57;
-  --rose-ink:  #D11048;
-  --rose-soft: #FFEAF0;
-  --rose-line: rgba(255,30,87,0.28);
+  /* Palette — see REDESIGN_V2_PLAN.md §2.1 */
+  --ink-950:    #070A10;   /* page background */
+  --ink-900:    #0A0E16;   /* base surfaces */
+  --ink-800:    #101622;   /* raised cards, inputs */
+  --line:       #1C2432;   /* hairlines, borders */
+  --sand-100:   #EDE6D6;   /* primary text */
+  --sand-400:   #A9A08C;   /* secondary text */
+  --brass-500:  #C8A24A;   /* accent: thread, CTAs, active nodes */
+  --brass-400:  #D4B36A;   /* accent hover */
+  --brass-glow: rgba(200, 162, 74, 0.16);   /* glows, focus rings */
 
-  --paper:     #FBFAFB;   /* near-white, faintly cool */
-  --paper-2:   #F1EFF3;   /* light cool grey, whisper of mauve */
-  --paper-3:   #E8E5EC;   /* deeper cool grey — footer / accents */
-  --tint-rose: #FBEEF2;   /* soft rose-tinted section */
-  --surface:   #FFFFFF;
-  --ink:       #14131A;     /* near-black, high contrast */
-  --ink-soft:  #4E4C57;
-  --ink-faint: #8A8893;
-  --line:      rgba(20,19,26,0.14);   /* crisper hairline */
-  --line-soft: rgba(20,19,26,0.07);
+  /* Type scale — §2.2 */
+  --text-display: clamp(2.75rem, 6vw, 5.25rem);
+  --text-h2:      clamp(1.9rem, 3.5vw, 3rem);
+  --text-h3:      1.375rem;
+  --text-body:    1.0625rem;
+  --text-small:   0.875rem;
+  --text-mono:    0.8125rem;
 
-  --shadow-sm: 0 1px 2px rgba(20,19,26,0.04);
-  --shadow-md: 0 10px 26px -16px rgba(20,19,26,0.18);
-  --shadow-lg: 0 24px 50px -28px rgba(20,19,26,0.22);
+  /* Spacing — 4px base */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
 
-  --background:         oklch(0.99 0.002 300);
-  --foreground:         oklch(0.20 0.012 300);
-  --card:               oklch(1 0 0);
-  --card-foreground:    oklch(0.20 0.012 300);
-  --popover:            oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.012 300);
-  --primary:            oklch(0.62 0.24 13);
-  --primary-foreground: oklch(1 0 0);
-  --secondary:          oklch(0.965 0.004 300);
-  --secondary-foreground: oklch(0.24 0.012 300);
-  --muted:              oklch(0.965 0.004 300);
-  --muted-foreground:   oklch(0.50 0.012 300);
-  --accent:             oklch(0.95 0.03 13);
-  --accent-foreground:  oklch(0.45 0.16 13);
-  --destructive:        oklch(0.62 0.24 13);
-  --destructive-foreground: oklch(1 0 0);
-  --border:             oklch(0.90 0.004 300);
-  --input:              oklch(0.90 0.004 300);
-  --ring:               oklch(0.62 0.24 13);
-  --chart-1: oklch(0.62 0.24 13);
-  --chart-2: oklch(0.70 0.16 25);
-  --chart-3: oklch(0.55 0.10 280);
-  --chart-4: oklch(0.75 0.12 70);
-  --chart-5: oklch(0.45 0.08 200);
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.20 0.012 300);
-  --sidebar-primary: oklch(0.62 0.24 13);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.95 0.03 13);
-  --sidebar-accent-foreground: oklch(0.45 0.16 13);
-  --sidebar-border: oklch(0.88 0.006 80);
-  --sidebar-ring: oklch(0.62 0.24 13);
+  /* Motion — §2.4 */
+  --dur-fast: 150ms;
+  --dur-med:  300ms;
+  --dur-slow: 700ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Z registry */
+  --z-nav: 50;
+  --z-overlay: 60;
+  --z-toast: 70;
+
+  /* shadcn semantic tokens, mapped onto the Lineage palette */
+  --background:         var(--ink-950);
+  --foreground:         var(--sand-100);
+  --card:               var(--ink-800);
+  --card-foreground:    var(--sand-100);
+  --popover:            var(--ink-800);
+  --popover-foreground: var(--sand-100);
+  --primary:            var(--brass-500);
+  --primary-foreground: var(--ink-950);
+  --secondary:          var(--ink-800);
+  --secondary-foreground: var(--sand-100);
+  --muted:              var(--ink-800);
+  --muted-foreground:   var(--sand-400);
+  --accent:             var(--ink-800);
+  --accent-foreground:  var(--brass-400);
+  --destructive:        #D9705F;   /* functional error red, not a brand accent */
+  --destructive-foreground: var(--sand-100);
+  --border:             var(--line);
+  --input:              var(--line);
+  --ring:               var(--brass-500);
+  --chart-1: var(--brass-500);
+  --chart-2: var(--sand-400);
+  --chart-3: var(--brass-400);
+  --chart-4: var(--sand-100);
+  --chart-5: #6B7A94;
+  --sidebar: var(--ink-900);
+  --sidebar-foreground: var(--sand-100);
+  --sidebar-primary: var(--brass-500);
+  --sidebar-primary-foreground: var(--ink-950);
+  --sidebar-accent: var(--ink-800);
+  --sidebar-accent-foreground: var(--brass-400);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--brass-500);
+}
+
+/* ─── LEGACY SHIM — DELETE IN PHASE 3 ─────────────────────────────
+   The v1 sections (Home, navbar, footer, policy pages) still reference
+   the old token names. They are re-pointed at the Lineage palette so
+   those sections stay functional (dark, readable) until each is rebuilt.
+   No light-theme values survive here — only the old names do. */
+:root {
+  --rose:      var(--brass-500);
+  --rose-ink:  var(--brass-400);
+  --rose-soft: rgba(200, 162, 74, 0.12);
+  --rose-line: rgba(200, 162, 74, 0.30);
+
+  --paper:     var(--ink-950);
+  --paper-2:   var(--ink-900);
+  --paper-3:   var(--ink-900);
+  --tint-rose: var(--ink-900);
+  --surface:   var(--ink-800);
+  --ink:       var(--sand-100);
+  --ink-soft:  var(--sand-400);
+  --ink-faint: #7D7666;
+  --line-soft: rgba(237, 230, 214, 0.06);
+
+  /* Lineage uses no drop shadows */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
 }
 
 /* ─── Base ───────────────────────────────────────────────────────── */
@@ -115,20 +180,21 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-weight: 400;
-    background-color: var(--paper);
-    color: var(--ink);
+    font-size: var(--text-body);
+    background-color: var(--ink-950);
+    color: var(--sand-100);
     overflow-x: hidden;
-    letter-spacing: -0.012em;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: var(--font-display);
+    font-stretch: 122%;
     font-weight: 700;
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    color: var(--ink);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--sand-100);
   }
 
   button:not(:disabled),
@@ -138,11 +204,11 @@
   a[href],
   select:not(:disabled) { @apply cursor-pointer; }
 
-  ::selection { background: var(--rose-soft); color: var(--rose-ink); }
+  ::selection { background: var(--brass-500); color: var(--ink-950); }
 
   ::-webkit-scrollbar { width: 11px; }
-  ::-webkit-scrollbar-track { background: var(--paper-2); }
-  ::-webkit-scrollbar-thumb { background: #cdcad4; border-radius: 0; border: 3px solid var(--paper-2); }
+  ::-webkit-scrollbar-track { background: var(--ink-900); }
+  ::-webkit-scrollbar-thumb { background: #2A3446; border-radius: 0; border: 3px solid var(--ink-900); }
 }
 
 /* ─── Layout ─────────────────────────────────────────────────────── */
@@ -163,7 +229,7 @@
 }
 
 /* ─── Type ───────────────────────────────────────────────────────── */
-.display { font-weight: 800; line-height: 0.98; letter-spacing: -0.042em; }
+.display { font-family: var(--font-display); font-stretch: 122%; font-weight: 750; line-height: 1.0; letter-spacing: -0.02em; }
 .balance { text-wrap: balance; }
 .mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
 .text-soft  { color: var(--ink-soft); }
@@ -240,12 +306,12 @@
   transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
   cursor: pointer;
 }
-.btn-primary { background: var(--rose); color: #fff; }
-.btn-primary:hover { background: #e30f49; }
+.btn-primary { background: var(--brass-500); color: var(--ink-950); }
+.btn-primary:hover { background: var(--brass-400); }
 .btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
 .btn-secondary:hover { border-color: var(--ink); }
-.btn-dark { background: var(--ink); color: #fff; }
-.btn-dark:hover { background: #000; }
+.btn-dark { background: var(--sand-100); color: var(--ink-950); }
+.btn-dark:hover { background: #FFFFFF; }
 
 /* Icon tile (sharp) */
 .icon-tile {
@@ -266,15 +332,14 @@
 .bg-surface { background: var(--surface); }
 .framed { border: 1px solid var(--line); background: var(--surface); }
 
-/* Warm hero wash so the top isn't a flat white sheet */
+/* Hero wash — brass breath over ink (used by policy pages) */
 .hero-wash {
   background:
-    radial-gradient(1100px 520px at 78% -8%, rgba(255,30,87,0.07), transparent 60%),
-    radial-gradient(900px 600px at 8% 110%, rgba(20,19,26,0.05), transparent 60%),
-    linear-gradient(180deg, var(--paper) 0%, #EFEDF3 100%);
+    radial-gradient(1100px 520px at 78% -8%, rgba(200,162,74,0.08), transparent 60%),
+    linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 100%);
 }
 
-.dot-field { background-image: radial-gradient(rgba(20,19,26,0.08) 1px, transparent 1px); background-size: 22px 22px; }
+.dot-field { background-image: radial-gradient(rgba(237,230,214,0.08) 1px, transparent 1px); background-size: 22px 22px; }
 .dot-field-fade {
   -webkit-mask-image: radial-gradient(ellipse 75% 60% at 50% 36%, #000 32%, transparent 78%);
   mask-image: radial-gradient(ellipse 75% 60% at 50% 36%, #000 32%, transparent 78%);
@@ -320,8 +385,8 @@
   border-bottom-color: var(--rose) !important;
 }
 
-/* ─── Bold rose band ─────────────────────────────────────────────── */
-.band-rose { background: var(--rose); color: #fff; }
+/* ─── Bold accent band ───────────────────────────────────────────── */
+.band-rose { background: var(--brass-500); color: var(--ink-950); }
 
 /* ─── Marquee ────────────────────────────────────────────────────── */
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
@@ -421,17 +486,9 @@
 .policy-prose th { color: var(--ink); font-weight: 600; background: var(--paper-2); }
 
 /* ══════════════════════════════════════════════════════════════════
-   Modern tech redesign — dark hero + refined light surfaces
-   (adds to the palette above; keeps rose / ink / paper identity)
+   LEGACY v1 utilities below — kept functional until Phase 3 rebuilds
+   the sections that use them. Colors resolve through the shim above.
    ══════════════════════════════════════════════════════════════════ */
-
-:root {
-  --ink-950: #0E0D13;   /* deepest, for hero base */
-  --ink-900: #14131A;   /* core ink */
-  --z-nav: 50;
-  --z-overlay: 60;
-  --z-toast: 70;
-}
 
 /* ─── Dark hero shell ────────────────────────────────────────────── */
 .hero-dark {
@@ -515,8 +572,8 @@
   transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 .panel-hover:hover {
-  box-shadow: var(--shadow-md);
-  border-color: rgba(20,19,26,0.22);
+  box-shadow: 0 12px 40px -16px var(--brass-glow);
+  border-color: rgba(200,162,74,0.35);
   transform: translateY(-3px);
 }
 
@@ -632,11 +689,11 @@
   border: 1px solid var(--rose-line);
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
-.tl-item:hover .tl-node { background: var(--rose); color: #fff; border-color: var(--rose); }
+.tl-item:hover .tl-node { background: var(--brass-500); color: var(--ink-950); border-color: var(--brass-500); }
 
 /* ─── Faint node/dot texture for light section corners ──────────────── */
 .dot-corner {
-  background-image: radial-gradient(rgba(20,19,26,0.12) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(237,230,214,0.10) 1px, transparent 1px);
   background-size: 20px 20px;
   -webkit-mask-image: radial-gradient(ellipse 60% 60% at 100% 0%, #000, transparent 70%);
   mask-image: radial-gradient(ellipse 60% 60% at 100% 0%, #000, transparent 70%);
@@ -653,4 +710,130 @@
 @media (prefers-reduced-motion: reduce) {
   .btn-pill:hover, .panel-hover:hover { transform: none; }
   .hero-in { animation: none; opacity: 1; transform: none; }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LINEAGE v2 — primitives (components in client/src/components/ui-v2/)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Section: vertical rhythm + 12-col-ready container */
+.v2-section { position: relative; padding-block: clamp(96px, 12vw, 160px); }
+.v2-container { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: var(--space-6); }
+@media (min-width: 1024px) { .v2-container { padding-inline: var(--space-8); } }
+
+/* Type roles */
+.v2-display {
+  font-family: var(--font-display);
+  font-stretch: 122%;
+  font-weight: 750;
+  font-size: var(--text-display);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--sand-100);
+  text-wrap: balance;
+}
+.v2-h2 {
+  font-family: var(--font-display);
+  font-stretch: 122%;
+  font-weight: 720;
+  font-size: var(--text-h2);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  color: var(--sand-100);
+  text-wrap: balance;
+}
+.v2-h3 {
+  font-family: var(--font-display);
+  font-stretch: 118%;
+  font-weight: 650;
+  font-size: var(--text-h3);
+  line-height: 1.2;
+  color: var(--sand-100);
+}
+.v2-body { font-size: var(--text-body); line-height: 1.65; color: var(--sand-400); }
+.v2-small { font-size: var(--text-small); line-height: 1.6; color: var(--sand-400); }
+
+/* Eyebrow: mono catalog entry, e.g. "CATALOG / 01 · PRACTICES" */
+.v2-eyebrow {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6ch;
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass-500);
+}
+.v2-eyebrow-index { color: var(--sand-400); }
+.v2-eyebrow-sep { color: var(--sand-400); }
+
+/* Button */
+.v2-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: var(--text-small);
+  font-weight: 500;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+.v2-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--brass-500), 0 0 0 4px var(--brass-glow);
+}
+.v2-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.v2-btn--brass { background: var(--brass-500); color: var(--ink-950); border: 1px solid transparent; }
+.v2-btn--brass:hover:not(:disabled) { background: var(--brass-400); }
+.v2-btn--ghost { background: transparent; color: var(--sand-100); border: 1px solid var(--line); }
+.v2-btn--ghost:hover:not(:disabled) { border-color: var(--brass-500); color: var(--brass-400); }
+
+/* Card: hairline record, no shadows, brass glow on hover/active only */
+.v2-card {
+  background: var(--ink-800);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition:
+    transform var(--dur-med) var(--ease),
+    border-color var(--dur-med) var(--ease),
+    box-shadow var(--dur-med) var(--ease);
+}
+.v2-card--hover:hover {
+  transform: translateY(-2px);
+  border-color: rgba(200, 162, 74, 0.4);
+  box-shadow: 0 12px 40px -16px var(--brass-glow);
+}
+
+/* LineageNode: 12px circle on the thread */
+.v2-node {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line);
+  background: var(--ink-950);
+  flex-shrink: 0;
+}
+.v2-node--active {
+  border-color: var(--brass-500);
+  background: var(--brass-500);
+  animation: v2-node-pulse var(--dur-slow) var(--ease) 1;
+}
+@keyframes v2-node-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(200, 162, 74, 0.45); }
+  100% { box-shadow: 0 0 0 14px rgba(200, 162, 74, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v2-card--hover:hover { transform: none; }
+  .v2-node--active { animation: none; }
 }

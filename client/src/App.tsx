@@ -4,7 +4,7 @@ import NotFound from "@/pages/NotFound";
 import { useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import DevTokens from "./pages/DevTokens";
 import Home from "./pages/Home";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
@@ -30,6 +30,8 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/privacy"} component={Privacy} />
       <Route path={"/terms"} component={Terms} />
+      {/* Temporary design-review route — delete in Phase 6 */}
+      <Route path={"/dev-tokens"} component={DevTokens} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
@@ -39,13 +41,11 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light" switchable={false}>
-        <TooltipProvider>
-          <Toaster />
-          <ScrollToTop />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
+      <TooltipProvider>
+        <Toaster />
+        <ScrollToTop />
+        <Router />
+      </TooltipProvider>
     </ErrorBoundary>
   );
 }

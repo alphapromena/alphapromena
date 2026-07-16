@@ -198,3 +198,13 @@
 - [x] Test script removed from package.json (less work than a smoke test); vitest.config.ts and vitest devDependency removed with it
 - [x] pnpm check clean, pnpm build passes
 - [ ] Noted for Phase 5: policy-page.tsx renders static markdown via Streamdown, pulling mermaid/cytoscape/shiki chunks (~4MB of lazy chunks, 1.6MB main bundle) — replace with a lightweight markdown renderer
+
+## Round 27.1: Lineage design foundation (Phase 1)
+- [x] Fonts self-hosted via fontsource: Archivo Variable (wdth+wght axes), IBM Plex Sans 400/500, IBM Plex Mono 400/500; Google Fonts links (Plus Jakarta Sans) removed from index.html
+- [x] index.css tokens rewritten to the Lineage system: 9 color tokens (ink/sand/brass), type scale (--text-display…--text-mono), spacing scale (--space-1…--space-32, 4px base), --radius: 8px, motion tokens (--dur-fast/med/slow, --ease)
+- [x] shadcn semantic tokens remapped onto the dark palette (background=ink-950, primary=brass-500, ring=brass-500, …)
+- [x] Old light values deleted; legacy token NAMES (--rose, --paper, --ink, …) kept as a clearly-marked shim re-pointed at the dark palette so untouched v1 sections stay functional until Phase 3 — DELETE THE SHIM IN PHASE 3
+- [x] Theme switcher removed: ThemeContext.tsx deleted, ThemeProvider unwrapped from App, Toaster pinned to dark, next-themes dependency dropped
+- [x] ui-v2 primitives: Section, Eyebrow (catalog index), Button/ButtonLink (brass, ghost, brass-glow focus ring), CardV2 (hairline, 2px hover lift), LineageNode (12px, single pulse, reduced-motion safe)
+- [x] Temporary /dev-tokens route renders palette swatches with hex, full type scale, spacing, motion, and every primitive — delete in Phase 6
+- [x] pnpm check clean, pnpm build passes
