@@ -244,5 +244,22 @@
 - [x] CLS 0 by construction: fixed layer, no layout size, no layout-affecting properties animated (transform / opacity / dashoffset only; node pulse is paint-only box-shadow); per-frame scripting is O(log n) — see PR notes for the frame budget
 - [x] pnpm check clean, pnpm build passes, all modules compile under vite dev
 
+## Round 27.5a: bundle, fonts, SEO, a11y (Phase 5a)
+- [x] Markdown runtime killed: policy docs pre-rendered to static HTML (marked, one-off, regen command noted in the files), rendered via dangerouslySetInnerHTML into .policy-prose; Streamdown removed. Bundle: 15,532 KB total / 336 JS chunks / 1,433 kB main → 756 KB total / 1 JS chunk / 536 kB main (163 kB gzip); build 16s → 4s
+- [x] Fonts: latin subsets only everywhere; Archivo Variable (wdth) + IBM Plex Sans 400 vendored in /public/fonts with verbatim fontsource descriptors and preloaded from index.html (the two above-fold faces, nothing else); Plex Sans 500 + Mono 400/500 via @fontsource latin-*.css; font-display swap everywhere; @fontsource-variable/archivo dep removed
+- [x] SEO: title + meta description rewritten around Ataccama certified partner MENA / data governance / enterprise AI; canonical; OG + Twitter cards pointed at /assets/v2/og-image.png (file arrives in Phase 5b); JSON-LD @graph with Organization + 3 Service nodes; sitemap.xml + robots.txt added
+- [x] A11y: global brass :focus-visible outline (custom box-shadow rings kept where present); skip-to-content link → #main on home + policy pages; all form labels already tied (verified); mobile menu aria-controls/haspopup + dialog id; practice tablist aria-orientation=vertical + ArrowUp/Down/Home/End keyboard support; mobile accordion aria-controls
+- [x] Contrast (automated WCAG check, all 16 pairs in use): every pair passes AA — worst text pair sand-400 on ink-800 at 6.98:1; brass-500 on ink-900 measures 8.02:1 (plan claimed ~7.5); no token adjustments needed
+- [x] /dev-tokens route and DevTokens.tsx deleted
+- [x] pnpm check clean, pnpm build passes, all routes + fonts + sitemap/robots serve under vite dev
+
+## Phase 5b (blocked on v2 assets)
+- [ ] sharp AVIF/WebP pipeline for everything in client/public/assets/v2/
+- [ ] <picture> srcset at 960/1440/2560 widths for section backgrounds + hero
+- [ ] Preload the hero image; lazy-load everything below the fold (SectionBg imgs already lazy)
+- [ ] og-image.png composition (1200x630, hero crop + logo + tagline)
+- [ ] Lighthouse run on the Vercel preview: 90+ mobile / 95+ desktop Performance, 100 A11y + SEO
+
 ## Notes for Phase 6 proofread
 - [ ] Headline: decide between "the Gulf's" and "the region's" most regulated institutions — eyebrow and Ataccama certification are MENA-wide, headline currently says Gulf
+- [ ] Policy docs are written for AlphaBeacon (the LinkedIn content product), not the marketing site — confirm that is intended for alphapromena.com/privacy and /terms

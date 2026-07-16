@@ -3,13 +3,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
-/* Lineage fonts, self-hosted. Archivo wdth.css carries both the width and
-   weight variable axes needed for the 120–125 display width. */
-import "@fontsource-variable/archivo/wdth.css";
-import "@fontsource/ibm-plex-sans/400.css";
-import "@fontsource/ibm-plex-sans/500.css";
-import "@fontsource/ibm-plex-mono/400.css";
-import "@fontsource/ibm-plex-mono/500.css";
+/* Lineage fonts, self-hosted, latin subsets only. The two above-fold
+   faces (Archivo Variable wdth, IBM Plex Sans 400) are vendored in
+   /public/fonts with @font-face in index.css so index.html can preload
+   them; the secondary faces load via fontsource latin-only CSS. */
+import "@fontsource/ibm-plex-sans/latin-500.css";
+import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource/ibm-plex-mono/latin-500.css";
 import App from "./App";
 import "./index.css";
 

@@ -213,7 +213,7 @@ export default function Home() {
       <LineageThread waypoints={WAYPOINTS} onActivate={onNodeActivate} />
       <NavbarV2 />
 
-      <main className="flex-1">
+      <main id="main" className="flex-1">
         <HeroV2 />
 
         {/* ══ PRACTICES ═══════════════════════════════════════════ */}
@@ -227,7 +227,21 @@ export default function Home() {
 
             {/* Desktop: index list + swapping detail panel */}
             <div className="hidden md:grid md:grid-cols-12 gap-12 mt-14">
-              <div className="md:col-span-5" role="tablist" aria-label="Practices">
+              <div
+                className="md:col-span-5"
+                role="tablist"
+                aria-label="Practices"
+                aria-orientation="vertical"
+                onKeyDown={(e) => {
+                  const move = e.key === "ArrowDown" || e.key === "ArrowRight" ? 1 : e.key === "ArrowUp" || e.key === "ArrowLeft" ? -1 : 0;
+                  const jump = e.key === "Home" ? 0 : e.key === "End" ? PRACTICES.length - 1 : -1;
+                  if (!move && jump < 0) return;
+                  e.preventDefault();
+                  const next = jump >= 0 ? jump : (activePractice + move + PRACTICES.length) % PRACTICES.length;
+                  setActivePractice(next);
+                  document.getElementById(`practice-tab-${PRACTICES[next].id}`)?.focus();
+                }}
+              >
                 {PRACTICES.map((p, i) => {
                   const active = activePractice === i;
                   return (
@@ -277,6 +291,7 @@ export default function Home() {
                     <button
                       className="w-full flex items-center gap-4 text-left py-5"
                       aria-expanded={open}
+                      aria-controls={`practice-detail-${p.id}`}
                       onClick={() => setMobileOpen(open ? -1 : i)}
                     >
                       <LineageNode active={open} />
@@ -286,7 +301,7 @@ export default function Home() {
                       </span>
                     </button>
                     {open && (
-                      <div className="v2-swap pb-7">
+                      <div id={`practice-detail-${p.id}`} className="v2-swap pb-7">
                         <PracticeDetail practice={p} onEnquire={enquire} />
                       </div>
                     )}

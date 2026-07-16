@@ -1,0 +1,11 @@
+Fonts in this directory are licensed under the SIL Open Font License 1.1.
+
+- archivo-latin-wdth-normal.woff2 — Archivo (variable: wght 100-900, wdth 62-125),
+  copyright Omnibus-Type. https://github.com/Omnibus-Type/Archivo
+- ibm-plex-sans-latin-400-normal.woff2 — IBM Plex Sans, copyright IBM Corp.
+  https://github.com/IBM/plex
+
+Files sourced from the fontsource distributions (latin subsets). These two
+faces are self-hosted here (instead of via the fontsource CSS imports) so
+index.html can preload them with stable URLs; the remaining faces load
+through @fontsource latin-only CSS imports in client/src/main.tsx.

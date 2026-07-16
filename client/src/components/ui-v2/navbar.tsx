@@ -94,6 +94,8 @@ export function NavbarV2() {
             onClick={() => setOpen(true)}
             aria-label="Open menu"
             aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-haspopup="dialog"
           >
             <Menu className="w-5 h-5" />
           </button>
@@ -101,7 +103,7 @@ export function NavbarV2() {
       </header>
 
       {open && (
-        <div ref={menuRef} className="v2-menu" role="dialog" aria-modal="true" aria-label="Menu">
+        <div ref={menuRef} id="mobile-menu" className="v2-menu" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="v2-container flex items-center justify-between" style={{ height: "72px" }}>
             <span className="v2-wordmark">Alpha Pro MENA</span>
             <button
