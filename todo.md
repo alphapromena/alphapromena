@@ -259,6 +259,21 @@
 - [ ] Follow-up candidate: sonner (32.9 kB) — nothing calls toast() since the Phase 3 success-panel redesign; the Toaster could be removed entirely
 - [x] pnpm check clean, pnpm build passes
 
+## Round 27.5a.2: remove dead dependencies
+- [x] sonner removed: zero toast() calls anywhere (Phase 3 replaced toasts with the inline success panel and inline error text); Toaster mount, ui/sonner.tsx, and the dependency deleted
+- [x] Tooltip stack removed: the only live consumer was App's TooltipProvider mount itself (shadcn boilerplate, no tooltips render on any page); ui/tooltip.tsx, its sole importer ui/sidebar.tsx (orphaned kit file), and @radix-ui/react-tooltip deleted — floating-ui left the bundle with it
+- [x] nanoid removed (zero imports in client/server/shared/api; the pnpm override for tailwind's transitive nanoid stays); @types/google.maps devDep removed (orphaned since Map.tsx was deleted in Phase 0)
+- [x] Reported, not removed: ~30 kit-only deps (radix primitives, recharts, embla, cmdk, vaul, input-otp, react-day-picker, date-fns, react-resizable-panels, class-variance-authority) are imported only by the unused shadcn ui/ kit — they never enter the shipped bundle, so removing them is repo hygiene (delete the kit) rather than a perf win
+- [x] source-map-explorer confirmed dev-only: never added to package.json (used via pnpm dlx), cannot enter the shipped bundle
+- [x] Main bundle 519.21 kB (157.35 gzip) → 442.39 kB (133.02 gzip); pnpm check clean, pnpm build passes
+
+## Post-launch bundle candidates (deliberately deferred)
+- tRPC client+react+server types (~42 kB) + tanstack query (~39 kB) + superjson (~15 kB): ~96 kB serving a single contact POST — could become one fetch() call, but it is the only conversion path on the site, so not a pre-launch refactor
+- zod (~45 kB): zod/mini could halve it, but the schema is shared with the server router — same reasoning, post-launch
+- react-hook-form (~23 kB): five fields could be uncontrolled + manual validation, not worth touching the conversion path pre-launch
+- tailwind-merge (~24 kB): cn() is used everywhere; swapping for plain clsx requires auditing for class conflicts — low value, medium risk
+- @builder.io/vite-plugin-jsx-loc (build plugin, unmet vite 7 peer): template leftover that injects source-location attributes; consider dropping post-launch
+
 ## Phase 5b (blocked on v2 assets)
 - [ ] sharp AVIF/WebP pipeline for everything in client/public/assets/v2/
 - [ ] <picture> srcset at 960/1440/2560 widths for section backgrounds + hero

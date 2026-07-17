@@ -1,5 +1,3 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { lazy, Suspense, useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
@@ -43,15 +41,12 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <TooltipProvider>
-        <a href="#main" className="v2-skip">Skip to content</a>
-        <Toaster />
-        <ScrollToTop />
-        <Router />
-        {/* Film grain (asset A6) — tiled at 4%; paints nothing until the
-            texture is committed to /assets/v2/grain-512.png. */}
-        <div className="v2-grain" aria-hidden="true" />
-      </TooltipProvider>
+      <a href="#main" className="v2-skip">Skip to content</a>
+      <ScrollToTop />
+      <Router />
+      {/* Film grain (asset A6) — tiled at 4%; paints nothing until the
+          texture is committed to /assets/v2/grain-512.png. */}
+      <div className="v2-grain" aria-hidden="true" />
     </ErrorBoundary>
   );
 }
