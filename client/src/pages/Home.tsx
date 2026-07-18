@@ -118,32 +118,14 @@ type ContactForm = z.infer<typeof contactSchema>;
 
 /* ── Helpers ────────────────────────────────────────────────────── */
 
+/* Label voice: Barlow 600 uppercase (kit) */
 const monoLabel: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
+  fontFamily: "var(--font-sans)",
   fontSize: "var(--text-mono)",
-  fontWeight: 500,
+  fontWeight: 600,
   letterSpacing: "0.08em",
   textTransform: "uppercase",
 };
-
-/** Lazy section background under an ink gradient; hides itself if the
-    asset is not committed yet (same graceful pattern as the hero). */
-function SectionBg({ src }: { src: string }) {
-  return (
-    <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-      <img
-        src={src}
-        alt=""
-        loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover"
-        onError={(e) => {
-          e.currentTarget.style.display = "none";
-        }}
-      />
-      <div className="v2-bg-scrim" />
-    </div>
-  );
-}
 
 function PracticeDetail({
   practice,
@@ -154,7 +136,7 @@ function PracticeDetail({
 }) {
   return (
     <div>
-      <p style={{ ...monoLabel, color: "var(--brass-500)" }}>{practice.sub}</p>
+      <p style={{ ...monoLabel, color: "var(--rose-deep)" }}>{practice.sub}</p>
       <p className="v2-body mt-4" style={{ maxWidth: "52ch" }}>{practice.body}</p>
       <div className="flex flex-wrap gap-2 mt-6">
         {practice.chips.map((c) => (
@@ -162,7 +144,7 @@ function PracticeDetail({
         ))}
       </div>
       <div className="mt-8">
-        <Button variant="ghost" onClick={() => onEnquire(practice.formValue)}>
+        <Button variant="outline" onClick={() => onEnquire(practice.formValue)}>
           Get in touch <ArrowRight className="w-4 h-4" />
         </Button>
       </div>
@@ -209,7 +191,7 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "var(--ink-950)" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--paper)" }}>
       <LineageThread waypoints={WAYPOINTS} onActivate={onNodeActivate} />
       <NavbarV2 />
 
@@ -218,7 +200,6 @@ export default function Home() {
 
         {/* ══ PRACTICES ═══════════════════════════════════════════ */}
         <Section id="practices" className="overflow-hidden">
-          <SectionBg src="/assets/v2/bg-practices.png" />
           <div className="relative z-[1]">
             <Eyebrow index="CATALOG / 01">Practices</Eyebrow>
             <h2 className="v2-h2 mt-5" style={{ maxWidth: "24ch" }}>
@@ -257,12 +238,12 @@ export default function Home() {
                       onMouseEnter={() => setActivePractice(i)}
                     >
                       <LineageNode active={active} />
-                      <span className="mono" style={{ ...monoLabel, color: active ? "var(--brass-500)" : "var(--sand-400)" }}>
+                      <span style={{ ...monoLabel, color: active ? "var(--rose-deep)" : "var(--ink-faint)" }}>
                         {p.index}
                       </span>
                       <span
                         className="v2-h3 transition-colors"
-                        style={{ color: active ? "var(--sand-100)" : "var(--sand-400)", transitionDuration: "var(--dur-fast)" }}
+                        style={{ color: active ? "var(--ink)" : "var(--ink-faint)", transitionDuration: "var(--dur-fast)" }}
                       >
                         {p.title}
                       </span>
@@ -295,8 +276,8 @@ export default function Home() {
                       onClick={() => setMobileOpen(open ? -1 : i)}
                     >
                       <LineageNode active={open} />
-                      <span style={{ ...monoLabel, color: open ? "var(--brass-500)" : "var(--sand-400)" }}>{p.index}</span>
-                      <span className="v2-h3 flex-1" style={{ color: open ? "var(--sand-100)" : "var(--sand-400)" }}>
+                      <span style={{ ...monoLabel, color: open ? "var(--rose-deep)" : "var(--ink-faint)" }}>{p.index}</span>
+                      <span className="v2-h3 flex-1" style={{ color: open ? "var(--ink)" : "var(--ink-faint)" }}>
                         {p.title}
                       </span>
                     </button>
@@ -312,9 +293,8 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ PARTNERSHIPS ════════════════════════════════════════ */}
-        <Section id="partnership" className="overflow-hidden" style={{ background: "var(--ink-900)" }}>
-          <SectionBg src="/assets/v2/bg-banking.png" />
+        {/* ══ PARTNERSHIPS ─ charcoal band ════════════════════════ */}
+        <Section id="partnership" className="band-dark overflow-hidden">
           <div className="relative z-[1]">
             <Eyebrow index="REGISTRY">Partnerships</Eyebrow>
             <h2 className="v2-h2 mt-5" style={{ maxWidth: "22ch" }}>
@@ -327,24 +307,27 @@ export default function Home() {
                   <div
                     style={{
                       fontFamily: "var(--font-display)",
-                      fontStretch: "122%",
-                      fontWeight: 720,
+                      fontWeight: 700,
                       fontSize: "1.75rem",
-                      letterSpacing: "-0.015em",
-                      color: "var(--sand-100)",
+                      letterSpacing: "-0.005em",
+                      textTransform: "uppercase",
+                      color: "var(--ink)",
                     }}
                   >
                     {p.name}
                   </div>
-                  <p className="mt-3" style={{ ...monoLabel, color: "var(--sand-400)", lineHeight: 1.8 }}>
+                  <p className="mt-3" style={{ ...monoLabel, color: "var(--ink-faint)", lineHeight: 1.8 }}>
                     {p.record}
                   </p>
-                  <p className="v2-body mt-5 flex-1">{p.sentence}</p>
+                  <p className="mt-5 flex-1" style={{ fontSize: "var(--text-body)", lineHeight: 1.65, color: "var(--ink-soft)" }}>
+                    {p.sentence}
+                  </p>
                   <a
                     href={p.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="v2-nav-link inline-flex items-center gap-2 mt-7 self-start"
+                    className="inline-flex items-center gap-2 mt-7 self-start"
+                    style={{ ...monoLabel, color: "var(--rose-deep)" }}
                   >
                     {p.linkLabel} <ExternalLink className="w-3.5 h-3.5" />
                   </a>
@@ -373,7 +356,7 @@ export default function Home() {
                 <div key={p.step} className="flex gap-6">
                   <LineageNode id={`process-node-${i}`} active={lit(`process-node-${i}`)} className="mt-1" />
                   <div className={i < PROCESS.length - 1 ? "pb-12" : ""} style={{ marginTop: "-4px" }}>
-                    <p style={{ ...monoLabel, color: "var(--brass-500)" }}>{p.step}</p>
+                    <p style={{ ...monoLabel, color: "var(--rose-deep)" }}>{p.step}</p>
                     <h3 className="v2-h3 mt-2">{p.label}</h3>
                     <p className="v2-small mt-2" style={{ maxWidth: "52ch" }}>{p.desc}</p>
                   </div>
@@ -384,16 +367,16 @@ export default function Home() {
         </Section>
 
         {/* ══ VALUES ══════════════════════════════════════════════ */}
-        <Section id="values" style={{ background: "var(--ink-900)" }}>
+        <Section id="values" style={{ background: "var(--surface)" }}>
           <Eyebrow index="CATALOG / 02">How we work</Eyebrow>
           <h2 className="v2-h2 mt-5">Six working principles.</h2>
           <div
             className="grid sm:grid-cols-2 lg:grid-cols-3 mt-14"
-            style={{ gap: "1px", background: "var(--line)", border: "1px solid var(--line)" }}
+            style={{ gap: "1px", background: "var(--line)", border: "1px solid var(--line)", borderRadius: "var(--radius)", overflow: "hidden" }}
           >
             {VALUES.map((v) => (
-              <div key={v.title} className="p-7" style={{ background: "var(--ink-900)" }}>
-                <div className="font-medium" style={{ color: "var(--sand-100)" }}>{v.title}</div>
+              <div key={v.title} className="p-7" style={{ background: "var(--surface)" }}>
+                <div className="font-semibold" style={{ color: "var(--ink)" }}>{v.title}</div>
                 <p className="v2-small mt-2">{v.line}</p>
               </div>
             ))}
@@ -415,7 +398,7 @@ export default function Home() {
               <a
                 href="mailto:info@alphapromena.com"
                 className="inline-block mt-6"
-                style={{ ...monoLabel, textTransform: "none", letterSpacing: "0.02em", color: "var(--brass-400)" }}
+                style={{ ...monoLabel, textTransform: "none", letterSpacing: "0.02em", color: "var(--rose-deep)" }}
               >
                 info@alphapromena.com
               </a>
@@ -432,10 +415,10 @@ export default function Home() {
                       document.getElementById("contact-form")?.scrollIntoView({ behavior: "smooth", block: "center" });
                     }}
                   >
-                    <span style={{ ...monoLabel, color: "var(--sand-100)" }}>{r.label}</span>
+                    <span style={{ ...monoLabel, color: "var(--ink)" }}>{r.label}</span>
                     <ArrowRight
                       className="w-4 h-4 transition-transform group-hover:translate-x-1"
-                      style={{ color: "var(--brass-500)" }}
+                      style={{ color: "var(--rose)" }}
                     />
                   </button>
                 ))}
@@ -484,7 +467,7 @@ export default function Home() {
                   </div>
                   <div className="sm:col-span-2 flex flex-col gap-3">
                     <div>
-                      <Button variant="brass" type="submit" disabled={submitContact.isPending}>
+                      <Button variant="rose" type="submit" disabled={submitContact.isPending}>
                         {submitContact.isPending ? "Sending" : "Send message"}
                         {!submitContact.isPending && <ArrowRight className="w-4 h-4" />}
                       </Button>
@@ -505,16 +488,15 @@ export default function Home() {
           </div>
         </Section>
 
-        {/* ══ CTA BAND ─ the thread terminates here ═══════════════ */}
-        <section className="relative overflow-hidden" style={{ borderTop: "1px solid var(--line)" }}>
-          <SectionBg src="/assets/v2/bg-ai.png" />
+        {/* ══ CTA BAND ─ charcoal, the thread terminates here ═════ */}
+        <section className="band-dark relative overflow-hidden">
           <div className="v2-container relative z-[1] py-24 sm:py-28">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
               <div className="flex items-center gap-5">
                 <LineageNode id="cta-node" active={lit("cta-node")} />
                 <h2 className="v2-h2" style={{ maxWidth: "18ch" }}>Start with a discovery call.</h2>
               </div>
-              <Button variant="brass" onClick={() => scrollTo("contact")} className="shrink-0">
+              <Button variant="rose" onClick={() => scrollTo("contact")} className="shrink-0">
                 Book a discovery call <ArrowRight className="w-4 h-4" />
               </Button>
             </div>

@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
-type Variant = "brass" | "ghost";
+type Variant = "rose" | "ink" | "outline";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
@@ -12,19 +12,20 @@ interface ButtonLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> 
 }
 
 /**
- * Lineage button. Brass is the single accent and is spent sparingly:
- * if a section already carries the thread, its buttons go ghost.
+ * Interlock button: fully rounded pill. Rose is the primary CTA (white
+ * text, rose-mid hover, rose-deep pressed); ink and outline carry
+ * secondary actions on light surfaces.
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = "brass", className, type = "button", ...rest }, ref) => (
+  ({ variant = "rose", className, type = "button", ...rest }, ref) => (
     <button ref={ref} type={type} className={cn("v2-btn", `v2-btn--${variant}`, className)} {...rest} />
   ),
 );
 Button.displayName = "ButtonV2";
 
-/** Anchor styled as a Lineage button, for external/document links. */
+/** Anchor styled as an Interlock pill, for external/document links. */
 export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
-  ({ variant = "brass", className, ...rest }, ref) => (
+  ({ variant = "rose", className, ...rest }, ref) => (
     <a ref={ref} className={cn("v2-btn", `v2-btn--${variant}`, className)} {...rest} />
   ),
 );

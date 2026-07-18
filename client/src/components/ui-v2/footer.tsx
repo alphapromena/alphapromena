@@ -7,16 +7,18 @@ const NAV = [
   { label: "Contact", id: "contact" },
 ];
 
-const mono: React.CSSProperties = {
-  fontFamily: "var(--font-mono)",
+const label: React.CSSProperties = {
+  fontFamily: "var(--font-sans)",
+  fontWeight: 600,
   fontSize: "var(--text-mono)",
   letterSpacing: "0.08em",
   textTransform: "uppercase",
 };
 
 /**
- * Lineage footer: three columns over a hairline bottom bar. Shared by the
- * home page and the standalone policy pages.
+ * Interlock footer: full-width charcoal band (ink to ink-deep), off-white
+ * text, rose accents, dark logo mark. Shared by the home page and the
+ * standalone policy pages.
  */
 export function FooterV2() {
   const [location] = useLocation();
@@ -24,28 +26,52 @@ export function FooterV2() {
   const anchor = (id: string) => `${prefix}#${id}`;
 
   return (
-    <footer style={{ background: "var(--ink-900)", borderTop: "1px solid var(--line)" }}>
+    <footer className="band-dark">
       <div className="v2-container pt-16 pb-8">
         <div className="grid gap-12 md:grid-cols-3 pb-14">
           <div>
-            <div className="v2-wordmark">Alpha Pro MENA</div>
+            <div className="flex items-center gap-3">
+              <img src="/brand/logo-mark-dark.svg" alt="" className="h-8 w-auto" />
+              <span
+                style={{
+                  fontFamily: "var(--font-display)",
+                  fontWeight: 700,
+                  fontSize: "1.05rem",
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                  color: "var(--band-text)",
+                }}
+              >
+                Alpha Pro MENA
+              </span>
+            </div>
             <p className="v2-small mt-4" style={{ maxWidth: "34ch" }}>
               Data governance, enterprise AI, and banking advisory for institutions across
               the Middle East and North Africa.
             </p>
-            <p className="mt-5" style={{ ...mono, color: "var(--brass-500)" }}>
+            <p className="mt-5" style={{ ...label, color: "var(--rose)" }}>
               Certified Ataccama Solution Partner, MENA
             </p>
           </div>
 
           <nav aria-label="Footer" className="flex flex-col items-start gap-4 md:justify-self-center">
             {NAV.map((l) => (
-              <a key={l.id} href={anchor(l.id)} className="v2-nav-link">{l.label}</a>
+              <a
+                key={l.id}
+                href={anchor(l.id)}
+                className="footer-link"
+                style={{ ...label, color: "var(--band-text-soft)" }}
+              >
+                {l.label}
+              </a>
             ))}
           </nav>
 
           <div className="flex flex-col items-start gap-4 md:justify-self-end">
-            <a href="mailto:info@alphapromena.com" className="v2-nav-link" style={{ textTransform: "none", letterSpacing: "0.02em" }}>
+            <a
+              href="mailto:info@alphapromena.com"
+              style={{ ...label, textTransform: "none", letterSpacing: "0.02em", color: "var(--band-text)" }}
+            >
               info@alphapromena.com
             </a>
             <span className="v2-small">Amman, Jordan</span>
@@ -54,7 +80,7 @@ export function FooterV2() {
               href="https://www.linkedin.com/company/alpha-pro-consulting"
               target="_blank"
               rel="noopener noreferrer"
-              className="v2-nav-link"
+              style={{ ...label, color: "var(--band-text-soft)" }}
             >
               LinkedIn
             </a>
@@ -63,15 +89,13 @@ export function FooterV2() {
 
         <div
           className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-6"
-          style={{ borderTop: "1px solid var(--line)" }}
+          style={{ borderTop: "1px solid rgba(243,242,241,0.14)" }}
         >
-          <span style={{ ...mono, textTransform: "none", color: "var(--sand-400)" }}>
-            © {new Date().getFullYear()} Alpha Pro MENA. All rights reserved.
-          </span>
+          <span className="v2-small">© {new Date().getFullYear()} Alpha Pro MENA. All rights reserved.</span>
           <div className="flex items-center gap-6">
-            <Link href="/privacy" className="v2-nav-link" style={{ textTransform: "none", letterSpacing: "0.02em" }}>Privacy</Link>
-            <Link href="/terms" className="v2-nav-link" style={{ textTransform: "none", letterSpacing: "0.02em" }}>Terms</Link>
-            <span style={{ ...mono, textTransform: "none", color: "var(--sand-400)" }}>Designed and built in Amman</span>
+            <Link href="/privacy" className="v2-small" style={{ color: "var(--band-text-soft)" }}>Privacy</Link>
+            <Link href="/terms" className="v2-small" style={{ color: "var(--band-text-soft)" }}>Terms</Link>
+            <span className="v2-small">Designed and built in Amman</span>
           </div>
         </div>
       </div>

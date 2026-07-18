@@ -26,7 +26,7 @@ function ScrollToTop() {
 
 function Router() {
   return (
-    <Suspense fallback={<div className="min-h-screen" style={{ background: "var(--ink-950)" }} />}>
+    <Suspense fallback={<div className="min-h-screen" style={{ background: "var(--paper)" }} />}>
       <Switch>
         <Route path={"/"} component={Home} />
         <Route path={"/privacy"} component={Privacy} />
@@ -44,9 +44,6 @@ function App() {
       <a href="#main" className="v2-skip">Skip to content</a>
       <ScrollToTop />
       <Router />
-      {/* Film grain (asset A6) — tiled at 4%; paints nothing until the
-          texture is committed to /assets/v2/grain-512.png. */}
-      <div className="v2-grain" aria-hidden="true" />
     </ErrorBoundary>
   );
 }

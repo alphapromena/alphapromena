@@ -11,9 +11,10 @@ const LINKS = [
 ];
 
 /**
- * Lineage navbar: fixed, transparent over the hero, gains an ink-900/85
- * backdrop blur after 40px of scroll. Mobile: full-screen overlay menu,
- * focus-trapped, closed on Escape or link click.
+ * Interlock navbar: fixed, transparent over the hero, gains a paper/85
+ * backdrop blur after 40px of scroll. Real brand mark beside the
+ * wordmark. Mobile: full-screen overlay menu, focus-trapped, closed on
+ * Escape or link click.
  */
 export function NavbarV2() {
   const [scrolled, setScrolled] = useState(false);
@@ -76,13 +77,16 @@ export function NavbarV2() {
     <>
       <header className={`v2-nav ${scrolled ? "v2-nav--scrolled" : ""}`}>
         <div className="v2-container flex items-center justify-between" style={{ height: "72px" }}>
-          <Link href="/" className="v2-wordmark">Alpha Pro MENA</Link>
+          <Link href="/" className="v2-wordmark">
+            <img src="/brand/logo-mark.svg" alt="" className="h-7 w-auto" />
+            Alpha Pro MENA
+          </Link>
 
           <nav className="hidden md:flex items-center" style={{ gap: "var(--space-8)" }} aria-label="Primary">
             {LINKS.map((l) => (
               <a key={l.id} href={anchor(l.id)} className="v2-nav-link">{l.label}</a>
             ))}
-            <ButtonLink href={anchor("contact")} variant="brass" style={{ padding: "10px 18px" }}>
+            <ButtonLink href={anchor("contact")} variant="rose" style={{ padding: "10px 22px" }}>
               Book a call
             </ButtonLink>
           </nav>
@@ -90,7 +94,7 @@ export function NavbarV2() {
           <button
             ref={toggleRef}
             className="md:hidden inline-flex items-center justify-center w-10 h-10"
-            style={{ color: "var(--sand-100)" }}
+            style={{ color: "var(--ink)" }}
             onClick={() => setOpen(true)}
             aria-label="Open menu"
             aria-expanded={open}
@@ -105,10 +109,13 @@ export function NavbarV2() {
       {open && (
         <div ref={menuRef} id="mobile-menu" className="v2-menu" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="v2-container flex items-center justify-between" style={{ height: "72px" }}>
-            <span className="v2-wordmark">Alpha Pro MENA</span>
+            <span className="v2-wordmark">
+              <img src="/brand/logo-mark.svg" alt="" className="h-7 w-auto" />
+              Alpha Pro MENA
+            </span>
             <button
               className="inline-flex items-center justify-center w-10 h-10"
-              style={{ color: "var(--sand-100)" }}
+              style={{ color: "var(--ink)" }}
               onClick={() => setOpen(false)}
               aria-label="Close menu"
             >
@@ -122,7 +129,7 @@ export function NavbarV2() {
               </a>
             ))}
             <div className="mt-8">
-              <ButtonLink href={anchor("contact")} variant="brass" onClick={() => setOpen(false)}>
+              <ButtonLink href={anchor("contact")} variant="rose" onClick={() => setOpen(false)}>
                 Book a call
               </ButtonLink>
             </div>

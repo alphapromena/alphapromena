@@ -6,8 +6,8 @@ interface CardV2Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Lineage card: raised ink-800 surface, 1px hairline border, 8px radius,
- * no drop shadows. Brass glow appears only on hover of interactive cards.
+ * Interlock card: white surface, soft shadow, 18px radius. Interactive
+ * cards lift 2px on hover.
  */
 export function CardV2({ interactive = false, className, ...rest }: CardV2Props) {
   return <div className={cn("v2-card", interactive && "v2-card--hover", className)} {...rest} />;

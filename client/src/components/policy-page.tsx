@@ -17,7 +17,7 @@ interface PolicyPageProps {
  */
 export function PolicyPage({ eyebrow, title, html }: PolicyPageProps) {
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: "var(--ink-950)" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--paper)" }}>
       <NavbarV2 />
 
       <main id="main" className="flex-1">

@@ -3,44 +3,43 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ─── Above-fold fonts (latin, preloaded from index.html) ────────── */
-/* Descriptors copied verbatim from the fontsource latin subsets; files
+/* ─── Above-fold fonts (Barlow latin, preloaded from index.html) ──── */
+/* Descriptors copied verbatim from the fontsource latin subset; files
    vendored in /public/fonts (see LICENSE.txt there). */
 @font-face {
-  font-family: 'Archivo Variable';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 100 900;
-  font-stretch: 62% 125%;
-  src: url(/fonts/archivo-latin-wdth-normal.woff2) format('woff2-variations');
-  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-}
-@font-face {
-  font-family: 'IBM Plex Sans';
+  font-family: 'Barlow';
   font-style: normal;
   font-display: swap;
   font-weight: 400;
-  src: url(/fonts/ibm-plex-sans-latin-400-normal.woff2) format('woff2');
+  src: url(/fonts/barlow-latin-400-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url(/fonts/barlow-latin-700-normal.woff2) format('woff2');
   unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
 }
 
 /* ─── Tailwind Theme Mapping ─────────────────────────────────────── */
 @theme inline {
-  --radius-sm: calc(var(--radius) - 2px);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 2px);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 6px);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --font-display: var(--font-display);
-  --color-ink-950: var(--ink-950);
-  --color-ink-900: var(--ink-900);
-  --color-ink-800: var(--ink-800);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-deep: var(--ink-deep);
   --color-line: var(--line);
-  --color-sand-100: var(--sand-100);
-  --color-sand-400: var(--sand-400);
-  --color-brass-500: var(--brass-500);
-  --color-brass-400: var(--brass-400);
+  --color-rose: var(--rose);
+  --color-rose-mid: var(--rose-mid);
+  --color-rose-deep: var(--rose-deep);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -75,28 +74,36 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* ═══ Tokens — "Lineage" (dark-first, single theme) ═══════════════ */
+/* ═══ Tokens — "Interlock" (official brand kit, light-first) ══════ */
 :root {
-  --radius: 8px;
+  --radius: 18px;
 
-  /* Fonts */
-  --font-display: 'Archivo Variable', system-ui, sans-serif;
-  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Barlow only, per the kit */
+  --font-display: 'Barlow', system-ui, sans-serif;
+  --font-sans: 'Barlow', system-ui, sans-serif;
+  --font-mono: 'Barlow', system-ui, sans-serif;
 
-  /* Palette — see REDESIGN_V2_PLAN.md §2.1 */
-  --ink-950:    #070A10;   /* page background */
-  --ink-900:    #0A0E16;   /* base surfaces */
-  --ink-800:    #101622;   /* raised cards, inputs */
-  --line:       #1C2432;   /* hairlines, borders */
-  --sand-100:   #EDE6D6;   /* primary text */
-  --sand-400:   #A9A08C;   /* secondary text */
-  --brass-500:  #C8A24A;   /* accent: thread, CTAs, active nodes */
-  --brass-400:  #D4B36A;   /* accent hover */
-  --brass-glow: rgba(200, 162, 74, 0.16);   /* glows, focus rings */
+  /* Official kit — REDESIGN_V3_PLAN.md */
+  --paper:     #F3F2F1;   /* page background */
+  --surface:   #FFFFFF;   /* cards */
+  --ink:       #313234;   /* primary text, dark bands */
+  --ink-deep:  #1A1C1E;   /* darkest band stop */
+  --rose:      #FF1E57;   /* primary accent, CTAs, display words */
+  --rose-mid:  #E92156;   /* hover */
+  --rose-deep: #B7274F;   /* pressed; small rose text on light (AA) */
+  --line:      rgba(49, 50, 52, 0.12);
 
-  /* Type scale — §2.2 */
-  --text-display: clamp(2.75rem, 6vw, 5.25rem);
+  /* Derived from the kit (alpha/soft variants only, no new hues) */
+  --ink-soft:  rgba(49, 50, 52, 0.74);
+  --ink-faint: rgba(49, 50, 52, 0.55);
+  --rose-glow: rgba(255, 30, 87, 0.16);
+  --band-text: #F3F2F1;                    /* off-white on dark bands */
+  --band-text-soft: rgba(243, 242, 241, 0.72);
+  --shadow-card: 0 12px 34px -20px rgba(26, 28, 30, 0.35);
+  --shadow-card-hover: 0 18px 44px -22px rgba(26, 28, 30, 0.4);
+
+  /* Type scale */
+  --text-display: clamp(2.6rem, 6vw, 5rem);
   --text-h2:      clamp(1.9rem, 3.5vw, 3rem);
   --text-h3:      1.375rem;
   --text-body:    1.0625rem;
@@ -115,7 +122,7 @@
   --space-24: 96px;
   --space-32: 128px;
 
-  /* Motion — §2.4 */
+  /* Motion (kept from v2) */
   --dur-fast: 150ms;
   --dur-med:  300ms;
   --dur-slow: 700ms;
@@ -125,41 +132,40 @@
   --z-nav: 50;
   --z-overlay: 60;
   --z-toast: 70;
-  --z-grain: 80;
 
-  /* shadcn semantic tokens, mapped onto the Lineage palette */
-  --background:         var(--ink-950);
-  --foreground:         var(--sand-100);
-  --card:               var(--ink-800);
-  --card-foreground:    var(--sand-100);
-  --popover:            var(--ink-800);
-  --popover-foreground: var(--sand-100);
-  --primary:            var(--brass-500);
-  --primary-foreground: var(--ink-950);
-  --secondary:          var(--ink-800);
-  --secondary-foreground: var(--sand-100);
-  --muted:              var(--ink-800);
-  --muted-foreground:   var(--sand-400);
-  --accent:             var(--ink-800);
-  --accent-foreground:  var(--brass-400);
-  --destructive:        #D9705F;   /* functional error red, not a brand accent */
-  --destructive-foreground: var(--sand-100);
+  /* shadcn semantic tokens, mapped onto the kit (light) */
+  --background:         var(--paper);
+  --foreground:         var(--ink);
+  --card:               var(--surface);
+  --card-foreground:    var(--ink);
+  --popover:            var(--surface);
+  --popover-foreground: var(--ink);
+  --primary:            var(--rose);
+  --primary-foreground: #FFFFFF;
+  --secondary:          #E9E8E6;
+  --secondary-foreground: var(--ink);
+  --muted:              #E9E8E6;
+  --muted-foreground:   var(--ink-soft);
+  --accent:             #FBE9EE;
+  --accent-foreground:  var(--rose-deep);
+  --destructive:        var(--rose-deep);
+  --destructive-foreground: #FFFFFF;
   --border:             var(--line);
   --input:              var(--line);
-  --ring:               var(--brass-500);
-  --chart-1: var(--brass-500);
-  --chart-2: var(--sand-400);
-  --chart-3: var(--brass-400);
-  --chart-4: var(--sand-100);
-  --chart-5: #6B7A94;
-  --sidebar: var(--ink-900);
-  --sidebar-foreground: var(--sand-100);
-  --sidebar-primary: var(--brass-500);
-  --sidebar-primary-foreground: var(--ink-950);
-  --sidebar-accent: var(--ink-800);
-  --sidebar-accent-foreground: var(--brass-400);
+  --ring:               var(--rose);
+  --chart-1: var(--rose);
+  --chart-2: var(--ink);
+  --chart-3: var(--rose-deep);
+  --chart-4: var(--ink-faint);
+  --chart-5: var(--rose-mid);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--rose);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FBE9EE;
+  --sidebar-accent-foreground: var(--rose-deep);
   --sidebar-border: var(--line);
-  --sidebar-ring: var(--brass-500);
+  --sidebar-ring: var(--rose);
 }
 
 /* ─── Base ───────────────────────────────────────────────────────── */
@@ -171,7 +177,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-padding-top: 5.5rem;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
@@ -179,18 +185,17 @@
     font-family: var(--font-sans);
     font-weight: 400;
     font-size: var(--text-body);
-    background-color: var(--ink-950);
-    color: var(--sand-100);
+    background-color: var(--paper);
+    color: var(--ink);
     overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-stretch: 122%;
     font-weight: 700;
     line-height: 1.04;
-    letter-spacing: -0.02em;
-    color: var(--sand-100);
+    letter-spacing: -0.01em;
+    color: var(--ink);
   }
 
   button:not(:disabled),
@@ -200,18 +205,18 @@
   a[href],
   select:not(:disabled) { @apply cursor-pointer; }
 
-  /* Default visible focus everywhere; components with custom brass
+  /* Default visible focus everywhere; components with custom rose
      box-shadow rings opt out via their own outline: none. */
   :focus-visible {
-    outline: 2px solid var(--brass-500);
+    outline: 2px solid var(--rose);
     outline-offset: 2px;
   }
 
-  ::selection { background: var(--brass-500); color: var(--ink-950); }
+  ::selection { background: var(--rose); color: #FFFFFF; }
 
   ::-webkit-scrollbar { width: 11px; }
-  ::-webkit-scrollbar-track { background: var(--ink-900); }
-  ::-webkit-scrollbar-thumb { background: #2A3446; border-radius: 0; border: 3px solid var(--ink-900); }
+  ::-webkit-scrollbar-track { background: var(--paper); }
+  ::-webkit-scrollbar-thumb { background: #C9C7C4; border-radius: 0; border: 3px solid var(--paper); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -219,52 +224,58 @@
 }
 
 /* ─── Shared utilities ───────────────────────────────────────────── */
-.mono { font-family: var(--font-mono); font-feature-settings: "tnum"; }
+/* Label voice: Barlow 600 uppercase (replaces the v2 mono treatment) */
+.mono {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
 
 /* Skip-to-content: visually hidden until keyboard focus */
 .v2-skip {
   position: fixed;
   top: 12px;
   left: 12px;
-  z-index: calc(var(--z-grain) + 1);
+  z-index: calc(var(--z-toast) + 1);
   padding: 10px 18px;
-  border-radius: var(--radius);
-  background: var(--brass-500);
-  color: var(--ink-950);
+  border-radius: 999px;
+  background: var(--rose);
+  color: #FFFFFF;
   font-family: var(--font-sans);
   font-size: var(--text-small);
-  font-weight: 500;
+  font-weight: 600;
   transform: translateY(-200%);
 }
 .v2-skip:focus-visible {
   transform: none;
-  outline: 2px solid var(--sand-100);
+  outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
 
-/* Hero wash — brass breath over ink (used by policy pages) */
+/* Policy header band */
 .hero-wash {
   background:
-    radial-gradient(1100px 520px at 78% -8%, rgba(200,162,74,0.08), transparent 60%),
-    linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 100%);
+    radial-gradient(900px 420px at 82% -10%, var(--rose-glow), transparent 60%),
+    linear-gradient(180deg, #FFFFFF 0%, var(--paper) 100%);
 }
 
 /* ─── Policy / legal document typography ─────────────────────────── */
 .policy-prose {
   max-width: 78ch;
-  color: var(--sand-400);
+  color: var(--ink-soft);
   font-size: 1.02rem;
   line-height: 1.72;
 }
 .policy-prose > :first-child { margin-top: 0; }
 .policy-prose h1 {
-  color: var(--sand-100);
+  color: var(--ink);
   font-size: clamp(1.7rem, 3.2vw, 2.15rem);
   line-height: 1.12;
   margin: 0 0 1.2rem;
 }
 .policy-prose h2 {
-  color: var(--sand-100);
+  color: var(--ink);
   font-size: 1.35rem;
   line-height: 1.25;
   margin: 2.6rem 0 0.9rem;
@@ -272,42 +283,41 @@
   border-top: 1px solid var(--line);
 }
 .policy-prose h3 {
-  color: var(--sand-100);
+  color: var(--ink);
   font-size: 1.08rem;
   margin: 1.8rem 0 0.6rem;
 }
 .policy-prose p { margin: 0 0 1.1rem; }
-.policy-prose strong { color: var(--sand-100); font-weight: 600; }
+.policy-prose strong { color: var(--ink); font-weight: 600; }
 .policy-prose a {
-  color: var(--brass-400);
+  color: var(--rose-deep);
   text-decoration: underline;
   text-underline-offset: 2px;
   text-decoration-thickness: 1px;
 }
-.policy-prose a:hover { color: var(--brass-500); }
+.policy-prose a:hover { color: var(--rose-mid); }
 .policy-prose ul,
 .policy-prose ol { margin: 0 0 1.2rem; padding-left: 1.35rem; }
 .policy-prose ul { list-style: disc; }
 .policy-prose ol { list-style: decimal; }
 .policy-prose li { margin: 0.4rem 0; padding-left: 0.2rem; }
-.policy-prose li::marker { color: var(--sand-400); }
+.policy-prose li::marker { color: var(--ink-faint); }
 .policy-prose hr {
   border: 0;
   border-top: 1px solid var(--line);
   margin: 2.2rem 0;
 }
 .policy-prose code {
-  font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 0.9em;
-  background: var(--ink-800);
+  background: #E9E8E6;
   padding: 0.1em 0.4em;
   border-radius: 4px;
 }
 .policy-prose blockquote {
   margin: 1.2rem 0;
   padding-left: 1.1rem;
-  border-left: 3px solid rgba(200,162,74,0.3);
-  color: var(--sand-400);
+  border-left: 3px solid var(--rose-deep);
+  color: var(--ink-soft);
 }
 .policy-prose table {
   width: 100%;
@@ -321,179 +331,211 @@
   padding: 0.55rem 0.8rem;
   text-align: left;
 }
-.policy-prose th { color: var(--sand-100); font-weight: 600; background: var(--ink-800); }
+.policy-prose th { color: var(--ink); font-weight: 600; background: #E9E8E6; }
 
 /* ══════════════════════════════════════════════════════════════════
-   LINEAGE v2 — primitives (components in client/src/components/ui-v2/)
+   INTERLOCK v3 — primitives (components in client/src/components/ui-v2/)
    ══════════════════════════════════════════════════════════════════ */
 
-/* Section: vertical rhythm + 12-col-ready container */
+/* Section: vertical rhythm + container */
 .v2-section { position: relative; padding-block: clamp(96px, 12vw, 160px); }
 .v2-container { width: 100%; max-width: 1200px; margin-inline: auto; padding-inline: var(--space-6); }
 @media (min-width: 1024px) { .v2-container { padding-inline: var(--space-8); } }
 
-/* Type roles */
+/* Type roles — Barlow 700/800 UPPERCASE display */
 .v2-display {
   font-family: var(--font-display);
-  font-stretch: 122%;
-  font-weight: 750;
+  font-weight: 800;
   font-size: var(--text-display);
-  line-height: 1.0;
-  letter-spacing: -0.02em;
-  color: var(--sand-100);
+  line-height: 0.98;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  color: var(--ink);
   text-wrap: balance;
 }
 .v2-h2 {
   font-family: var(--font-display);
-  font-stretch: 122%;
-  font-weight: 720;
+  font-weight: 700;
   font-size: var(--text-h2);
-  line-height: 1.06;
-  letter-spacing: -0.015em;
-  color: var(--sand-100);
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  color: var(--ink);
   text-wrap: balance;
 }
 .v2-h3 {
   font-family: var(--font-display);
-  font-stretch: 118%;
-  font-weight: 650;
+  font-weight: 600;
   font-size: var(--text-h3);
   line-height: 1.2;
-  color: var(--sand-100);
+  color: var(--ink);
 }
-.v2-body { font-size: var(--text-body); line-height: 1.65; color: var(--sand-400); }
-.v2-small { font-size: var(--text-small); line-height: 1.6; color: var(--sand-400); }
+.v2-body { font-size: var(--text-body); line-height: 1.65; color: var(--ink-soft); }
+.v2-small { font-size: var(--text-small); line-height: 1.6; color: var(--ink-soft); }
 
-/* Eyebrow: mono catalog entry, e.g. "CATALOG / 01 · PRACTICES" */
+/* One rose word per headline (pure rose allowed at display sizes) */
+.v2-rose-word { color: var(--rose); }
+
+/* Eyebrow: Barlow 600 caps, rose-deep on light */
 .v2-eyebrow {
   display: inline-flex;
   align-items: baseline;
   gap: 0.6ch;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--text-mono);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--brass-500);
+  color: var(--rose-deep);
 }
-.v2-eyebrow-index { color: var(--sand-400); }
-.v2-eyebrow-sep { color: var(--sand-400); }
+.v2-eyebrow-index { color: var(--ink-faint); }
+.v2-eyebrow-sep { color: var(--ink-faint); }
 
-/* Button */
+/* Button: fully rounded pills */
 .v2-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius);
+  padding: 12px 26px;
+  border-radius: 999px;
   font-family: var(--font-sans);
-  font-size: var(--text-small);
-  font-weight: 500;
+  font-size: 0.9375rem;
+  font-weight: 600;
   line-height: 1.2;
+  letter-spacing: 0.01em;
   cursor: pointer;
   transition:
     background-color var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease),
     color var(--dur-fast) var(--ease),
-    box-shadow var(--dur-fast) var(--ease);
+    box-shadow var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
 }
 .v2-btn:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px var(--brass-500), 0 0 0 4px var(--brass-glow);
+  box-shadow: 0 0 0 2px var(--surface), 0 0 0 5px var(--rose);
 }
 .v2-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.v2-btn--brass { background: var(--brass-500); color: var(--ink-950); border: 1px solid transparent; }
-.v2-btn--brass:hover:not(:disabled) { background: var(--brass-400); }
-.v2-btn--ghost { background: transparent; color: var(--sand-100); border: 1px solid var(--line); }
-.v2-btn--ghost:hover:not(:disabled) { border-color: var(--brass-500); color: var(--brass-400); }
+.v2-btn:active:not(:disabled) { transform: translateY(1px); }
+.v2-btn--rose { background: var(--rose); color: #FFFFFF; border: 1px solid transparent; }
+.v2-btn--rose:hover:not(:disabled) { background: var(--rose-mid); }
+.v2-btn--rose:active:not(:disabled) { background: var(--rose-deep); }
+.v2-btn--ink { background: var(--ink); color: var(--paper); border: 1px solid transparent; }
+.v2-btn--ink:hover:not(:disabled) { background: var(--ink-deep); }
+.v2-btn--outline { background: transparent; color: var(--ink); border: 1.5px solid var(--ink); }
+.v2-btn--outline:hover:not(:disabled) { background: var(--ink); color: #FFFFFF; }
 
-/* Card: hairline record, no shadows, brass glow on hover/active only */
+/* Card: white surface, soft shadow, 18px radius */
 .v2-card {
-  background: var(--ink-800);
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
   transition:
     transform var(--dur-med) var(--ease),
-    border-color var(--dur-med) var(--ease),
     box-shadow var(--dur-med) var(--ease);
 }
 .v2-card--hover:hover {
   transform: translateY(-2px);
-  border-color: rgba(200, 162, 74, 0.4);
-  box-shadow: 0 12px 40px -16px var(--brass-glow);
+  box-shadow: var(--shadow-card-hover);
 }
 
-/* LineageNode: 12px circle on the thread */
+/* LineageNode: 12px circle, rose when active */
 .v2-node {
   display: inline-block;
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 1.5px solid var(--line);
-  background: var(--ink-950);
+  border: 1.5px solid rgba(49, 50, 52, 0.3);
+  background: var(--surface);
   flex-shrink: 0;
 }
 .v2-node--active {
-  border-color: var(--brass-500);
-  background: var(--brass-500);
+  border-color: var(--rose);
+  background: var(--rose);
   animation: v2-node-pulse var(--dur-slow) var(--ease) 1;
 }
 @keyframes v2-node-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(200, 162, 74, 0.45); }
-  100% { box-shadow: 0 0 0 14px rgba(200, 162, 74, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(255, 30, 87, 0.4); }
+  100% { box-shadow: 0 0 0 14px rgba(255, 30, 87, 0); }
 }
 
-/* Capability chip: mono record tag */
+/* Capability chip */
 .v2-chip {
   display: inline-flex;
   align-items: center;
-  padding: 6px 12px;
-  font-family: var(--font-mono);
+  padding: 7px 14px;
+  font-family: var(--font-sans);
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--sand-400);
-  background: var(--ink-800);
+  color: var(--ink-soft);
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: 999px;
   white-space: nowrap;
 }
 
-/* Form fields: ink-800 surface, hairline border, brass focus ring */
+/* Form fields: white surface, hairline border, rose focus ring */
 .v2-label {
   display: block;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--sand-400);
+  color: var(--ink-faint);
 }
 .v2-field {
   width: 100%;
-  background: var(--ink-800);
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
-  color: var(--sand-100);
+  border-radius: calc(var(--radius) - 6px);
+  color: var(--ink);
   font-family: var(--font-sans);
   font-size: 0.9375rem;
   line-height: 1.4;
-  padding: 10px 14px;
+  padding: 11px 16px;
   transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
 }
-.v2-field::placeholder { color: rgba(169, 160, 140, 0.5); }
+.v2-field::placeholder { color: var(--ink-faint); }
 .v2-field:focus, .v2-field:focus-visible {
   outline: none;
-  border-color: var(--brass-500);
-  box-shadow: 0 0 0 3px var(--brass-glow);
+  border-color: var(--rose);
+  box-shadow: 0 0 0 3px var(--rose-glow);
 }
 textarea.v2-field { resize: vertical; min-height: 120px; }
 .v2-field-error {
   font-size: 0.8125rem;
-  color: var(--destructive);
+  color: var(--rose-deep);
 }
+
+/* ─── Charcoal bands — partnerships + pre-footer CTA ─────────────── */
+.band-dark {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--ink) 0%, var(--ink-deep) 100%);
+  color: var(--band-text);
+}
+.band-dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(720px 420px at 84% 0%, rgba(255, 30, 87, 0.16), transparent 60%),
+    radial-gradient(560px 400px at 6% 100%, rgba(255, 30, 87, 0.08), transparent 60%);
+}
+.band-dark .v2-h2, .band-dark .v2-h3 { color: var(--band-text); }
+.band-dark .v2-body, .band-dark .v2-small { color: var(--band-text-soft); }
+.band-dark .v2-eyebrow { color: var(--rose); }
+.band-dark .v2-eyebrow-index, .band-dark .v2-eyebrow-sep { color: rgba(243, 242, 241, 0.55); }
+.band-dark .v2-node { background: var(--ink-deep); border-color: rgba(243, 242, 241, 0.3); }
+.band-dark .v2-node--active { background: var(--rose); border-color: var(--rose); }
 
 /* ─── Shell: navbar ──────────────────────────────────────────────── */
 .v2-nav {
@@ -508,81 +550,74 @@ textarea.v2-field { resize: vertical; min-height: 120px; }
     border-color var(--dur-med) var(--ease);
 }
 .v2-nav--scrolled {
-  background: rgba(10, 14, 22, 0.85);
+  background: rgba(243, 242, 241, 0.85);
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border-bottom-color: var(--line);
 }
 .v2-wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-family: var(--font-display);
-  font-stretch: 122%;
   font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: -0.01em;
-  color: var(--sand-100);
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
   white-space: nowrap;
 }
 .v2-nav-link {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: var(--text-mono);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--sand-400);
+  color: var(--ink-soft);
   transition: color var(--dur-fast) var(--ease);
 }
-.v2-nav-link:hover { color: var(--sand-100); }
+.v2-nav-link:hover { color: var(--rose-deep); }
 .v2-nav-link:focus-visible {
   outline: none;
-  color: var(--sand-100);
-  box-shadow: 0 0 0 1px var(--brass-500), 0 0 0 4px var(--brass-glow);
-  border-radius: 2px;
+  color: var(--rose-deep);
+  box-shadow: 0 0 0 2px var(--rose-glow), 0 0 0 1px var(--rose);
+  border-radius: 4px;
 }
 
-/* Full-screen mobile menu */
+/* Full-screen mobile menu (light) */
 .v2-menu {
   position: fixed;
   inset: 0;
   z-index: calc(var(--z-nav) + 1);
-  background: rgba(7, 10, 16, 0.98);
+  background: rgba(243, 242, 241, 0.98);
   display: flex;
   flex-direction: column;
 }
 .v2-menu-link {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: 1.35rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--sand-100);
+  color: var(--ink);
   padding: var(--space-4) 0;
   border-bottom: 1px solid var(--line);
   transition: color var(--dur-fast) var(--ease);
 }
-.v2-menu-link:hover { color: var(--brass-400); }
+.v2-menu-link:hover { color: var(--rose-deep); }
 .v2-menu-link:focus-visible {
   outline: none;
-  color: var(--brass-400);
-  box-shadow: inset 0 -2px 0 var(--brass-500);
+  color: var(--rose-deep);
+  box-shadow: inset 0 -2px 0 var(--rose);
 }
 
-/* ─── Shell: hero ────────────────────────────────────────────────── */
-.v2-hero-bg {
+/* ─── Shell: hero (light, flat logo placeholder until 3D lands) ──── */
+.v3-hero-orb {
   position: absolute;
-  inset: 0;
-  background-image: url("/assets/v2/hero-lineage.png");
-  background-size: cover;
-  background-position: center right;
-}
-/* Left-to-right ink scrim (85% → 20%) keeps the left third readable,
-   plus a bottom seam into the page background. */
-.v2-hero-scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgba(7, 10, 16, 0.55) 0%, transparent 22%),
-    linear-gradient(180deg, transparent 72%, var(--ink-950) 100%),
-    linear-gradient(90deg, rgba(7, 10, 16, 0.85) 0%, rgba(7, 10, 16, 0.62) 42%, rgba(7, 10, 16, 0.2) 100%);
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 30, 87, 0.14) 0%, rgba(255, 30, 87, 0.05) 45%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(4px);
 }
 
 /* Hero load sequence — line masks + fades, orchestrated via --d delays */
@@ -605,7 +640,7 @@ textarea.v2-field { resize: vertical; min-height: 120px; }
 .v2-swap { animation: v2-swap-in var(--dur-med) var(--ease); }
 @keyframes v2-swap-in { from { opacity: 0; } to { opacity: 1; } }
 
-/* ─── Lineage thread — fixed scroll-synced layer (Phase 4) ───────── */
+/* ─── Lineage thread — fixed scroll-synced layer, rose on light ──── */
 /* position: fixed + pointer-events: none + zero layout size = CLS 0.
    The inner <g> is translated by -scrollY; only transform and
    stroke-dashoffset change per frame. */
@@ -624,29 +659,8 @@ textarea.v2-field { resize: vertical; min-height: 120px; }
   animation: v2-svg-pulse var(--dur-slow) var(--ease) 1;
 }
 @keyframes v2-svg-pulse {
-  0%   { transform: scale(1); opacity: 0.55; }
+  0%   { transform: scale(1); opacity: 0.5; }
   100% { transform: scale(3.2); opacity: 0; }
-}
-
-/* ─── Section backgrounds (assets A2–A4) ─────────────────────────── */
-/* Images are lazy <img loading="lazy"> elements hidden onError, under
-   an ink-950 gradient at 60–80%. See SectionBg in Home.tsx. */
-.v2-bg-scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, var(--ink-950) 0%, rgba(7, 10, 16, 0.7) 45%, var(--ink-950) 100%);
-}
-
-/* ─── Grain overlay (asset A6) — fixed, tiled, 4% ────────────────── */
-.v2-grain {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-grain);
-  pointer-events: none;
-  background-image: url("/assets/v2/grain-512.png");
-  background-repeat: repeat;
-  background-size: 512px 512px;
-  opacity: 0.04;
 }
 
 @media (prefers-reduced-motion: reduce) {

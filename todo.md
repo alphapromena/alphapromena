@@ -274,12 +274,18 @@
 - tailwind-merge (~24 kB): cn() is used everywhere; swapping for plain clsx requires auditing for class conflicts — low value, medium risk
 - @builder.io/vite-plugin-jsx-loc (build plugin, unmet vite 7 peer): template leftover that injects source-location attributes; consider dropping post-launch
 
-## Phase 5b (blocked on v2 assets)
-- [ ] sharp AVIF/WebP pipeline for everything in client/public/assets/v2/
-- [ ] <picture> srcset at 960/1440/2560 widths for section backgrounds + hero
-- [ ] Preload the hero image; lazy-load everything below the fold (SectionBg imgs already lazy)
-- [ ] og-image.png composition (1200x630, hero crop + logo + tagline)
-- [ ] Lighthouse run on the Vercel preview: 90+ mobile / 95+ desktop Performance, 100 A11y + SEO
+## Phase 5b — SUPERSEDED by v3 "Interlock" (REDESIGN_V3_PLAN.md)
+The AI-generated dark backgrounds (hero-lineage, bg-*, grain) are retired; v3 surfaces are clean color. What survives moves to Round 28.3: og-image composition, favicons, and the Lighthouse run (90+ mobile / 95+ desktop Performance, 100 A11y + SEO).
+
+## Round 28.0: Interlock foundation (v3)
+- [x] REDESIGN_V3_PLAN.md added; official brand mark committed as client/public/brand/logo-mark.svg + logo-mark-dark.svg
+- [x] Fonts: Barlow only (kit) — latin 400/700 vendored in /public/fonts and preloaded (above-fold pair), 500/600/800 via @fontsource latin CSS; Archivo + IBM Plex Sans/Mono fully removed (deps, vendored files, preloads); all previously mono-styled elements now Barlow 600 uppercase 0.08em
+- [x] index.css rewritten to the exact kit tokens (--paper/--surface/--ink/--ink-deep/--rose/--rose-mid/--rose-deep/--line), light-first, motion tokens kept, --radius 18px cards, fully rounded pill buttons; shadcn semantic tokens remapped to light; derived alpha variants documented (--ink-soft/--ink-faint/--rose-glow/band text)
+- [x] Primitives reskinned: Button variants rose/ink/outline (rose pill + white text, rose-mid hover, rose-deep pressed, rose focus ring); Eyebrow Barlow 600 caps rose-deep; CardV2 white + soft shadow + 18px + 2px hover lift; LineageNode rose when active; Navbar paper/85 blur with the real logo mark + ALPHA PRO MENA wordmark + rose pill CTA; Footer charcoal band with logo-mark-dark
+- [x] Recolor sweep: hero rebuilt light (paper bg, soft rose orb, flat mark center-right as 28.1 placeholder, uppercase headline with one rose word "regulated"); partnerships + pre-footer CTA are full-width charcoal bands (ink→ink-deep, off-white text, rose glow, white cards); values on white; LineageThread recolored rose (0.55→0.22 opacity gradient) — elegant on light
+- [x] Retired dark-asset wiring removed: v2-hero-bg/scrim CSS, SectionBg component + bg-practices/bg-banking/bg-ai usages, grain overlay + .v2-grain
+- [x] pnpm check clean, pnpm build passes (main 442.83 kB / 133.14 gzip — unchanged), all routes + brand SVGs + Barlow files serve under vite dev
+- [ ] 28.3 a11y re-check (kit-mandated pairs to verify): white on rose buttons ≈3.8:1 (below 4.5 AA for 15px text), pure rose eyebrows on the ink band ≈3.4:1 — decide bump-size vs rose-deep/darker band treatment with stakeholders
 
 ## Notes for Phase 6 proofread
 - [ ] Headline: decide between "the Gulf's" and "the region's" most regulated institutions — eyebrow and Ataccama certification are MENA-wide, headline currently says Gulf

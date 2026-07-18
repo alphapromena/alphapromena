@@ -210,8 +210,8 @@ export function LineageThread({ waypoints, onActivate }: LineageThreadProps) {
     <svg className="v2-thread" aria-hidden="true">
       <defs>
         <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="var(--brass-500)" stopOpacity="0.9" />
-          <stop offset="1" stopColor="var(--brass-500)" stopOpacity="0.35" />
+          <stop offset="0" stopColor="var(--rose)" stopOpacity="0.55" />
+          <stop offset="1" stopColor="var(--rose)" stopOpacity="0.22" />
         </linearGradient>
       </defs>
       <g ref={gRef}>
@@ -221,7 +221,7 @@ export function LineageThread({ waypoints, onActivate }: LineageThreadProps) {
             cx={origin.x}
             cy={origin.y}
             r="5"
-            fill="var(--brass-500)"
+            fill="var(--rose)"
             style={{ opacity: originOn ? 1 : 0, transition: "opacity var(--dur-fast) var(--ease)" }}
           />
         )}
@@ -232,7 +232,7 @@ export function LineageThread({ waypoints, onActivate }: LineageThreadProps) {
             cy={origin.y}
             r="6"
             fill="none"
-            stroke="var(--brass-500)"
+            stroke="var(--rose)"
             strokeWidth="1.5"
           />
         )}
