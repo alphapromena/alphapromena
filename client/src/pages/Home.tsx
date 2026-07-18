@@ -190,13 +190,19 @@ export default function Home() {
     [setValue, scrollTo],
   );
 
+  /* Hero pills preselect without changing the scroll target. */
+  const preselect = useCallback(
+    (formValue: string) => setValue("inquiryType", formValue, { shouldValidate: false }),
+    [setValue],
+  );
+
   return (
     <div className="min-h-screen flex flex-col" style={{ background: "var(--paper)" }}>
       <LineageThread waypoints={WAYPOINTS} onActivate={onNodeActivate} />
       <NavbarV2 />
 
       <main id="main" className="flex-1">
-        <HeroV2 />
+        <HeroV2 onPreselect={preselect} />
 
         {/* ══ PRACTICES ═══════════════════════════════════════════ */}
         <Section id="practices" className="overflow-hidden">

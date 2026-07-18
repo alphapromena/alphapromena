@@ -285,7 +285,17 @@ The AI-generated dark backgrounds (hero-lineage, bg-*, grain) are retired; v3 su
 - [x] Recolor sweep: hero rebuilt light (paper bg, soft rose orb, flat mark center-right as 28.1 placeholder, uppercase headline with one rose word "regulated"); partnerships + pre-footer CTA are full-width charcoal bands (ink→ink-deep, off-white text, rose glow, white cards); values on white; LineageThread recolored rose (0.55→0.22 opacity gradient) — elegant on light
 - [x] Retired dark-asset wiring removed: v2-hero-bg/scrim CSS, SectionBg component + bg-practices/bg-banking/bg-ai usages, grain overlay + .v2-grain
 - [x] pnpm check clean, pnpm build passes (main 442.83 kB / 133.14 gzip — unchanged), all routes + brand SVGs + Barlow files serve under vite dev
-- [ ] 28.3 a11y re-check (kit-mandated pairs to verify): white on rose buttons ≈3.8:1 (below 4.5 AA for 15px text), pure rose eyebrows on the ink band ≈3.4:1 — decide bump-size vs rose-deep/darker band treatment with stakeholders
+- [x] 28.3 a11y flags RESOLVED by stakeholder decision (recorded + applied in 28.1): rose buttons stay kit-rose with white Barlow 700 text at 17px+, documented as an intentional AA-large stance; rose eyebrows on ink bands switched to paper text with only the index in rose
+
+## Round 28.1: interactive 3D hero
+- [x] Deps: three 0.185.1 + @react-three/fiber 9.6.1 + @react-three/drei 10.7.7 (R3F 9 line — installed React is 19.2, not 18) + @types/three dev
+- [x] hero-mark-3d.tsx: brand mark extruded at runtime from /brand/logo-mark.svg via SVGLoader (depth 14, bevel 2/1.5, 4 segments, 24 curve segments); rose path = MeshPhysicalMaterial rose glass (roughness 0.12, clearcoat 1), charcoal path = ceramic (roughness 0.3, metalness 0.1, clearcoat 0.6); bbox-centered, y-flip corrected, sized to ~80% of stage
+- [x] Lighting: procedural drei Environment from Lightformers only (soft white overhead + rose side fill, zero external HDR fetches) + one directional light; ContactShadows opacity 0.35
+- [x] Motion: idle float (~5s y sine + gentle sway), damped pointer-follow tilt (window pointermove, ±0.35 rad clamp, lerp 0.08), entrance scale 0.92→1 with wrapper fade; dpr [1, 1.75]; frameloop set to "never" when the hero is offscreen (IntersectionObserver) or the tab is hidden
+- [x] SceneBoundary: React.lazy + error boundary + fixed-aspect reserved stage box; flat SVG fallback used outright for prefers-reduced-motion, missing WebGL, or chunk failure — fallback and canvas share the same box, zero CLS by construction
+- [x] Floating pills: 6 ink pill buttons (Barlow 600 caps 12px, rose lucide icon, ±8px float on 4.5–6s staggered loops, hover lift + rose ring, focus rings); practice pills preselect the form practice; mobile <640px shows only Data Governance / Enterprise AI / Banking & Finance, repositioned clear of the mark
+- [x] Bundle isolation verified: main 448.65 kB (134.67 gzip, ~442 target held) vs hero-mark-3d lazy chunk 981.98 kB (270.91 gzip) — 3D loads only when eligible
+- [x] pnpm check clean, pnpm build passes; canvas container aria-hidden, pills are real focusable buttons
 
 ## Notes for Phase 6 proofread
 - [ ] Headline: decide between "the Gulf's" and "the region's" most regulated institutions — eyebrow and Ataccama certification are MENA-wide, headline currently says Gulf
