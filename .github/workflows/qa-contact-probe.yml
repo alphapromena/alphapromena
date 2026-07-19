@@ -1,32 +1,28 @@
 # Launch-QA helper (Round 28.4): POSTs one real submission to the contact
-# tRPC endpoint of a given deployment, from GitHub's network. Exists because
+# tRPC endpoint of the branch preview, from GitHub's network. Exists because
 # some networks (including the dev machine that authored this) reset TLS to
 # *.vercel.app, making preview verification impossible locally.
 #
-# Usage: gh workflow run qa-contact-probe.yml -f base_url=... -f share_token=...
+# Runs on pull_request only while the repo variable QA_CONTACT_PROBE is
+# "enabled"; QA_BASE_URL / QA_SHARE_TOKEN are repo variables too. Disarm
+# after verification with:  gh variable set QA_CONTACT_PROBE -b disabled
 name: qa-contact-probe
 
 on:
-  workflow_dispatch:
-    inputs:
-      base_url:
-        description: "Deployment base URL (no trailing slash)"
-        required: true
-      share_token:
-        description: "_vercel_share token for protected previews (optional)"
-        required: false
-        default: ""
+  pull_request:
+    branches: [main]
 
 jobs:
   probe:
+    if: ${{ vars.QA_CONTACT_PROBE == 'enabled' }}
     runs-on: ubuntu-latest
     steps:
       - name: POST contact.submit
         run: |
-          BASE="${{ inputs.base_url }}"
+          BASE="${{ vars.QA_BASE_URL }}"
           JAR=$(mktemp)
-          if [ -n "${{ inputs.share_token }}" ]; then
-            curl -s -c "$JAR" -o /dev/null -w "share auth: %{http_code}\n" "$BASE/?_vercel_share=${{ inputs.share_token }}"
+          if [ -n "${{ vars.QA_SHARE_TOKEN }}" ]; then
+            curl -s -L -c "$JAR" -o /dev/null -w "share auth: %{http_code}\n" "$BASE/?_vercel_share=${{ vars.QA_SHARE_TOKEN }}"
           fi
           echo "--- GET probe (expect tRPC METHOD_NOT_SUPPORTED json) ---"
           curl -s -b "$JAR" "$BASE/api/trpc/contact.submit" | head -c 400; echo
