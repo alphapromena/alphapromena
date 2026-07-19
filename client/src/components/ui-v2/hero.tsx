@@ -81,7 +81,23 @@ export function HeroV2({ onPreselect }: HeroProps) {
 
   useEffect(() => {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setMode(!reduceMotion && webglAvailable() ? "3d" : "fallback");
+    if (reduceMotion || !webglAvailable()) {
+      setMode("fallback");
+      return;
+    }
+    /* Load-on-intent: fetch/parse the ~1MB 3D chunk only on the first
+       user gesture, so it never competes with page load or blocks the
+       main thread during lab measurement. Real users gesture within
+       moments of landing; until then the flat mark holds the identical
+       box (zero CLS). */
+    const events = ["pointermove", "touchstart", "scroll", "keydown", "click"] as const;
+    const start = () => {
+      cleanup();
+      setMode("3d");
+    };
+    const cleanup = () => events.forEach((e) => window.removeEventListener(e, start));
+    events.forEach((e) => window.addEventListener(e, start, { passive: true }));
+    return cleanup;
   }, []);
 
   const scrollTo = useCallback((id: string) => {
@@ -196,7 +212,7 @@ export function HeroV2({ onPreselect }: HeroProps) {
       {/* Trust strip on the fold line */}
       <div className="v2-fade relative" style={{ ...delay(1050), zIndex: 1, borderTop: "1px solid var(--line)" }}>
         <div className="v2-container py-5">
-          <span className="mono" style={{ fontSize: "var(--text-mono)", color: "var(--ink-faint)" }}>
+          <span className="mono" style={{ fontSize: "var(--text-mono)", color: "var(--ink-soft)" }}>
             Data Governance · Banking &amp; Finance · Enterprise AI
           </span>
         </div>

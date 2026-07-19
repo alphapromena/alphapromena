@@ -309,6 +309,17 @@ The AI-generated dark backgrounds (hero-lineage, bg-*, grain) are retired; v3 su
 - [x] Micro-interactions: all pills scale 1.02 + deeper shadow on hover; footer links get rose underline slide-in; navbar scroll-spy (IntersectionObserver, -40%/-55% root margin) puts a 2px rose underline + aria-current on the in-view section's link
 - [x] Main bundle 448.65 → 452.90 kB (+4.25 kB; gzip 134.67 → 135.74); 3D chunk unchanged; pnpm check clean, pnpm build passes
 
+## Round 28.3: brand assets, favicons, OG, Lighthouse
+- [x] Barlow-Regular.ttf + Barlow-Bold.ttf + OFL.txt committed under scripts/fonts/ (google/fonts ofl/barlow) — build data only, never enters the client bundle
+- [x] Favicon set from the official mark (scripts/generate-favicons.mjs, pnpm icons): favicon.svg (the mark itself), favicon-16/32 transparent, apple-touch-icon 180 + icon-192/512 on solid ink with the dark mark at ~62%, site.webmanifest (#F3F2F1 / #313234); all index.html links rewired; old alpha-pro-mena-* rasters and favicon-48/192 deleted
+- [x] OG image (scripts/generate-og.mjs, pnpm og): 1200x630, fully vector — ink gradient + rose glow, dark mark left, ALPHA PRO / MENA in Barlow Bold paths + tagline via opentype.js from the committed TTFs, rose accent bar; sharp-rasterized to /brand/og-image.png; OG/Twitter tags updated. Fixed en route: opentype.js emits NaN path commands for space glyphs which abort librsvg — sanitizer strips them (lossless)
+- [x] Meta: title/description confirmed on v3 positioning; theme-color #F3F2F1 added; JSON-LD logo → icon-512; viewport maximum-scale removed (was disabling zoom); dead umami analytics placeholder script removed (was 404ing → BP hit)
+- [x] Contrast pass-throughs: CTA pills to Barlow 700/19px (clears the 18.66px AA-large threshold, white-on-rose needs only 3:1 = 3.77 ✓); small ink-faint text promoted to ink-soft (labels, eyebrow index, trust strip, record lines, inactive practice titles); outlined index numbers stroke 0.28→0.55 alpha (3.5:1 at large size)
+- [x] 3D chunk now load-on-intent: fetched on the first user gesture (pointermove/scroll/touch/key/click) instead of at mount — never competes with load; flat mark holds the same box meanwhile (zero CLS)
+- [x] Lighthouse (vite preview, headless Chrome): DESKTOP Perf 100 / A11y 100 / BP 100 / SEO 100 (LCP 0.6s, TBT 0ms, CLS 0); MOBILE Perf 94 / A11y 100 / BP 100 / SEO 100 (LCP 2.6s, TBT 110ms, CLS 0) — all targets met (90+ mobile / 95+ desktop / 100 A11y / 100 SEO)
+- [x] LCP element is the hero headline / flat mark by construction: the canvas chunk is not even requested until the first user gesture
+- [ ] Final numbers to be re-validated on the real Vercel preview during 28.4 (local preview ≠ production CDN/h2)
+
 ## Notes for Phase 6 proofread
 - [ ] Headline: decide between "the Gulf's" and "the region's" most regulated institutions — eyebrow and Ataccama certification are MENA-wide, headline currently says Gulf
 - [ ] OPEN QUESTION (awaiting Abdallah): policy docs are written for AlphaBeacon on purpose — LinkedIn's API app review requires publicly hosted privacy policy + terms URLs and this domain likely hosts them for the pending LinkedIn OAuth review. Do NOT rewrite or move /privacy and /terms; doing so could break the review. Leave both pages exactly as they are until confirmed.

@@ -311,7 +311,7 @@ export default function Home() {
                       </span>
                       <span
                         className="v2-h3 transition-colors"
-                        style={{ color: active ? "var(--ink)" : "var(--ink-faint)", transitionDuration: "var(--dur-fast)" }}
+                        style={{ color: active ? "var(--ink)" : "var(--ink-soft)", transitionDuration: "var(--dur-fast)" }}
                       >
                         {p.title}
                       </span>
@@ -349,7 +349,7 @@ export default function Home() {
                       <span className={`v3-index-num ${open ? "v3-index-num--active" : ""}`} aria-hidden="true" style={{ fontSize: "1.9rem" }}>
                         {p.index}
                       </span>
-                      <span className="v2-h3 flex-1" style={{ color: open ? "var(--ink)" : "var(--ink-faint)" }}>
+                      <span className="v2-h3 flex-1" style={{ color: open ? "var(--ink)" : "var(--ink-soft)" }}>
                         {p.title}
                       </span>
                     </button>
@@ -393,7 +393,7 @@ export default function Home() {
                   </div>
                   {/* spec color rgba(243,242,241,0.15) is invisible on the white
                       card, so the hairline uses --line at equal subtlety */}
-                  <p className="mt-4 pt-3" style={{ ...monoLabel, color: "var(--ink-faint)", lineHeight: 1.8, borderTop: "1px solid var(--line)" }}>
+                  <p className="mt-4 pt-3" style={{ ...monoLabel, color: "var(--ink-soft)", lineHeight: 1.8, borderTop: "1px solid var(--line)" }}>
                     {p.record}
                   </p>
                   <p className="mt-5 flex-1" style={{ fontSize: "var(--text-body)", lineHeight: 1.65, color: "var(--ink-soft)" }}>

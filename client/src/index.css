@@ -388,8 +388,8 @@
   text-transform: uppercase;
   color: var(--rose-deep);
 }
-.v2-eyebrow-index { color: var(--ink-faint); }
-.v2-eyebrow-sep { color: var(--ink-faint); }
+.v2-eyebrow-index { color: var(--ink-soft); }
+.v2-eyebrow-sep { color: var(--ink-soft); }
 
 /* Button: fully rounded pills */
 .v2-btn {
@@ -401,8 +401,9 @@
   border-radius: 999px;
   font-family: var(--font-sans);
   /* Stakeholder decision (28.1): kit-rose CTAs keep white text at
-     Barlow 700 / 17px+ — documented AA-large stance. */
-  font-size: 1.0625rem;
+     Barlow 700 / 17px+. 19px clears the WCAG large-text threshold
+     (18.66px bold), so white-on-rose needs only 3:1 (actual 3.77). */
+  font-size: 1.1875rem;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: 0.01em;
@@ -494,7 +495,7 @@
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-soft);
 }
 .v2-field {
   width: 100%;
@@ -811,8 +812,10 @@ textarea.v2-field { resize: vertical; min-height: 120px; }
   font-weight: 800;
   line-height: 1;
   min-width: 1.6em;
+  /* 0.55 alpha keeps the hollow look while clearing 3:1 large-text
+     contrast on paper (axe measures the effective stroke color) */
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(49, 50, 52, 0.28);
+  -webkit-text-stroke: 1.5px rgba(49, 50, 52, 0.55);
   transition: color var(--dur-med) var(--ease), -webkit-text-stroke-color var(--dur-med) var(--ease);
 }
 .v3-index-num--active { color: var(--rose); -webkit-text-stroke-color: var(--rose); }
