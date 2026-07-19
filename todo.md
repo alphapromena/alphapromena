@@ -189,3 +189,149 @@
 - [x] Updated Banking department card description to remove Baker Tilly reference
 - [x] Footer: removed placeholder social icon links (LI, TW, GH)
 - [x] Department email display: gradient-card uses plain mailto:Sales@Alphapromena.com — no obfuscation
+
+## Round 27.0: redesign baseline (Lineage v2, Phase 0)
+- [x] Branch redesign/v2 created from main; main tagged pre-redesign-v2
+- [x] REDESIGN_V2_PLAN.md committed to repo root
+- [x] tsconfig problems resolved: IDE diagnostics were caused by missing node_modules (pnpm install fixes); real bug fixed — tsBuildInfoFile wrote into node_modules/typescript (a pnpm store symlink), moved to node_modules/.cache/tsbuildinfo
+- [x] Dead components deleted (verified zero live imports): AIChatBox.tsx, Map.tsx, gradient-card.tsx, department-contact-card.tsx, ComponentShowcase.tsx
+- [x] Test script removed from package.json (less work than a smoke test); vitest.config.ts and vitest devDependency removed with it
+- [x] pnpm check clean, pnpm build passes
+- [ ] Noted for Phase 5: policy-page.tsx renders static markdown via Streamdown, pulling mermaid/cytoscape/shiki chunks (~4MB of lazy chunks, 1.6MB main bundle) — replace with a lightweight markdown renderer
+
+## Round 27.1: Lineage design foundation (Phase 1)
+- [x] Fonts self-hosted via fontsource: Archivo Variable (wdth+wght axes), IBM Plex Sans 400/500, IBM Plex Mono 400/500; Google Fonts links (Plus Jakarta Sans) removed from index.html
+- [x] index.css tokens rewritten to the Lineage system: 9 color tokens (ink/sand/brass), type scale (--text-display…--text-mono), spacing scale (--space-1…--space-32, 4px base), --radius: 8px, motion tokens (--dur-fast/med/slow, --ease)
+- [x] shadcn semantic tokens remapped onto the dark palette (background=ink-950, primary=brass-500, ring=brass-500, …)
+- [x] Old light values deleted; legacy token NAMES (--rose, --paper, --ink, …) kept as a clearly-marked shim re-pointed at the dark palette so untouched v1 sections stay functional until Phase 3 — DELETE THE SHIM IN PHASE 3
+- [x] Theme switcher removed: ThemeContext.tsx deleted, ThemeProvider unwrapped from App, Toaster pinned to dark, next-themes dependency dropped
+- [x] ui-v2 primitives: Section, Eyebrow (catalog index), Button/ButtonLink (brass, ghost, brass-glow focus ring), CardV2 (hairline, 2px hover lift), LineageNode (12px, single pulse, reduced-motion safe)
+- [x] Temporary /dev-tokens route renders palette swatches with hex, full type scale, spacing, motion, and every primitive — delete in Phase 6
+- [x] pnpm check clean, pnpm build passes
+
+## Round 27.2: shell (Phase 2)
+- [x] NavbarV2: fixed, transparent over hero, ink-900/85 backdrop blur + hairline after 40px scroll; Archivo wordmark; mono links (Practices, Partnerships, Process, Contact) + brass "Book a call"; mobile full-screen overlay menu with focus trap, Escape close, scroll lock
+- [x] HeroV2: full-viewport, H1 option B ("The data partner for the Gulf's most regulated institutions."), eyebrow ATACCAMA CERTIFIED PARTNER · MENA & GCC, subline, brass + ghost CTAs, mono trust strip on the fold line
+- [x] Hero load sequence: thread draws 700ms, headline line-mask reveals with 80ms stagger, trust strip fades last (~1.55s total); everything instant under prefers-reduced-motion
+- [x] LineageThread component: SVG layer with waypoints API, vertical-biased cubic path, brass gradient stroke, origin node, draw-in animation, debounced resize recompute — scroll mapping comes in Phase 4
+- [x] Hero background wired to /assets/v2/hero-lineage.png under the ink-950 L-to-R scrim (85%→20%); renders as quiet ink gradient until asset A1 is committed (client/public/assets/v2/ created)
+- [x] FooterV2: three columns (wordmark + description + certified-partner line; mono nav; email + Amman + LinkedIn), hairline bottom bar with copyright, Privacy/Terms, built-in-Amman line
+- [x] Policy pages switched to the new shell; old navbar-dropdown.tsx, site-footer.tsx, and unused alpha-pro-logo.tsx deleted
+- [x] All mid-page v1 sections untouched and functional; pnpm check clean, pnpm build passes
+- [x] LinkedIn resolved: footer points to the parent firm's page (linkedin.com/company/alpha-pro-consulting) until a dedicated MENA page exists
+
+## Round 27.3: sections rebuilt (Phase 3)
+- [x] Practices: CATALOG / 01 eyebrow; three entries (Data Governance & Intelligence / Enterprise AI & Platform Development / Banking & Finance Advisory); desktop index list + detail panel swapping on hover/click with 300ms fade; mobile stacked accordion; each detail = 2 sentences + 4 mono chips + ghost "Get in touch" that preselects the practice in the contact form
+- [x] Partnerships: REGISTRY eyebrow; two CardV2 certification records (Ataccama, Baker Tilly) with Archivo names, mono record lines (region / status / scope; no since-year existed in v1 code), one sentence, external link
+- [x] Process: LINEAGE eyebrow; 6 steps on a vertical thread with LineageNodes (ids process-node-0..5 ready for Phase 4), STEP 01–06 mono labels, Archivo h3 titles, one sentence each
+- [x] Values: CATALOG / 02 · HOW WE WORK; 6 values compressed to a hairline 3x2 grid, title + one line, no icons
+- [x] Contact: OPEN A RECORD; left = pitch + direct email + three mono routing rows that preselect the practice; right = form with identical backend logic (tRPC contact.submit, zod, Resend, CRM webhook untouched); inputs restyled ink-800/hairline/brass focus; Practice select added (maps to existing inquiryType field, so no API change); success replaces form with "Message sent. We reply within one business day."; error is inline with a direct email fallback
+- [x] CTA band before footer: "Start with a discovery call." + brass button; thread terminates at a final filled node (id cta-node)
+- [x] Removed: capability marquee, department cards, scroll-triggered Ataccama popup, fixed WebGL backdrop + scene-canvas.tsx, stats/about sections (per plan section list), legacy CSS shim and all v1 utility classes
+- [x] Deleted dead components: blobs, aurora-button, shine-border, service-card; dropped three, @types/three, framer-motion deps (main bundle 1,626 kB → 1,433 kB)
+- [x] Section backgrounds wired with graceful fallbacks: bg-practices.png (Practices), bg-banking.png (Partnerships), bg-ai.png (CTA band) as lazy imgs under 60–80% ink scrims; grain-512.png as fixed 4% tiled overlay in App — all render fine while assets are pending
+- [x] NotFound page restyled to Lineage (was hardcoded light); policy pages moved to v2 primitives; .gitignore now excludes .claude/settings.local.json
+- [x] pnpm check clean, pnpm build passes, all routes/modules compile under vite dev
+- [ ] Form e2e submit not verifiable locally (no vercel CLI / DATABASE_URL in this environment); server code is untouched from v1 — verify the full pipeline on the Vercel preview in Phase 6 step 3
+
+## Round 27.4: lineage motion (Phase 4)
+- [x] LineageThread rewritten as a position-fixed, pointer-events-none SVG layer: path computed in document coordinates through the 9 existing waypoint ids (thread-origin, process-node-0..5, contact-node, cta-node), inner <g> translated by -scrollY so scroll tracking is transform-only
+- [x] stroke-dashoffset mapped to a trigger line at viewport center + 12% lead via a precomputed length↔y lookup (binary search per frame, no DOM reads in the hot path); recompute on debounced resize + ResizeObserver on body (catches accordion toggles / async reflow)
+- [x] Nodes activate (brass fill + single pulse) when their waypoint passes the trigger line and stay active; activation state lives in Home and drives the DOM LineageNodes; origin node pulses in the SVG at intro completion; cta terminal node is part of the same sequence
+- [x] Hero load sequence unified: the Phase 2 draw is now the thread's own 700ms intro tween (origin → hero exit), after which scroll mapping takes over via max(introFloor, scrollTarget) — no double-trigger, thread never retracts above the hero
+- [x] Process section's DOM connector spans removed (the SVG thread is the line now)
+- [x] prefers-reduced-motion: thread fully drawn, all nodes active on load, no intro/pulses/dashoffset mapping (translate still tracks scroll — positioning, not animation)
+- [x] CLS 0 by construction: fixed layer, no layout size, no layout-affecting properties animated (transform / opacity / dashoffset only; node pulse is paint-only box-shadow); per-frame scripting is O(log n) — see PR notes for the frame budget
+- [x] pnpm check clean, pnpm build passes, all modules compile under vite dev
+
+## Round 27.5a: bundle, fonts, SEO, a11y (Phase 5a)
+- [x] Markdown runtime killed: policy docs pre-rendered to static HTML (marked, one-off, regen command noted in the files), rendered via dangerouslySetInnerHTML into .policy-prose; Streamdown removed. Bundle: 15,532 KB total / 336 JS chunks / 1,433 kB main → 756 KB total / 1 JS chunk / 536 kB main (163 kB gzip); build 16s → 4s
+- [x] Fonts: latin subsets only everywhere; Archivo Variable (wdth) + IBM Plex Sans 400 vendored in /public/fonts with verbatim fontsource descriptors and preloaded from index.html (the two above-fold faces, nothing else); Plex Sans 500 + Mono 400/500 via @fontsource latin-*.css; font-display swap everywhere; @fontsource-variable/archivo dep removed
+- [x] SEO: title + meta description rewritten around Ataccama certified partner MENA / data governance / enterprise AI; canonical; OG + Twitter cards pointed at /assets/v2/og-image.png (file arrives in Phase 5b); JSON-LD @graph with Organization + 3 Service nodes; sitemap.xml + robots.txt added
+- [x] A11y: global brass :focus-visible outline (custom box-shadow rings kept where present); skip-to-content link → #main on home + policy pages; all form labels already tied (verified); mobile menu aria-controls/haspopup + dialog id; practice tablist aria-orientation=vertical + ArrowUp/Down/Home/End keyboard support; mobile accordion aria-controls
+- [x] Contrast (automated WCAG check, all 16 pairs in use): every pair passes AA — worst text pair sand-400 on ink-800 at 6.98:1; brass-500 on ink-900 measures 8.02:1 (plan claimed ~7.5); no token adjustments needed
+- [x] /dev-tokens route and DevTokens.tsx deleted
+- [x] pnpm check clean, pnpm build passes, all routes + fonts + sitemap/robots serve under vite dev
+
+## Round 27.5a.1: route-level code splitting
+- [x] Privacy and Terms route-split via React.lazy + Suspense (ink-950 fallback), so the pre-rendered legal HTML stays out of the homepage bundle: main 535.73 kB (162.55 gzip) → 519.21 kB (157.35 gzip); lazy chunks Privacy 9.63 kB, Terms 7.46 kB, shared policy-page 1.36 kB
+- [x] Main bundle composition (source-map-explorer): react-dom 176.8 kB (34.9%), zod 44.9, app code 41.2, tanstack query 38.6, sonner 32.9, tailwind-merge 24.2, react-hook-form 23.0, trpc client+react+server 42.4, superjson 15.0, floating-ui+radix tooltip ~30
+- [ ] Follow-up candidate: sonner (32.9 kB) — nothing calls toast() since the Phase 3 success-panel redesign; the Toaster could be removed entirely
+- [x] pnpm check clean, pnpm build passes
+
+## Round 27.5a.2: remove dead dependencies
+- [x] sonner removed: zero toast() calls anywhere (Phase 3 replaced toasts with the inline success panel and inline error text); Toaster mount, ui/sonner.tsx, and the dependency deleted
+- [x] Tooltip stack removed: the only live consumer was App's TooltipProvider mount itself (shadcn boilerplate, no tooltips render on any page); ui/tooltip.tsx, its sole importer ui/sidebar.tsx (orphaned kit file), and @radix-ui/react-tooltip deleted — floating-ui left the bundle with it
+- [x] nanoid removed (zero imports in client/server/shared/api; the pnpm override for tailwind's transitive nanoid stays); @types/google.maps devDep removed (orphaned since Map.tsx was deleted in Phase 0)
+- [x] Reported, not removed: ~30 kit-only deps (radix primitives, recharts, embla, cmdk, vaul, input-otp, react-day-picker, date-fns, react-resizable-panels, class-variance-authority) are imported only by the unused shadcn ui/ kit — they never enter the shipped bundle, so removing them is repo hygiene (delete the kit) rather than a perf win
+- [x] source-map-explorer confirmed dev-only: never added to package.json (used via pnpm dlx), cannot enter the shipped bundle
+- [x] Main bundle 519.21 kB (157.35 gzip) → 442.39 kB (133.02 gzip); pnpm check clean, pnpm build passes
+
+## Post-launch bundle candidates (deliberately deferred)
+- tRPC client+react+server types (~42 kB) + tanstack query (~39 kB) + superjson (~15 kB): ~96 kB serving a single contact POST — could become one fetch() call, but it is the only conversion path on the site, so not a pre-launch refactor
+- zod (~45 kB): zod/mini could halve it, but the schema is shared with the server router — same reasoning, post-launch
+- react-hook-form (~23 kB): five fields could be uncontrolled + manual validation, not worth touching the conversion path pre-launch
+- tailwind-merge (~24 kB): cn() is used everywhere; swapping for plain clsx requires auditing for class conflicts — low value, medium risk
+- @builder.io/vite-plugin-jsx-loc (build plugin, unmet vite 7 peer): template leftover that injects source-location attributes; consider dropping post-launch
+
+## Phase 5b — SUPERSEDED by v3 "Interlock" (REDESIGN_V3_PLAN.md)
+The AI-generated dark backgrounds (hero-lineage, bg-*, grain) are retired; v3 surfaces are clean color. What survives moves to Round 28.3: og-image composition, favicons, and the Lighthouse run (90+ mobile / 95+ desktop Performance, 100 A11y + SEO).
+
+## Round 28.0: Interlock foundation (v3)
+- [x] REDESIGN_V3_PLAN.md added; official brand mark committed as client/public/brand/logo-mark.svg + logo-mark-dark.svg
+- [x] Fonts: Barlow only (kit) — latin 400/700 vendored in /public/fonts and preloaded (above-fold pair), 500/600/800 via @fontsource latin CSS; Archivo + IBM Plex Sans/Mono fully removed (deps, vendored files, preloads); all previously mono-styled elements now Barlow 600 uppercase 0.08em
+- [x] index.css rewritten to the exact kit tokens (--paper/--surface/--ink/--ink-deep/--rose/--rose-mid/--rose-deep/--line), light-first, motion tokens kept, --radius 18px cards, fully rounded pill buttons; shadcn semantic tokens remapped to light; derived alpha variants documented (--ink-soft/--ink-faint/--rose-glow/band text)
+- [x] Primitives reskinned: Button variants rose/ink/outline (rose pill + white text, rose-mid hover, rose-deep pressed, rose focus ring); Eyebrow Barlow 600 caps rose-deep; CardV2 white + soft shadow + 18px + 2px hover lift; LineageNode rose when active; Navbar paper/85 blur with the real logo mark + ALPHA PRO MENA wordmark + rose pill CTA; Footer charcoal band with logo-mark-dark
+- [x] Recolor sweep: hero rebuilt light (paper bg, soft rose orb, flat mark center-right as 28.1 placeholder, uppercase headline with one rose word "regulated"); partnerships + pre-footer CTA are full-width charcoal bands (ink→ink-deep, off-white text, rose glow, white cards); values on white; LineageThread recolored rose (0.55→0.22 opacity gradient) — elegant on light
+- [x] Retired dark-asset wiring removed: v2-hero-bg/scrim CSS, SectionBg component + bg-practices/bg-banking/bg-ai usages, grain overlay + .v2-grain
+- [x] pnpm check clean, pnpm build passes (main 442.83 kB / 133.14 gzip — unchanged), all routes + brand SVGs + Barlow files serve under vite dev
+- [x] 28.3 a11y flags RESOLVED by stakeholder decision (recorded + applied in 28.1): rose buttons stay kit-rose with white Barlow 700 text at 17px+, documented as an intentional AA-large stance; rose eyebrows on ink bands switched to paper text with only the index in rose
+
+## Round 28.1: interactive 3D hero
+- [x] Deps: three 0.185.1 + @react-three/fiber 9.6.1 + @react-three/drei 10.7.7 (R3F 9 line — installed React is 19.2, not 18) + @types/three dev
+- [x] hero-mark-3d.tsx: brand mark extruded at runtime from /brand/logo-mark.svg via SVGLoader (depth 14, bevel 2/1.5, 4 segments, 24 curve segments); rose path = MeshPhysicalMaterial rose glass (roughness 0.12, clearcoat 1), charcoal path = ceramic (roughness 0.3, metalness 0.1, clearcoat 0.6); bbox-centered, y-flip corrected, sized to ~80% of stage
+- [x] Lighting: procedural drei Environment from Lightformers only (soft white overhead + rose side fill, zero external HDR fetches) + one directional light; ContactShadows opacity 0.35
+- [x] Motion: idle float (~5s y sine + gentle sway), damped pointer-follow tilt (window pointermove, ±0.35 rad clamp, lerp 0.08), entrance scale 0.92→1 with wrapper fade; dpr [1, 1.75]; frameloop set to "never" when the hero is offscreen (IntersectionObserver) or the tab is hidden
+- [x] SceneBoundary: React.lazy + error boundary + fixed-aspect reserved stage box; flat SVG fallback used outright for prefers-reduced-motion, missing WebGL, or chunk failure — fallback and canvas share the same box, zero CLS by construction
+- [x] Floating pills: 6 ink pill buttons (Barlow 600 caps 12px, rose lucide icon, ±8px float on 4.5–6s staggered loops, hover lift + rose ring, focus rings); practice pills preselect the form practice; mobile <640px shows only Data Governance / Enterprise AI / Banking & Finance, repositioned clear of the mark
+- [x] Bundle isolation verified: main 448.65 kB (134.67 gzip, ~442 target held) vs hero-mark-3d lazy chunk 981.98 kB (270.91 gzip) — 3D loads only when eligible
+- [x] pnpm check clean, pnpm build passes; canvas container aria-hidden, pills are real focusable buttons
+
+## Round 28.2: section motion
+- [x] Reveal system: useReveal hook (IntersectionObserver, threshold 0.2, fires once, adds .is-revealed) + .reveal-up/.reveal-fade/.reveal-scale utilities with --reveal-delay staggering; instant under prefers-reduced-motion; zero new dependencies
+- [x] Capability marquee under the hero: 8 uppercase Barlow 600 items with rose diamond separators, duplicated aria-hidden track, ~30s CSS translate loop, pause on hover, static single row under reduced motion, hairlines top/bottom
+- [x] Practices: huge outlined Barlow 800 index numbers (ink text-stroke, rose fill on active), 3px rose slide-in indicator on the active row, detail panel wrapped in white CardV2, chips stagger in at 60ms; row LineageNodes replaced by the number+indicator treatment; behavior and preselect logic untouched
+- [x] Partnerships band: large soft rose radial glow behind the cards, cards reveal-up staggered 140ms; record-line top hairline — spec color rgba(243,242,241,0.15) is invisible on the white cards, substituted --line at equal subtlety (noted in code)
+- [x] Process: step label/title/sentence reveal-up staggered (0/60/120ms) driven by thread-node activation (no observer — reuses litNodes state); most recently activated STEP label ticks pure rose; thread/node mechanics untouched
+- [x] Values: 60ms staggered grid reveal; hover lifts 2px and slides a rose underline under the title
+- [x] Contact: rose caret + stronger 4px focus ring; submit pill swaps label for an inline spinner (aria-busy, role=status); success check icon scales 0.6→1 with a single rose ring pulse
+- [x] CTA band: closing line in display Barlow uppercase with rose word "discovery", rose glow orb, arrow slides 4px on hover; terminal node pulse remains activation-driven
+- [x] Micro-interactions: all pills scale 1.02 + deeper shadow on hover; footer links get rose underline slide-in; navbar scroll-spy (IntersectionObserver, -40%/-55% root margin) puts a 2px rose underline + aria-current on the in-view section's link
+- [x] Main bundle 448.65 → 452.90 kB (+4.25 kB; gzip 134.67 → 135.74); 3D chunk unchanged; pnpm check clean, pnpm build passes
+
+## Round 28.3: brand assets, favicons, OG, Lighthouse
+- [x] Barlow-Regular.ttf + Barlow-Bold.ttf + OFL.txt committed under scripts/fonts/ (google/fonts ofl/barlow) — build data only, never enters the client bundle
+- [x] Favicon set from the official mark (scripts/generate-favicons.mjs, pnpm icons): favicon.svg (the mark itself), favicon-16/32 transparent, apple-touch-icon 180 + icon-192/512 on solid ink with the dark mark at ~62%, site.webmanifest (#F3F2F1 / #313234); all index.html links rewired; old alpha-pro-mena-* rasters and favicon-48/192 deleted
+- [x] OG image (scripts/generate-og.mjs, pnpm og): 1200x630, fully vector — ink gradient + rose glow, dark mark left, ALPHA PRO / MENA in Barlow Bold paths + tagline via opentype.js from the committed TTFs, rose accent bar; sharp-rasterized to /brand/og-image.png; OG/Twitter tags updated. Fixed en route: opentype.js emits NaN path commands for space glyphs which abort librsvg — sanitizer strips them (lossless)
+- [x] Meta: title/description confirmed on v3 positioning; theme-color #F3F2F1 added; JSON-LD logo → icon-512; viewport maximum-scale removed (was disabling zoom); dead umami analytics placeholder script removed (was 404ing → BP hit)
+- [x] Contrast pass-throughs: CTA pills to Barlow 700/19px (clears the 18.66px AA-large threshold, white-on-rose needs only 3:1 = 3.77 ✓); small ink-faint text promoted to ink-soft (labels, eyebrow index, trust strip, record lines, inactive practice titles); outlined index numbers stroke 0.28→0.55 alpha (3.5:1 at large size)
+- [x] 3D chunk now load-on-intent: fetched on the first user gesture (pointermove/scroll/touch/key/click) instead of at mount — never competes with load; flat mark holds the same box meanwhile (zero CLS)
+- [x] Lighthouse (vite preview, headless Chrome): DESKTOP Perf 100 / A11y 100 / BP 100 / SEO 100 (LCP 0.6s, TBT 0ms, CLS 0); MOBILE Perf 94 / A11y 100 / BP 100 / SEO 100 (LCP 2.6s, TBT 110ms, CLS 0) — all targets met (90+ mobile / 95+ desktop / 100 A11y / 100 SEO)
+- [x] LCP element is the hero headline / flat mark by construction: the canvas chunk is not even requested until the first user gesture
+- [ ] Final numbers to be re-validated on the real Vercel preview during 28.4 (local preview ≠ production CDN/h2)
+
+## Round 28.4: QA and launch (PR open, merge gated on stakeholder sign-off)
+- [x] Preview: alphapromena-git-redesign-v2-alphapromenas-projects.vercel.app (deployment protection on; share links minted per-review, 23h expiry)
+- [x] Copy proofread: zero em-dashes in visible copy (legal docs = documented ship-as-is exception); headline finalized "the region's most regulated institutions"; uppercase only via the design system
+- [x] LAUNCH-BLOCKING FIX: vercel.json catch-all rewrite was serving index.html for /api/trpc/* (cache-busted probes, 405+HTML on POST) — the production contact backend has been unreachable; fixed with /((?!api/).*) and verified on the preview (tRPC METHOD_NOT_SUPPORTED JSON on GET = handler routed)
+- [x] Cross-browser: chromium full interactive pass + firefox/webkit smoke + iPhone 13 emulation — 21/22 green, zero console errors (the /privacy "fail" is a vite-preview SPA-fallback artifact; verified on Vercel). Network caveat: this machine's ISP resets TLS to *.vercel.app (SNI filtering, confirmed vs direct edge IP), so interactive QA ran on a local serve of the identical build; content/routing/API checks ran against the real preview via Vercel-side fetches. Real-device Safari/Android not reachable — stakeholders should spot-check on phones via the share link
+- [x] Verified: 3D intent-load + pointer-follow, reduced-motion and WebGL-blocked fallbacks, marquee, scroll-spy, thread + 7 node activations, practice swap + preselect, empty-submit validation (4 errors), mobile menu trap, 404
+- [!] Contact pipeline: the real POST is BLOCKED by deployment protection — Vercel share tokens authorize page views, not /api/* calls (401 "Protected deployment" from the GitHub runner). Handler routing IS verified (authenticated GET returns tRPC METHOD_NOT_SUPPORTED JSON). Options: dashboard-issued Protection Bypass for Automation secret → rerun the armed probe, or (recommended) the real submit happens in the post-merge production smoke test. NOTE: DATABASE_URL presence in Vercel env is unverified until that submit
+- [x] Preview Lighthouse via CI job: mobile 40/91/96/91, desktop 92/91/96/91 — polluted by preview-only artifacts (Vercel Live feedback toolbar injected into preview HTML drives TBT 2,580ms; x-robots-tag: noindex fails the SEO crawl audit). Clean-room local build: desktop 100/100/100/100, mobile 94/100/100/100. Production carries neither artifact; re-measure post-merge
+- [x] Ship-as-is decisions annotated: policy-page.tsx (AlphaBeacon docs / LinkedIn OAuth), footer LinkedIn → alpha-pro-consulting with swap comment
+- [x] PR #6 "Redesign v3: Interlock" opened with before/after screenshots (docs/qa-28.4), Lighthouse table, bundle story, full round log — MERGE BLOCKED pending stakeholder sign-off; after approval: merge, confirm production deploy, smoke-test production incl. the fixed contact endpoint, tag redesign-v3-live
+- [ ] Post-merge: disarm the QA probe (gh variable set QA_CONTACT_PROBE -b disabled)
+
+## Notes for Phase 6 proofread
+- [x] RESOLVED (28.4): headline uses "the region's most regulated institutions" — matches the MENA-wide eyebrow and certification; applied in hero.tsx
+- [ ] OPEN QUESTION (awaiting Abdallah): policy docs are written for AlphaBeacon on purpose — LinkedIn's API app review requires publicly hosted privacy policy + terms URLs and this domain likely hosts them for the pending LinkedIn OAuth review. Do NOT rewrite or move /privacy and /terms; doing so could break the review. Leave both pages exactly as they are until confirmed.

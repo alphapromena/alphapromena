@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git pull *)",
+      "Bash(pnpm dev *)",
+      "Bash(curl -s http://localhost:5173/ -o /dev/null -w \"root: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/pages/Home.tsx\" -o /dev/null -w \"Home.tsx transform: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/index.css\" -o /dev/null -w \"index.css transform: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/components/ui-v2/index.ts\" -o /dev/null -w \"ui-v2 transform: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/components/policy-page.tsx\" -o /dev/null -w \"policy-page transform: %{http_code}\\\\n\")",
+      "Bash(git commit -m 'feat\\(redesign\\): practices, partnerships, process, values, contact *)",
+      "Bash(curl -s \"http://localhost:5173/src/pages/Home.tsx\" -o /dev/null -w \"Home: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/components/ui-v2/lineage-thread.tsx\" -o /dev/null -w \"lineage-thread: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/components/ui-v2/hero.tsx\" -o /dev/null -w \"hero: %{http_code}\\\\n\")",
+      "Bash(curl -s \"http://localhost:5173/src/index.css\" -o /dev/null -w \"css: %{http_code}\\\\n\")",
+      "Bash(git commit -m 'feat\\(redesign\\): scroll-driven lineage thread and hero sequence *)",
+      "Bash(awk '{print $1 \" KB total assets\"}')",
+      "Bash(xargs -I{} du -k {})",
+      "Bash(npx --yes marked --gfm -i privacy-policy.md -o privacy-policy.html)",
+      "Bash(npx --yes marked --gfm -i terms-of-service.md -o terms-of-service.html)",
+      "Bash(pnpm dlx *)",
+      "Bash(grep -E \"^latin-\\(4|5\\)00\\\\.css$\")",
+      "Bash(node \"C:\\\\Users\\\\user\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Claude-Projects-alphapromena-alphapromena\\\\f380d129-3d2f-4ac3-bd6c-c42f74577756\\\\scratchpad\\\\contrast-check.mjs\")",
+      "Bash(git commit -m 'chore\\(redesign\\): drop markdown runtime, SEO, accessibility pass *)",
+      "Bash(node -e ' *)"
+    ]
+  }
+}

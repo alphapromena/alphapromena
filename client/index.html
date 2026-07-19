@@ -3,30 +3,84 @@
 
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Alpha Pro MENA</title>
-    <meta name="description" content="Alpha Pro MENA delivers enterprise AI consulting, data governance, custom AI implementation, banking & finance solutions, and full-stack development across the MENA region." />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alpha Pro MENA | Ataccama Certified Partner · Data Governance & Enterprise AI</title>
+    <meta name="description" content="Ataccama's certified Solution Partner across MENA. Alpha Pro MENA delivers data governance, enterprise AI, and banking advisory for the region's most regulated institutions." />
+    <link rel="canonical" href="https://alphapromena.com/" />
+    <meta name="theme-color" content="#F3F2F1" />
+
+    <!-- Favicon set generated from the official mark: scripts/generate-favicons.mjs -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="/favicon-192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/alpha-pro-mena-favicon-512.png" />
-    <meta property="og:image" content="/alpha-pro-mena-favicon-512.png" />
-    <meta name="twitter:image" content="/alpha-pro-mena-favicon-512.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Above-fold fonts (Barlow latin, font-display: swap) -->
+    <link rel="preload" href="/fonts/barlow-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Social cards (image: scripts/generate-og.mjs) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Alpha Pro MENA" />
+    <meta property="og:title" content="Alpha Pro MENA | Ataccama Certified Partner · Data Governance & Enterprise AI" />
+    <meta property="og:description" content="Ataccama's certified Solution Partner across MENA. Data governance, enterprise AI, and banking advisory for regulated institutions." />
+    <meta property="og:url" content="https://alphapromena.com/" />
+    <meta property="og:image" content="https://alphapromena.com/brand/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Alpha Pro MENA | Ataccama Certified Partner · Data Governance & Enterprise AI" />
+    <meta name="twitter:description" content="Ataccama's certified Solution Partner across MENA. Data governance, enterprise AI, and banking advisory for regulated institutions." />
+    <meta name="twitter:image" content="https://alphapromena.com/brand/og-image.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://alphapromena.com/#organization",
+          "name": "Alpha Pro MENA",
+          "url": "https://alphapromena.com/",
+          "logo": "https://alphapromena.com/icon-512.png",
+          "email": "info@alphapromena.com",
+          "description": "Ataccama's certified Solution Partner across the Middle East and North Africa. Data governance, enterprise AI, and banking advisory for regulated institutions.",
+          "address": { "@type": "PostalAddress", "addressLocality": "Amman", "addressCountry": "JO" },
+          "sameAs": ["https://www.linkedin.com/company/alpha-pro-consulting"]
+        },
+        {
+          "@type": "Service",
+          "name": "Data Governance & Intelligence",
+          "serviceType": "Data governance consulting",
+          "provider": { "@id": "https://alphapromena.com/#organization" },
+          "areaServed": "Middle East and North Africa",
+          "description": "Deployment of Ataccama One for data catalog, lineage, quality, master data, and regulatory compliance."
+        },
+        {
+          "@type": "Service",
+          "name": "Enterprise AI & Platform Development",
+          "serviceType": "Artificial intelligence consulting and development",
+          "provider": { "@id": "https://alphapromena.com/#organization" },
+          "areaServed": "Middle East and North Africa",
+          "description": "AI readiness assessments, model audits, custom machine learning systems, and the cloud-native platforms that power them."
+        },
+        {
+          "@type": "Service",
+          "name": "Banking & Finance Advisory",
+          "serviceType": "Financial services technology consulting",
+          "provider": { "@id": "https://alphapromena.com/#organization" },
+          "areaServed": "Middle East and North Africa",
+          "description": "Risk models, fraud detection, regulatory reporting, and core banking integrations for regulated institutions."
+        }
+      ]
+    }
+    </script>
   </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script
-      defer
-      src="%VITE_ANALYTICS_ENDPOINT%/umami"
-      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
   </body>
 
 </html>
