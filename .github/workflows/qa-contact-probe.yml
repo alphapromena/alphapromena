@@ -1,0 +1,37 @@
+# Launch-QA helper (Round 28.4): POSTs one real submission to the contact
+# tRPC endpoint of a given deployment, from GitHub's network. Exists because
+# some networks (including the dev machine that authored this) reset TLS to
+# *.vercel.app, making preview verification impossible locally.
+#
+# Usage: gh workflow run qa-contact-probe.yml -f base_url=... -f share_token=...
+name: qa-contact-probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Deployment base URL (no trailing slash)"
+        required: true
+      share_token:
+        description: "_vercel_share token for protected previews (optional)"
+        required: false
+        default: ""
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST contact.submit
+        run: |
+          BASE="${{ inputs.base_url }}"
+          JAR=$(mktemp)
+          if [ -n "${{ inputs.share_token }}" ]; then
+            curl -s -c "$JAR" -o /dev/null -w "share auth: %{http_code}\n" "$BASE/?_vercel_share=${{ inputs.share_token }}"
+          fi
+          echo "--- GET probe (expect tRPC METHOD_NOT_SUPPORTED json) ---"
+          curl -s -b "$JAR" "$BASE/api/trpc/contact.submit" | head -c 400; echo
+          echo "--- POST submission ---"
+          curl -s -b "$JAR" -X POST "$BASE/api/trpc/contact.submit?batch=1" \
+            -H "Content-Type: application/json" \
+            -d '{"0":{"json":{"name":"QA Verification Round 28.4","company":"Alpha Pro MENA (internal QA)","email":"engineer@alphapromena.com","inquiryType":"General inquiry","message":"Automated launch QA submission from Round 28.4 verifying the contact pipeline on the redesign/v2 preview. Safe to ignore."}}}' \
+            -w "\nPOST status: %{http_code}\n"
