@@ -138,7 +138,7 @@ export function HeroV2({ onPreselect }: HeroProps) {
               <span style={delay(450)}>The data partner</span>
             </span>
             <span className="v2-reveal-line">
-              <span style={delay(530)}>for the Gulf's most</span>
+              <span style={delay(530)}>for the region's most</span>
             </span>
             <span className="v2-reveal-line">
               <span style={delay(610)}>

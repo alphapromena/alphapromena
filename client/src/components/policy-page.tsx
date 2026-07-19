@@ -14,6 +14,11 @@ interface PolicyPageProps {
  * Standalone legal / policy page. Reuses the site's header and footer so
  * it feels part of the marketing site, and renders a markdown document
  * inside a readable, single-column article.
+ *
+ * SHIP-AS-IS (28.4): the document content is written for AlphaBeacon on
+ * purpose. These URLs likely back the pending LinkedIn OAuth app review
+ * (which requires public privacy/terms links), so do not rewrite or move
+ * them without confirmation from Abdallah.
  */
 export function PolicyPage({ eyebrow, title, html }: PolicyPageProps) {
   return (

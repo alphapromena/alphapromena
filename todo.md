@@ -321,5 +321,5 @@ The AI-generated dark backgrounds (hero-lineage, bg-*, grain) are retired; v3 su
 - [ ] Final numbers to be re-validated on the real Vercel preview during 28.4 (local preview ≠ production CDN/h2)
 
 ## Notes for Phase 6 proofread
-- [ ] Headline: decide between "the Gulf's" and "the region's" most regulated institutions — eyebrow and Ataccama certification are MENA-wide, headline currently says Gulf
+- [x] RESOLVED (28.4): headline uses "the region's most regulated institutions" — matches the MENA-wide eyebrow and certification; applied in hero.tsx
 - [ ] OPEN QUESTION (awaiting Abdallah): policy docs are written for AlphaBeacon on purpose — LinkedIn's API app review requires publicly hosted privacy policy + terms URLs and this domain likely hosts them for the pending LinkedIn OAuth review. Do NOT rewrite or move /privacy and /terms; doing so could break the review. Leave both pages exactly as they are until confirmed.
