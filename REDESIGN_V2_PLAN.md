@@ -1,3 +1,5 @@
+> **SUPERSEDED.** The visual language in sections 2 and 3 of this plan (the "Lineage" dark theme) was replaced by [REDESIGN_V3_PLAN.md](REDESIGN_V3_PLAN.md) ("Interlock", the official brand kit). The structural, backend, SEO, accessibility, and performance work from this plan shipped and remains in force. Launched as `redesign-v3-live` on 2026-07-19.
+
 # Alpha Pro MENA, Redesign v2: "Lineage"
 
 Master plan for the full redesign of alphapromena.com. Assets are generated in Claude chat via Higgsfield. Code is executed in Claude Code, one phase per session, using the paste-ready prompts below. Drop this file in the repo root so Claude Code can reference it.

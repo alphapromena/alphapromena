@@ -330,7 +330,22 @@ The AI-generated dark backgrounds (hero-lineage, bg-*, grain) are retired; v3 su
 - [x] Preview Lighthouse via CI job: mobile 40/91/96/91, desktop 92/91/96/91 — polluted by preview-only artifacts (Vercel Live feedback toolbar injected into preview HTML drives TBT 2,580ms; x-robots-tag: noindex fails the SEO crawl audit). Clean-room local build: desktop 100/100/100/100, mobile 94/100/100/100. Production carries neither artifact; re-measure post-merge
 - [x] Ship-as-is decisions annotated: policy-page.tsx (AlphaBeacon docs / LinkedIn OAuth), footer LinkedIn → alpha-pro-consulting with swap comment
 - [x] PR #6 "Redesign v3: Interlock" opened with before/after screenshots (docs/qa-28.4), Lighthouse table, bundle story, full round log — MERGE BLOCKED pending stakeholder sign-off; after approval: merge, confirm production deploy, smoke-test production incl. the fixed contact endpoint, tag redesign-v3-live
-- [ ] Post-merge: disarm the QA probe (gh variable set QA_CONTACT_PROBE -b disabled)
+- [x] Post-merge: QA probe disarmed (QA_CONTACT_PROBE=disabled)
+
+## Round 28.4: launched (2026-07-19)
+- [x] PR #6 merged to main (f43314b); production deploy confirmed and verified externally; tagged redesign-v3-live; remote redesign/v2 branch deleted (history preserved by the tag and main)
+- [x] Production API probe (custom domain, this machine): GET /api/trpc/contact.submit returns tRPC METHOD_NOT_SUPPORTED JSON — the historic rewrite bug is closed on production itself
+- [x] Assets verified: /brand/og-image.png 200 image/png, /favicon.svg 200 image/svg+xml, /site.webmanifest 200 application/manifest+json
+- [x] First real production form submit succeeded (200, success:true). Pipeline status: DB row CREATED in Neon (DATABASE_URL configured); Resend LOG-ONLY ("[Notification] (logging only — Resend not configured)" to abood@/hamza@/Qusai@) — set RESEND_API_KEY + verified sender to enable lead emails; CRM webhook NOT CONFIGURED (silent no-op, DEPARTMENT_WEBHOOK_URL unset)
+- [x] Production Lighthouse (clean, no preview artifacts):
+
+  | Run | Perf | A11y | BP | SEO | LCP | TBT | CLS |
+  |---|---|---|---|---|---|---|---|
+  | Desktop (alphapromena.com) | 99 | 100 | 100 | 100 | 0.7 s | 10 ms | 0.03 |
+  | Mobile (www direct, canonical) | 94 | 100 | 100 | 100 | 2.3 s | 80 ms | 0 |
+  | Mobile (apex, pays the 307 redirect) | 89 | 100 | 100 | 100 | 3.0 s | 80 ms | 0 |
+
+- [ ] Follow-up for the team: set RESEND_API_KEY (and a verified sender) in Vercel production env so lead notifications actually email; leads currently land in the DB only
 
 ## Notes for Phase 6 proofread
 - [x] RESOLVED (28.4): headline uses "the region's most regulated institutions" — matches the MENA-wide eyebrow and certification; applied in hero.tsx
