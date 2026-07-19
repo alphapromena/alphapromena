@@ -320,6 +320,18 @@ The AI-generated dark backgrounds (hero-lineage, bg-*, grain) are retired; v3 su
 - [x] LCP element is the hero headline / flat mark by construction: the canvas chunk is not even requested until the first user gesture
 - [ ] Final numbers to be re-validated on the real Vercel preview during 28.4 (local preview ≠ production CDN/h2)
 
+## Round 28.4: QA and launch (PR open, merge gated on stakeholder sign-off)
+- [x] Preview: alphapromena-git-redesign-v2-alphapromenas-projects.vercel.app (deployment protection on; share links minted per-review, 23h expiry)
+- [x] Copy proofread: zero em-dashes in visible copy (legal docs = documented ship-as-is exception); headline finalized "the region's most regulated institutions"; uppercase only via the design system
+- [x] LAUNCH-BLOCKING FIX: vercel.json catch-all rewrite was serving index.html for /api/trpc/* (cache-busted probes, 405+HTML on POST) — the production contact backend has been unreachable; fixed with /((?!api/).*) and verified on the preview (tRPC METHOD_NOT_SUPPORTED JSON on GET = handler routed)
+- [x] Cross-browser: chromium full interactive pass + firefox/webkit smoke + iPhone 13 emulation — 21/22 green, zero console errors (the /privacy "fail" is a vite-preview SPA-fallback artifact; verified on Vercel). Network caveat: this machine's ISP resets TLS to *.vercel.app (SNI filtering, confirmed vs direct edge IP), so interactive QA ran on a local serve of the identical build; content/routing/API checks ran against the real preview via Vercel-side fetches. Real-device Safari/Android not reachable — stakeholders should spot-check on phones via the share link
+- [x] Verified: 3D intent-load + pointer-follow, reduced-motion and WebGL-blocked fallbacks, marquee, scroll-spy, thread + 7 node activations, practice swap + preselect, empty-submit validation (4 errors), mobile menu trap, 404
+- [x] Contact pipeline: real submission via the qa-contact-probe workflow on PR #6 (GitHub runner network); results + Vercel function logs recorded in the PR/QA report
+- [x] Preview Lighthouse via CI job (runner Chrome vs protected preview with JWT header); local numbers: desktop 100/100/100/100, mobile 94/100/100/100
+- [x] Ship-as-is decisions annotated: policy-page.tsx (AlphaBeacon docs / LinkedIn OAuth), footer LinkedIn → alpha-pro-consulting with swap comment
+- [x] PR #6 "Redesign v3: Interlock" opened with before/after screenshots (docs/qa-28.4), Lighthouse table, bundle story, full round log — MERGE BLOCKED pending stakeholder sign-off; after approval: merge, confirm production deploy, smoke-test production incl. the fixed contact endpoint, tag redesign-v3-live
+- [ ] Post-merge: disarm the QA probe (gh variable set QA_CONTACT_PROBE -b disabled)
+
 ## Notes for Phase 6 proofread
 - [x] RESOLVED (28.4): headline uses "the region's most regulated institutions" — matches the MENA-wide eyebrow and certification; applied in hero.tsx
 - [ ] OPEN QUESTION (awaiting Abdallah): policy docs are written for AlphaBeacon on purpose — LinkedIn's API app review requires publicly hosted privacy policy + terms URLs and this domain likely hosts them for the pending LinkedIn OAuth review. Do NOT rewrite or move /privacy and /terms; doing so could break the review. Leave both pages exactly as they are until confirmed.
