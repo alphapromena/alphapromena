@@ -31,3 +31,33 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"0":{"json":{"name":"QA Verification Round 28.4","company":"Alpha Pro MENA (internal QA)","email":"engineer@alphapromena.com","inquiryType":"General inquiry","message":"Automated launch QA submission from Round 28.4 verifying the contact pipeline on the redesign/v2 preview. Safe to ignore."}}}' \
             -w "\nPOST status: %{http_code}\n"
+
+  lighthouse:
+    if: ${{ vars.QA_CONTACT_PROBE == 'enabled' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lighthouse against the preview (mobile + desktop)
+        run: |
+          BASE="${{ vars.QA_BASE_URL }}"
+          JAR=$(mktemp)
+          curl -s -L -c "$JAR" -o /dev/null "$BASE/?_vercel_share=${{ vars.QA_SHARE_TOKEN }}"
+          JWT=$(grep _vercel_jwt "$JAR" | awk '{print $NF}')
+          HDRS="{\"Cookie\":\"_vercel_jwt=$JWT\"}"
+          npm i -g lighthouse >/dev/null 2>&1
+          for PRESET in mobile desktop; do
+            EXTRA=""
+            [ "$PRESET" = "desktop" ] && EXTRA="--preset=desktop"
+            lighthouse "$BASE/" $EXTRA --extra-headers "$HDRS" \
+              --chrome-flags="--headless=new" --output=json --output-path="./lh-$PRESET.json" --quiet >/dev/null 2>&1 || true
+            node -e "
+              const r=require('./lh-$PRESET.json');const c=r.categories;
+              console.log('PREVIEW '+'$PRESET'.toUpperCase(),
+                'Perf:'+Math.round(c.performance.score*100),
+                'A11y:'+Math.round(c.accessibility.score*100),
+                'BP:'+Math.round(c['best-practices'].score*100),
+                'SEO:'+Math.round(c.seo.score*100),
+                'LCP:'+r.audits['largest-contentful-paint'].displayValue,
+                'TBT:'+r.audits['total-blocking-time'].displayValue,
+                'CLS:'+r.audits['cumulative-layout-shift'].displayValue);
+            "
+          done
