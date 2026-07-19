@@ -419,7 +419,13 @@
   box-shadow: 0 0 0 2px var(--surface), 0 0 0 5px var(--rose);
 }
 .v2-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.v2-btn:hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 12px 26px -14px rgba(26, 28, 30, 0.4);
+}
 .v2-btn:active:not(:disabled) { transform: translateY(1px); }
+.v2-btn svg { transition: transform var(--dur-fast) var(--ease); }
+.v3-btn-arrow:hover:not(:disabled) svg { transform: translateX(4px); }
 .v2-btn--rose { background: var(--rose); color: #FFFFFF; border: 1px solid transparent; }
 .v2-btn--rose:hover:not(:disabled) { background: var(--rose-mid); }
 .v2-btn--rose:active:not(:disabled) { background: var(--rose-deep); }
@@ -503,10 +509,11 @@
   transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
 }
 .v2-field::placeholder { color: var(--ink-faint); }
+.v2-field { caret-color: var(--rose); }
 .v2-field:focus, .v2-field:focus-visible {
   outline: none;
   border-color: var(--rose);
-  box-shadow: 0 0 0 3px var(--rose-glow);
+  box-shadow: 0 0 0 4px var(--rose-glow);
 }
 textarea.v2-field { resize: vertical; min-height: 120px; }
 .v2-field-error {
@@ -587,6 +594,12 @@ textarea.v2-field { resize: vertical; min-height: 120px; }
   color: var(--rose-deep);
   box-shadow: 0 0 0 2px var(--rose-glow), 0 0 0 1px var(--rose);
   border-radius: 4px;
+}
+/* Scroll-spy: section currently in view */
+.v2-nav-link--active {
+  color: var(--ink);
+  box-shadow: inset 0 -2px 0 var(--rose);
+  padding-bottom: 2px;
 }
 
 /* Full-screen mobile menu (light) */
@@ -731,6 +744,174 @@ textarea.v2-field { resize: vertical; min-height: 120px; }
   100% { transform: scale(3.2); opacity: 0; }
 }
 
+/* ══ Round 28.2 — scroll reveals + section motion ═════════════════ */
+
+/* Reveal utilities: a useReveal container gains .is-revealed once ~20%
+   visible; descendants transition in, staggered via --reveal-delay.
+   Elements may also carry .is-revealed themselves (process steps are
+   driven by thread-node activation instead of an observer). */
+.reveal-up, .reveal-fade, .reveal-scale {
+  opacity: 0;
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal-up { transform: translateY(16px); }
+.reveal-scale { transform: scale(0.96); }
+.is-revealed .reveal-up, .is-revealed.reveal-up,
+.is-revealed .reveal-fade, .is-revealed.reveal-fade,
+.is-revealed .reveal-scale, .is-revealed.reveal-scale {
+  opacity: 1;
+  transform: none;
+}
+
+/* Capability marquee (under the hero) */
+.v3-marquee {
+  display: flex;
+  overflow: hidden;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  user-select: none;
+}
+.v3-marquee-track {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-width: 100%;
+  padding-block: 14px;
+  animation: v3-marquee 30s linear infinite;
+}
+@keyframes v3-marquee { to { transform: translateX(-100%); } }
+.v3-marquee:hover .v3-marquee-track { animation-play-state: paused; }
+.v3-marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding-right: var(--space-8);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.v3-marquee-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--rose);
+  rotate: 45deg;
+  flex-shrink: 0;
+}
+
+/* Practices: huge outlined index numbers + active indicator */
+.v3-index-num {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 4vw, 3.1rem);
+  font-weight: 800;
+  line-height: 1;
+  min-width: 1.6em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(49, 50, 52, 0.28);
+  transition: color var(--dur-med) var(--ease), -webkit-text-stroke-color var(--dur-med) var(--ease);
+}
+.v3-index-num--active { color: var(--rose); -webkit-text-stroke-color: var(--rose); }
+.v3-row-indicator {
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--rose);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform var(--dur-med) var(--ease);
+}
+.v3-row--active .v3-row-indicator { transform: scaleY(1); }
+
+/* Partnerships band: one large soft rose glow behind the cards */
+.v3-band-glow {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(920px, 110%);
+  aspect-ratio: 1.5;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(255, 30, 87, 0.17), transparent 72%);
+  pointer-events: none;
+}
+
+/* Values: lift + rose underline slide */
+.v3-value-cell { transition: transform var(--dur-fast) var(--ease); }
+.v3-value-cell:hover { transform: translateY(-2px); }
+.v3-value-title { display: inline-block; position: relative; }
+.v3-value-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  background: var(--rose);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-med) var(--ease);
+}
+.v3-value-cell:hover .v3-value-title::after { transform: scaleX(1); }
+
+/* Contact: pending spinner + success check */
+.v3-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #FFFFFF;
+  animation: v3-spin 0.8s linear infinite;
+}
+@keyframes v3-spin { to { transform: rotate(360deg); } }
+.v3-success-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--rose);
+  color: #FFFFFF;
+  animation:
+    v3-check-in 0.45s var(--ease) both,
+    v3-check-ring 0.7s var(--ease) 0.15s 1;
+}
+@keyframes v3-check-in {
+  from { transform: scale(0.6); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+@keyframes v3-check-ring {
+  from { box-shadow: 0 0 0 0 rgba(255, 30, 87, 0.4); }
+  to   { box-shadow: 0 0 0 18px rgba(255, 30, 87, 0); }
+}
+
+/* Footer links: rose underline slide-in */
+.footer-link { position: relative; }
+.footer-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 2px;
+  background: var(--rose);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-med) var(--ease);
+}
+.footer-link:hover::after { transform: scaleX(1); }
+
+/* CTA band closing line uses display type on dark */
+.band-dark .v2-display { color: var(--band-text); }
+
 @media (prefers-reduced-motion: reduce) {
   .v2-card--hover:hover { transform: none; }
   .v2-node--active { animation: none; }
@@ -739,4 +920,11 @@ textarea.v2-field { resize: vertical; min-height: 120px; }
   .v2-swap { animation: none; }
   .v2-thread-pulse { animation: none; } /* base opacity 0 keeps it hidden */
   .v3-pill { animation: none; }
+  .reveal-up, .reveal-fade, .reveal-scale { transition: none; opacity: 1; transform: none; }
+  .v3-marquee-track { animation: none; }
+  .v3-marquee-track[aria-hidden="true"] { display: none; }
+  .v2-btn:hover:not(:disabled) { transform: none; }
+  .v3-value-cell:hover { transform: none; }
+  .v3-success-check { animation: none; }
+  .v3-btn-arrow:hover:not(:disabled) svg { transform: none; }
 }

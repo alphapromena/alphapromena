@@ -19,6 +19,7 @@ const LINKS = [
 export function NavbarV2() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
   const [location] = useLocation();
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -34,6 +35,29 @@ export function NavbarV2() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  /* Scroll-spy: the link of the section crossing the viewport's middle
+     band carries a rose underline (home page only). */
+  useEffect(() => {
+    if (location !== "/") {
+      setActiveSection(null);
+      return;
+    }
+    const els = LINKS.map((l) => document.getElementById(l.id)).filter(
+      (el): el is HTMLElement => el !== null,
+    );
+    if (els.length === 0) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) setActiveSection(e.target.id);
+        }
+      },
+      { rootMargin: "-40% 0px -55% 0px", threshold: 0 },
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [location]);
 
   /* Focus trap + scroll lock while the mobile menu is open. */
   useEffect(() => {
@@ -84,7 +108,14 @@ export function NavbarV2() {
 
           <nav className="hidden md:flex items-center" style={{ gap: "var(--space-8)" }} aria-label="Primary">
             {LINKS.map((l) => (
-              <a key={l.id} href={anchor(l.id)} className="v2-nav-link">{l.label}</a>
+              <a
+                key={l.id}
+                href={anchor(l.id)}
+                className={`v2-nav-link ${activeSection === l.id ? "v2-nav-link--active" : ""}`}
+                aria-current={activeSection === l.id ? "true" : undefined}
+              >
+                {l.label}
+              </a>
             ))}
             <ButtonLink href={anchor("contact")} variant="rose" style={{ padding: "10px 22px" }}>
               Book a call

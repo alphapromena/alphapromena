@@ -1,9 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight, Check, ExternalLink } from "lucide-react";
+import { useReveal } from "@/hooks/useReveal";
 import {
   Button,
   ButtonLink,
@@ -107,6 +108,17 @@ const ROUTING = [
 
 const PRACTICE_OPTIONS = [...PRACTICES.map((p) => p.formValue), "General inquiry"];
 
+const CAPS = [
+  "Data Governance",
+  "Data Quality",
+  "Master Data Management",
+  "AI Strategy",
+  "MLOps",
+  "Fraud Detection",
+  "Regulatory Reporting",
+  "Cloud-Native Platforms",
+];
+
 const contactSchema = z.object({
   name: z.string().min(2, "Name is required"),
   company: z.string().min(1, "Company is required"),
@@ -117,6 +129,40 @@ const contactSchema = z.object({
 type ContactForm = z.infer<typeof contactSchema>;
 
 /* ── Helpers ────────────────────────────────────────────────────── */
+
+/** Scroll-reveal container: children with .reveal-* transition in once
+    ~20% of this wrapper is visible (staggered via --reveal-delay). */
+function Reveal({ className, children, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <div ref={ref} className={className} {...rest}>
+      {children}
+    </div>
+  );
+}
+
+const rd = (ms: number) => ({ "--reveal-delay": `${ms}ms` }) as React.CSSProperties;
+
+/** Infinite capability marquee: duplicated aria-hidden track, pure CSS
+    translate loop, paused on hover, static row under reduced motion. */
+function CapabilityMarquee() {
+  const track = (hidden: boolean) => (
+    <div className="v3-marquee-track" aria-hidden={hidden || undefined}>
+      {CAPS.map((c) => (
+        <span key={c} className="v3-marquee-item">
+          {c}
+          <span className="v3-marquee-dot" aria-hidden="true" />
+        </span>
+      ))}
+    </div>
+  );
+  return (
+    <div className="v3-marquee" aria-label="Capabilities">
+      {track(false)}
+      {track(true)}
+    </div>
+  );
+}
 
 /* Label voice: Barlow 600 uppercase (kit) */
 const monoLabel: React.CSSProperties = {
@@ -139,8 +185,10 @@ function PracticeDetail({
       <p style={{ ...monoLabel, color: "var(--rose-deep)" }}>{practice.sub}</p>
       <p className="v2-body mt-4" style={{ maxWidth: "52ch" }}>{practice.body}</p>
       <div className="flex flex-wrap gap-2 mt-6">
-        {practice.chips.map((c) => (
-          <span key={c} className="v2-chip">{c}</span>
+        {practice.chips.map((c, i) => (
+          <span key={c} className="v2-chip v2-fade" style={{ "--d": `${i * 60}ms` } as React.CSSProperties}>
+            {c}
+          </span>
         ))}
       </div>
       <div className="mt-8">
@@ -169,6 +217,15 @@ export default function Home() {
     });
   }, []);
   const lit = useCallback((id: string) => litNodes.has(id), [litNodes]);
+
+  /* Most recently activated process step gets the pure-rose STEP label. */
+  const lastLitStep = useMemo(() => {
+    let last = -1;
+    for (let i = 0; i < PROCESS.length; i++) {
+      if (litNodes.has(`process-node-${i}`)) last = i;
+    }
+    return last;
+  }, [litNodes]);
 
   const scrollTo = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -204,13 +261,18 @@ export default function Home() {
       <main id="main" className="flex-1">
         <HeroV2 onPreselect={preselect} />
 
+        {/* ══ CAPABILITY MARQUEE ══════════════════════════════════ */}
+        <CapabilityMarquee />
+
         {/* ══ PRACTICES ═══════════════════════════════════════════ */}
         <Section id="practices" className="overflow-hidden">
           <div className="relative z-[1]">
-            <Eyebrow index="CATALOG / 01">Practices</Eyebrow>
-            <h2 className="v2-h2 mt-5" style={{ maxWidth: "24ch" }}>
-              Three practices, one accountable partner.
-            </h2>
+            <Reveal>
+              <div className="reveal-up"><Eyebrow index="CATALOG / 01">Practices</Eyebrow></div>
+              <h2 className="v2-h2 mt-5 reveal-up" style={{ ...rd(80), maxWidth: "24ch" }}>
+                Three practices, one accountable partner.
+              </h2>
+            </Reveal>
 
             {/* Desktop: index list + swapping detail panel */}
             <div className="hidden md:grid md:grid-cols-12 gap-12 mt-14">
@@ -238,13 +300,13 @@ export default function Home() {
                       aria-selected={active}
                       id={`practice-tab-${p.id}`}
                       aria-controls="practice-panel"
-                      className="w-full flex items-center gap-5 text-left py-6"
+                      className={`relative w-full flex items-center gap-5 text-left py-6 pl-5 ${active ? "v3-row--active" : ""}`}
                       style={{ borderTop: "1px solid var(--line)" }}
                       onClick={() => setActivePractice(i)}
                       onMouseEnter={() => setActivePractice(i)}
                     >
-                      <LineageNode active={active} />
-                      <span style={{ ...monoLabel, color: active ? "var(--rose-deep)" : "var(--ink-faint)" }}>
+                      <span className="v3-row-indicator" aria-hidden="true" />
+                      <span className={`v3-index-num ${active ? "v3-index-num--active" : ""}`} aria-hidden="true">
                         {p.index}
                       </span>
                       <span
@@ -258,14 +320,16 @@ export default function Home() {
                 })}
               </div>
               <div
-                className="md:col-span-7 pt-6"
+                className="md:col-span-7"
                 id="practice-panel"
                 role="tabpanel"
                 aria-labelledby={`practice-tab-${PRACTICES[activePractice].id}`}
               >
-                <div key={activePractice} className="v2-swap">
-                  <PracticeDetail practice={PRACTICES[activePractice]} onEnquire={enquire} />
-                </div>
+                <CardV2 className="p-8">
+                  <div key={activePractice} className="v2-swap">
+                    <PracticeDetail practice={PRACTICES[activePractice]} onEnquire={enquire} />
+                  </div>
+                </CardV2>
               </div>
             </div>
 
@@ -276,13 +340,15 @@ export default function Home() {
                 return (
                   <div key={p.id} style={{ borderTop: "1px solid var(--line)" }}>
                     <button
-                      className="w-full flex items-center gap-4 text-left py-5"
+                      className={`relative w-full flex items-center gap-4 text-left py-5 pl-4 ${open ? "v3-row--active" : ""}`}
                       aria-expanded={open}
                       aria-controls={`practice-detail-${p.id}`}
                       onClick={() => setMobileOpen(open ? -1 : i)}
                     >
-                      <LineageNode active={open} />
-                      <span style={{ ...monoLabel, color: open ? "var(--rose-deep)" : "var(--ink-faint)" }}>{p.index}</span>
+                      <span className="v3-row-indicator" aria-hidden="true" />
+                      <span className={`v3-index-num ${open ? "v3-index-num--active" : ""}`} aria-hidden="true" style={{ fontSize: "1.9rem" }}>
+                        {p.index}
+                      </span>
                       <span className="v2-h3 flex-1" style={{ color: open ? "var(--ink)" : "var(--ink-faint)" }}>
                         {p.title}
                       </span>
@@ -301,15 +367,18 @@ export default function Home() {
 
         {/* ══ PARTNERSHIPS ─ charcoal band ════════════════════════ */}
         <Section id="partnership" className="band-dark overflow-hidden">
+          <div className="v3-band-glow" aria-hidden="true" />
           <div className="relative z-[1]">
-            <Eyebrow index="REGISTRY">Partnerships</Eyebrow>
-            <h2 className="v2-h2 mt-5" style={{ maxWidth: "22ch" }}>
-              Certified, on the record.
-            </h2>
+            <Reveal>
+              <div className="reveal-up"><Eyebrow index="REGISTRY">Partnerships</Eyebrow></div>
+              <h2 className="v2-h2 mt-5 reveal-up" style={{ ...rd(80), maxWidth: "22ch" }}>
+                Certified, on the record.
+              </h2>
+            </Reveal>
 
-            <div className="grid md:grid-cols-2 gap-6 mt-14">
-              {PARTNERS.map((p) => (
-                <CardV2 key={p.name} interactive className="p-8 lg:p-10 flex flex-col">
+            <Reveal className="grid md:grid-cols-2 gap-6 mt-14">
+              {PARTNERS.map((p, i) => (
+                <CardV2 key={p.name} interactive className="reveal-up p-8 lg:p-10 flex flex-col" style={rd(i * 140)}>
                   <div
                     style={{
                       fontFamily: "var(--font-display)",
@@ -322,7 +391,9 @@ export default function Home() {
                   >
                     {p.name}
                   </div>
-                  <p className="mt-3" style={{ ...monoLabel, color: "var(--ink-faint)", lineHeight: 1.8 }}>
+                  {/* spec color rgba(243,242,241,0.15) is invisible on the white
+                      card, so the hairline uses --line at equal subtlety */}
+                  <p className="mt-4 pt-3" style={{ ...monoLabel, color: "var(--ink-faint)", lineHeight: 1.8, borderTop: "1px solid var(--line)" }}>
                     {p.record}
                   </p>
                   <p className="mt-5 flex-1" style={{ fontSize: "var(--text-body)", lineHeight: 1.65, color: "var(--ink-soft)" }}>
@@ -339,7 +410,7 @@ export default function Home() {
                   </a>
                 </CardV2>
               ))}
-            </div>
+            </Reveal>
           </div>
         </Section>
 
@@ -347,57 +418,75 @@ export default function Home() {
         <Section id="how-we-work">
           <div className="grid lg:grid-cols-12 gap-12">
             <div className="lg:col-span-4">
-              <div className="lg:sticky lg:top-28">
-                <Eyebrow index="LINEAGE">Process</Eyebrow>
-                <h2 className="v2-h2 mt-5">A structured engagement.</h2>
-                <p className="v2-body mt-5" style={{ maxWidth: "38ch" }}>
+              <Reveal className="lg:sticky lg:top-28">
+                <div className="reveal-up"><Eyebrow index="LINEAGE">Process</Eyebrow></div>
+                <h2 className="v2-h2 mt-5 reveal-up" style={rd(80)}>A structured engagement.</h2>
+                <p className="v2-body mt-5 reveal-up" style={{ ...rd(160), maxWidth: "38ch" }}>
                   Six stages, each with a clear gate. Enterprise clients see status, spend, and
                   risk at every step.
                 </p>
-              </div>
+              </Reveal>
             </div>
             <div className="lg:col-span-8">
-              {/* The SVG thread is the connecting line between these nodes. */}
-              {PROCESS.map((p, i) => (
-                <div key={p.step} className="flex gap-6">
-                  <LineageNode id={`process-node-${i}`} active={lit(`process-node-${i}`)} className="mt-1" />
-                  <div className={i < PROCESS.length - 1 ? "pb-12" : ""} style={{ marginTop: "-4px" }}>
-                    <p style={{ ...monoLabel, color: "var(--rose-deep)" }}>{p.step}</p>
-                    <h3 className="v2-h3 mt-2">{p.label}</h3>
-                    <p className="v2-small mt-2" style={{ maxWidth: "52ch" }}>{p.desc}</p>
+              {/* The SVG thread is the connecting line between these nodes.
+                  Step content reveals as its node activates (no observer). */}
+              {PROCESS.map((p, i) => {
+                const on = lit(`process-node-${i}`);
+                return (
+                  <div key={p.step} className="flex gap-6">
+                    <LineageNode id={`process-node-${i}`} active={on} className="mt-1" />
+                    <div
+                      className={`${i < PROCESS.length - 1 ? "pb-12 " : ""}${on ? "is-revealed" : ""}`}
+                      style={{ marginTop: "-4px" }}
+                    >
+                      <p
+                        className="reveal-up"
+                        style={{
+                          ...monoLabel,
+                          color: i === lastLitStep ? "var(--rose)" : "var(--rose-deep)",
+                          transitionProperty: "opacity, transform, color",
+                        }}
+                      >
+                        {p.step}
+                      </p>
+                      <h3 className="v2-h3 mt-2 reveal-up" style={rd(60)}>{p.label}</h3>
+                      <p className="v2-small mt-2 reveal-up" style={{ ...rd(120), maxWidth: "52ch" }}>{p.desc}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </Section>
 
         {/* ══ VALUES ══════════════════════════════════════════════ */}
         <Section id="values" style={{ background: "var(--surface)" }}>
-          <Eyebrow index="CATALOG / 02">How we work</Eyebrow>
-          <h2 className="v2-h2 mt-5">Six working principles.</h2>
-          <div
+          <Reveal>
+            <div className="reveal-up"><Eyebrow index="CATALOG / 02">How we work</Eyebrow></div>
+            <h2 className="v2-h2 mt-5 reveal-up" style={rd(80)}>Six working principles.</h2>
+          </Reveal>
+          <Reveal
             className="grid sm:grid-cols-2 lg:grid-cols-3 mt-14"
             style={{ gap: "1px", background: "var(--line)", border: "1px solid var(--line)", borderRadius: "var(--radius)", overflow: "hidden" }}
           >
-            {VALUES.map((v) => (
-              <div key={v.title} className="p-7" style={{ background: "var(--surface)" }}>
-                <div className="font-semibold" style={{ color: "var(--ink)" }}>{v.title}</div>
+            {VALUES.map((v, i) => (
+              <div key={v.title} className="v3-value-cell reveal-up p-7" style={{ ...rd(i * 60), background: "var(--surface)" }}>
+                <div className="v3-value-title font-semibold" style={{ color: "var(--ink)" }}>{v.title}</div>
                 <p className="v2-small mt-2">{v.line}</p>
               </div>
             ))}
-          </div>
+          </Reveal>
         </Section>
 
         {/* ══ CONTACT ═════════════════════════════════════════════ */}
         <Section id="contact">
           <div className="grid lg:grid-cols-12 gap-12 items-start">
-            <div className="lg:col-span-5">
-              <div className="flex items-center gap-4">
+            <Reveal className="lg:col-span-5">
+              <div className="flex items-center gap-4 reveal-up">
                 <LineageNode id="contact-node" active={lit("contact-node")} />
                 <Eyebrow>Open a record</Eyebrow>
               </div>
-              <h2 className="v2-h2 mt-5">Start the conversation.</h2>
+              <h2 className="v2-h2 mt-5 reveal-up" style={rd(80)}>Start the conversation.</h2>
               <p className="v2-body mt-5" style={{ maxWidth: "40ch" }}>
                 Tell us about your challenge. We reply within one business day.
               </p>
@@ -430,12 +519,12 @@ export default function Home() {
                 ))}
                 <div style={{ borderTop: "1px solid var(--line)" }} />
               </div>
-            </div>
+            </Reveal>
 
             <div className="lg:col-span-7" id="contact-form">
               {submitContact.isSuccess ? (
                 <CardV2 className="p-10">
-                  <LineageNode active />
+                  <span className="v3-success-check"><Check className="w-5 h-5" /></span>
                   <h3 className="v2-h3 mt-5">Message sent.</h3>
                   <p className="v2-body mt-2">We reply within one business day.</p>
                 </CardV2>
@@ -473,9 +562,14 @@ export default function Home() {
                   </div>
                   <div className="sm:col-span-2 flex flex-col gap-3">
                     <div>
-                      <Button variant="rose" type="submit" disabled={submitContact.isPending}>
-                        {submitContact.isPending ? "Sending" : "Send message"}
-                        {!submitContact.isPending && <ArrowRight className="w-4 h-4" />}
+                      <Button variant="rose" type="submit" disabled={submitContact.isPending} aria-busy={submitContact.isPending}>
+                        {submitContact.isPending ? (
+                          <span className="v3-spinner" role="status" aria-label="Sending" />
+                        ) : (
+                          <>
+                            Send message <ArrowRight className="w-4 h-4" />
+                          </>
+                        )}
                       </Button>
                     </div>
                     {submitContact.isError && (
@@ -496,17 +590,26 @@ export default function Home() {
 
         {/* ══ CTA BAND ─ charcoal, the thread terminates here ═════ */}
         <section className="band-dark relative overflow-hidden">
-          <div className="v2-container relative z-[1] py-24 sm:py-28">
+          <div
+            className="v3-hero-orb"
+            style={{ right: "-10%", top: "-30%", width: "48%", aspectRatio: "1" }}
+            aria-hidden="true"
+          />
+          <Reveal className="v2-container relative z-[1] py-24 sm:py-28">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-6">
                 <LineageNode id="cta-node" active={lit("cta-node")} />
-                <h2 className="v2-h2" style={{ maxWidth: "18ch" }}>Start with a discovery call.</h2>
+                <h2 className="v2-display reveal-up" style={{ maxWidth: "14ch", fontSize: "clamp(2.2rem, 5vw, 4rem)" }}>
+                  Start with a <span className="v2-rose-word">discovery</span> call.
+                </h2>
               </div>
-              <Button variant="rose" onClick={() => scrollTo("contact")} className="shrink-0">
-                Book a discovery call <ArrowRight className="w-4 h-4" />
-              </Button>
+              <div className="reveal-up shrink-0" style={rd(140)}>
+                <Button variant="rose" className="v3-btn-arrow" onClick={() => scrollTo("contact")}>
+                  Book a discovery call <ArrowRight className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
-          </div>
+          </Reveal>
         </section>
       </main>
 

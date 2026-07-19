@@ -297,6 +297,18 @@ The AI-generated dark backgrounds (hero-lineage, bg-*, grain) are retired; v3 su
 - [x] Bundle isolation verified: main 448.65 kB (134.67 gzip, ~442 target held) vs hero-mark-3d lazy chunk 981.98 kB (270.91 gzip) — 3D loads only when eligible
 - [x] pnpm check clean, pnpm build passes; canvas container aria-hidden, pills are real focusable buttons
 
+## Round 28.2: section motion
+- [x] Reveal system: useReveal hook (IntersectionObserver, threshold 0.2, fires once, adds .is-revealed) + .reveal-up/.reveal-fade/.reveal-scale utilities with --reveal-delay staggering; instant under prefers-reduced-motion; zero new dependencies
+- [x] Capability marquee under the hero: 8 uppercase Barlow 600 items with rose diamond separators, duplicated aria-hidden track, ~30s CSS translate loop, pause on hover, static single row under reduced motion, hairlines top/bottom
+- [x] Practices: huge outlined Barlow 800 index numbers (ink text-stroke, rose fill on active), 3px rose slide-in indicator on the active row, detail panel wrapped in white CardV2, chips stagger in at 60ms; row LineageNodes replaced by the number+indicator treatment; behavior and preselect logic untouched
+- [x] Partnerships band: large soft rose radial glow behind the cards, cards reveal-up staggered 140ms; record-line top hairline — spec color rgba(243,242,241,0.15) is invisible on the white cards, substituted --line at equal subtlety (noted in code)
+- [x] Process: step label/title/sentence reveal-up staggered (0/60/120ms) driven by thread-node activation (no observer — reuses litNodes state); most recently activated STEP label ticks pure rose; thread/node mechanics untouched
+- [x] Values: 60ms staggered grid reveal; hover lifts 2px and slides a rose underline under the title
+- [x] Contact: rose caret + stronger 4px focus ring; submit pill swaps label for an inline spinner (aria-busy, role=status); success check icon scales 0.6→1 with a single rose ring pulse
+- [x] CTA band: closing line in display Barlow uppercase with rose word "discovery", rose glow orb, arrow slides 4px on hover; terminal node pulse remains activation-driven
+- [x] Micro-interactions: all pills scale 1.02 + deeper shadow on hover; footer links get rose underline slide-in; navbar scroll-spy (IntersectionObserver, -40%/-55% root margin) puts a 2px rose underline + aria-current on the in-view section's link
+- [x] Main bundle 448.65 → 452.90 kB (+4.25 kB; gzip 134.67 → 135.74); 3D chunk unchanged; pnpm check clean, pnpm build passes
+
 ## Notes for Phase 6 proofread
 - [ ] Headline: decide between "the Gulf's" and "the region's" most regulated institutions — eyebrow and Ataccama certification are MENA-wide, headline currently says Gulf
 - [ ] OPEN QUESTION (awaiting Abdallah): policy docs are written for AlphaBeacon on purpose — LinkedIn's API app review requires publicly hosted privacy policy + terms URLs and this domain likely hosts them for the pending LinkedIn OAuth review. Do NOT rewrite or move /privacy and /terms; doing so could break the review. Leave both pages exactly as they are until confirmed.
