@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useLocation } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { Footer, Grain, Navbar } from "@/components/ui-v4";
@@ -6,10 +5,6 @@ import { Footer, Grain, Navbar } from "@/components/ui-v4";
 export default function NotFound() {
   const [, setLocation] = useLocation();
 
-  useEffect(() => {
-    document.documentElement.classList.add("v4-dark");
-    return () => document.documentElement.classList.remove("v4-dark");
-  }, []);
 
   return (
     <div className="v4 flex min-h-screen flex-col">

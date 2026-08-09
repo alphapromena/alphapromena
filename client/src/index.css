@@ -225,49 +225,37 @@
 
 
 /* ═══════════════════════════════════════════════════════════════════
-   v4 "SIGNAL" — dark cinematic layer
-   Scoped to .v4 so the shadcn primitives keep their own light token set.
-   html.v4-dark paints the document and overscroll area to match.
+   v4 "SIGNAL / LIGHT"
+
+   Light-first, built on the official kit already declared in :root above.
+   The page is paper with ink text; exactly two sections invert to a dark
+   band (.v4-band): the free assessment and the pre-footer CTA.
+
+   Every directional rule here is logical (inline-start/end, text-start),
+   so the same stylesheet serves the Arabic RTL locale unchanged.
    ═══════════════════════════════════════════════════════════════════ */
 
-html.v4-dark,
-html.v4-dark body {
-  background: #1A1C1E;
-  color-scheme: dark;
-}
-html.v4-dark ::selection { background: #FF1E57; color: #0B0C0D; }
-html.v4-dark ::-webkit-scrollbar { width: 10px; }
-html.v4-dark ::-webkit-scrollbar-track { background: #131517; }
-html.v4-dark ::-webkit-scrollbar-thumb { background: #303336; border: 3px solid #131517; }
-/* Lenis drives the scroll position itself; native smoothing fights it. */
-html.v4-dark { scroll-behavior: auto; }
-html.lenis-stopped { overflow: hidden; }
-
 .v4 {
-  --rose:      #FF1E57;
-  --rose-mid:  #E92156;
-  --rose-deep: #B7274F;
-  --ink:       #313234;
-  --ink-deep:  #1A1C1E;
-  --void:      #0B0C0D;
-  --paper:     #F3F2F1;
-  --line:      rgba(243, 242, 241, 0.10);
-
+  --void: #0B0C0D;                 /* only ever behind media */
   --font-display: "Barlow Condensed", "Barlow", system-ui, sans-serif;
   --font-body: "Barlow", system-ui, sans-serif;
 
-  background: var(--ink-deep);
-  color: var(--paper);
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--font-body);
   font-weight: 400;
-  letter-spacing: 0;
-  -webkit-font-smoothing: antialiased;
 }
 
-.v4 ::selection { background: var(--rose); color: var(--void); }
+/* Arabic swaps the family and drops the Latin display mannerisms. */
+.v4:lang(ar) {
+  --font-display: "IBM Plex Sans Arabic", "Barlow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans Arabic", "Barlow", system-ui, sans-serif;
+}
+
+.v4 ::selection { background: var(--rose); color: #FFFFFF; }
 
 .v4 :focus-visible {
-  outline: 2px solid var(--paper);
+  outline: 2px solid var(--rose);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -277,12 +265,23 @@ html.lenis-stopped { overflow: hidden; }
   font-family: var(--font-display);
   font-weight: 800;
   text-transform: uppercase;
-  line-height: 0.86;
+  line-height: 0.88;
   letter-spacing: -0.015em;
-  color: var(--paper);
+  color: var(--ink);
   text-wrap: balance;
 }
+/* Connected script breaks under tracking and casing, so Arabic takes its
+   impact from weight and size instead of those two properties. */
+.v4-display:lang(ar) {
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.18;
+}
+
 .v4-rose { color: var(--rose); }
+/* Body-size rose must clear AA on paper, so it darkens. */
+.v4-rose-text { color: var(--rose-deep); }
 
 .v4-eyebrow {
   font-family: var(--font-body);
@@ -290,37 +289,77 @@ html.lenis-stopped { overflow: hidden; }
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(243, 242, 241, 0.52);
+  color: var(--ink-faint);
 }
+.v4-eyebrow:lang(ar) { letter-spacing: 0; text-transform: none; font-size: 0.85rem; }
 
 .v4-lead {
   font-size: clamp(1rem, 1.15vw, 1.15rem);
   line-height: 1.62;
-  color: rgba(243, 242, 241, 0.66);
-  max-width: 56ch;
+  color: var(--ink-soft);
+  max-width: 60ch;
 }
-.v4-body { color: rgba(243, 242, 241, 0.62); line-height: 1.66; }
+.v4-body { color: var(--ink-soft); line-height: 1.66; }
 .v4-num {
   font-family: var(--font-display);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
 }
+/* Numerals stay Latin in Arabic, so the Latin display face still applies. */
+.v4-num:lang(ar) {
+  font-family: "Barlow Condensed", system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+/* ── Dark bands (exactly two on the site) ───────────────────────── */
+.v4-band {
+  background: linear-gradient(160deg, var(--ink) 0%, var(--ink-deep) 100%);
+  color: var(--band-text);
+}
+.v4-band .v4-display,
+.v4-band .v4-num { color: var(--band-text); }
+.v4-band .v4-eyebrow { color: rgba(243, 242, 241, 0.62); }
+.v4-band .v4-lead,
+.v4-band .v4-body { color: var(--band-text-soft); }
+.v4-band .v4-rose-text { color: var(--rose); }
+.v4-band .v4-card {
+  background: rgba(243, 242, 241, 0.05);
+  border-color: rgba(243, 242, 241, 0.14);
+  box-shadow: none;
+}
+.v4-band .v4-rule { border-color: rgba(243, 242, 241, 0.14); }
+.v4-band :focus-visible { outline-color: var(--band-text); }
+
+/* ── Surfaces ───────────────────────────────────────────────────── */
+.v4-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+}
+.v4-card-hover {
+  transition: box-shadow var(--dur-med) var(--ease), transform var(--dur-med) var(--ease);
+}
+.v4-card-hover:hover { box-shadow: var(--shadow-card-hover); transform: translateY(-2px); }
+.v4-rule { border-block-start: 1px solid var(--line); }
+
+/* Rose side-rule accent. Logical, so it sits on the correct edge in RTL. */
+.v4-accent { border-inline-start: 2px solid var(--rose); padding-inline-start: 1.15rem; }
 
 /* ── Controls ───────────────────────────────────────────────────── */
 .v4-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.72rem 1.35rem;
+  padding: 0.8rem 1.5rem;
   border-radius: 999px;
   background: var(--rose);
   color: #FFFFFF;
   font-weight: 600;
-  font-size: 0.86rem;
-  letter-spacing: 0.01em;
+  font-size: 0.95rem;
   border: 0;
-  transition: background 0.22s ease, transform 0.22s ease;
+  transition: background var(--dur-med) var(--ease), transform var(--dur-med) var(--ease);
 }
 .v4-pill:hover { background: var(--rose-mid); }
 .v4-pill:active { background: var(--rose-deep); transform: translateY(1px); }
@@ -330,66 +369,80 @@ html.lenis-stopped { overflow: hidden; }
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.72rem 1.25rem;
+  padding: 0.8rem 1.4rem;
   border-radius: 999px;
-  border: 1px solid rgba(243, 242, 241, 0.22);
-  color: var(--paper);
+  border: 1px solid var(--line);
   background: transparent;
+  color: var(--ink);
   font-weight: 600;
-  font-size: 0.86rem;
-  transition: border-color 0.22s ease, background 0.22s ease;
+  font-size: 0.95rem;
+  transition: border-color var(--dur-med) var(--ease), background var(--dur-med) var(--ease);
 }
-.v4-ghost:hover { border-color: rgba(243, 242, 241, 0.44); background: rgba(243, 242, 241, 0.04); }
+.v4-ghost:hover { border-color: var(--ink-faint); background: rgba(49, 50, 52, 0.03); }
+.v4-band .v4-ghost { border-color: rgba(243, 242, 241, 0.28); color: var(--band-text); }
+.v4-band .v4-ghost:hover { border-color: var(--band-text); background: rgba(243, 242, 241, 0.06); }
 
 .v4-link {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   font-weight: 600;
-  font-size: 0.86rem;
-  color: var(--paper);
-  border-bottom: 1px solid rgba(243, 242, 241, 0.24);
-  padding-bottom: 2px;
-  transition: border-color 0.22s ease, color 0.22s ease;
+  font-size: 0.9rem;
+  color: var(--ink);
+  border-block-end: 1px solid var(--line);
+  padding-block-end: 2px;
+  transition: border-color var(--dur-med) var(--ease), color var(--dur-med) var(--ease);
 }
-.v4-link:hover { border-color: var(--rose); color: var(--rose); }
+.v4-link:hover { border-block-end-color: var(--rose); color: var(--rose-deep); }
+.v4-band .v4-link { color: var(--band-text); border-block-end-color: rgba(243, 242, 241, 0.28); }
+.v4-band .v4-link:hover { color: var(--rose); border-block-end-color: var(--rose); }
+/* Directional arrows point along the reading direction. */
+[dir="rtl"] .v4-link svg,
+[dir="rtl"] .v4-pill svg { transform: scaleX(-1); }
 
 /* ── Form fields ────────────────────────────────────────────────── */
 .v4-field {
   width: 100%;
   background: transparent;
   border: 0;
-  border-bottom: 1px solid rgba(243, 242, 241, 0.20);
-  color: var(--paper);
+  border-block-end: 1px solid var(--line);
+  color: var(--ink);
   font-family: var(--font-body);
-  font-size: 0.98rem;
-  padding: 0.65rem 0;
-  transition: border-color 0.22s ease;
+  font-size: 1rem;
+  padding-block: 0.65rem;
+  text-align: start;
+  transition: border-color var(--dur-med) var(--ease);
 }
-.v4-field::placeholder { color: rgba(243, 242, 241, 0.30); }
-.v4-field:focus {
-  outline: none;
-  border-bottom-color: var(--rose);
-}
+.v4-field::placeholder { color: var(--ink-faint); }
+.v4-field:focus { outline: none; border-block-end-color: var(--rose); }
 .v4-field:focus-visible { outline: none; }
-.v4-field option { background: #1A1C1E; color: #F3F2F1; }
-.v4-error { color: var(--rose); font-size: 0.78rem; letter-spacing: 0.01em; }
+.v4-error { color: var(--rose-deep); font-size: 0.8rem; }
 
 /* ── Media treatments ───────────────────────────────────────────── */
+/* Paper scrim: lifts light footage toward the page ground so copy stays
+   readable without the image turning muddy. */
+.v4-paper-scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(243, 242, 241, 0.80);
+}
 .v4-vignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 42%, rgba(11, 12, 13, 0.72) 100%);
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(243, 242, 241, 0.55) 100%);
 }
 
+/* Paper grain multiplies rather than overlays, so it reads as fibre in the
+   sheet instead of haze on top of it. */
 .v4-grain {
   position: fixed;
   inset: 0;
   z-index: 60;
   pointer-events: none;
-  opacity: 0.035;
-  mix-blend-mode: overlay;
+  opacity: 0.025;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
 }
@@ -403,24 +456,19 @@ html.lenis-stopped { overflow: hidden; }
   .v4-cursor-ring {
     display: block;
     position: fixed;
-    top: 0;
-    left: 0;
+    inset-block-start: 0;
+    inset-inline-start: 0;
     z-index: 70;
     pointer-events: none;
     border-radius: 999px;
     will-change: transform;
   }
-  .v4-cursor-dot {
-    width: 6px;
-    height: 6px;
-    margin: -3px 0 0 -3px;
-    background: var(--rose);
-  }
+  .v4-cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: var(--rose); }
   .v4-cursor-ring {
     width: 30px;
     height: 30px;
     margin: -15px 0 0 -15px;
-    border: 1px solid rgba(255, 30, 87, 0.55);
+    border: 1px solid rgba(255, 30, 87, 0.5);
     transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease, border-color 0.2s ease;
   }
   .v4-cursor-ring[data-active="true"] {
@@ -432,11 +480,17 @@ html.lenis-stopped { overflow: hidden; }
 }
 
 /* ── Marquee ────────────────────────────────────────────────────── */
-.v4-marquee { display: flex; width: max-content; animation: v4-marquee-run 38s linear infinite; }
+.v4-marquee { display: flex; width: max-content; animation: v4-marquee-run 42s linear infinite; }
 .v4-marquee-wrap:hover .v4-marquee { animation-play-state: paused; }
 @keyframes v4-marquee-run {
   from { transform: translate3d(0, 0, 0); }
   to   { transform: translate3d(-50%, 0, 0); }
+}
+/* RTL reads the other way, so the track travels the other way. */
+[dir="rtl"] .v4-marquee { animation-name: v4-marquee-run-rtl; }
+@keyframes v4-marquee-run-rtl {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(50%, 0, 0); }
 }
 .v4-marquee-mask {
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -446,16 +500,44 @@ html.lenis-stopped { overflow: hidden; }
 /* ── Skip link ──────────────────────────────────────────────────── */
 .v4-skip {
   position: absolute;
-  left: -9999px;
-  top: 0;
+  inset-inline-start: -9999px;
+  inset-block-start: 0;
   z-index: 100;
   background: var(--rose);
   color: #fff;
   padding: 0.7rem 1.1rem;
   font-weight: 600;
-  border-radius: 0 0 6px 0;
+  border-end-end-radius: 6px;
 }
-.v4-skip:focus { left: 0; }
+.v4-skip:focus { inset-inline-start: 0; }
+
+/* ── Long-form legal copy (English only, light) ─────────────────── */
+.v4-prose { color: var(--ink-soft); line-height: 1.75; }
+.v4-prose h1,
+.v4-prose h2,
+.v4-prose h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ink);
+  line-height: 1.05;
+}
+.v4-prose h2 { font-size: 1.9rem; margin-block: 3rem 1rem; }
+.v4-prose h3 { font-size: 1.3rem; margin-block: 2.25rem 0.65rem; }
+.v4-prose p { margin-block-end: 1.15rem; }
+.v4-prose ul,
+.v4-prose ol { margin-block-end: 1.35rem; margin-inline-start: 1.15rem; }
+.v4-prose ul { list-style: disc; }
+.v4-prose ol { list-style: decimal; }
+.v4-prose li { margin-block-end: 0.55rem; padding-inline-start: 0.35rem; }
+.v4-prose li::marker { color: var(--rose); }
+.v4-prose strong { color: var(--ink); font-weight: 600; }
+.v4-prose a { color: var(--rose-deep); border-block-end: 1px solid rgba(183, 39, 79, 0.35); }
+.v4-prose hr { border: 0; border-block-start: 1px solid var(--line); margin-block: 2.5rem; }
+.v4-prose table { width: 100%; border-collapse: collapse; margin-block-end: 1.5rem; }
+.v4-prose th,
+.v4-prose td { border: 1px solid var(--line); padding: 0.6rem 0.8rem; text-align: start; }
+.v4-prose th { color: var(--ink); font-weight: 600; }
 
 /* ── Reduced motion ─────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -478,63 +560,43 @@ html.lenis body { height: auto; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
 
-/* Hero readability scrim. Narrow viewports need the darkening stacked
-   vertically behind the copy; wide ones can keep the cinematic side wipe
-   that leaves the assembling lattice exposed on the right. */
+/* Hero readability scrim. Narrow viewports stack the wash vertically behind
+   the copy; wide ones use a side wipe that leaves the assembling lattice
+   exposed on the trailing edge. Logical, so RTL wipes the other way. */
 .v4-hero-scrim {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(11, 12, 13, 0.74) 0%,
-    rgba(11, 12, 13, 0.40) 42%,
-    rgba(11, 12, 13, 0.80) 100%
+    rgba(243, 242, 241, 0.92) 0%,
+    rgba(243, 242, 241, 0.62) 46%,
+    rgba(243, 242, 241, 0.90) 100%
   );
 }
 @media (min-width: 768px) {
+  /* linear-gradient has no logical direction keyword, so the RTL wipe is an
+     explicit override rather than a logical value. */
   .v4-hero-scrim {
     background: linear-gradient(
-      90deg,
-      rgba(11, 12, 13, 0.90) 0%,
-      rgba(11, 12, 13, 0.62) 46%,
-      rgba(11, 12, 13, 0.12) 78%,
-      transparent 100%
+      to right,
+      rgba(243, 242, 241, 0.95) 0%,
+      rgba(243, 242, 241, 0.78) 44%,
+      rgba(243, 242, 241, 0.28) 74%,
+      rgba(243, 242, 241, 0.05) 100%
+    );
+  }
+  [dir="rtl"] .v4-hero-scrim {
+    background: linear-gradient(
+      to left,
+      rgba(243, 242, 241, 0.95) 0%,
+      rgba(243, 242, 241, 0.78) 44%,
+      rgba(243, 242, 241, 0.28) 74%,
+      rgba(243, 242, 241, 0.05) 100%
     );
   }
 }
 
-/* Long-form legal copy on the dark palette. */
-.v4-prose { color: rgba(243, 242, 241, 0.72); line-height: 1.75; font-size: 1rem; }
-.v4-prose h1,
-.v4-prose h2,
-.v4-prose h3 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  color: var(--paper);
-  line-height: 1.05;
-}
-.v4-prose h2 { font-size: 1.9rem; margin-top: 3rem; margin-bottom: 1rem; }
-.v4-prose h3 { font-size: 1.3rem; margin-top: 2.25rem; margin-bottom: 0.65rem; }
-.v4-prose p { margin-bottom: 1.15rem; }
-.v4-prose ul,
-.v4-prose ol { margin: 0 0 1.35rem 1.15rem; }
-.v4-prose ul { list-style: disc; }
-.v4-prose ol { list-style: decimal; }
-.v4-prose li { margin-bottom: 0.55rem; padding-left: 0.35rem; }
-.v4-prose li::marker { color: var(--rose); }
-.v4-prose strong { color: var(--paper); font-weight: 600; }
-.v4-prose a { color: var(--rose); border-bottom: 1px solid rgba(255, 30, 87, 0.4); }
-.v4-prose a:hover { border-bottom-color: var(--rose); }
-.v4-prose hr { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
-.v4-prose code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.88em;
-  color: var(--paper);
-}
-.v4-prose table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
-.v4-prose th,
-.v4-prose td { border: 1px solid var(--line); padding: 0.6rem 0.8rem; text-align: left; }
-.v4-prose th { color: var(--paper); font-weight: 600; }
+/* Progress bars fill from the reading edge. */
+.v4-bar { transform-origin: left center; }
+[dir="rtl"] .v4-bar { transform-origin: right center; }

@@ -1,32 +1,27 @@
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from "wouter";
+import { useContent, LOCALE_PATH, OTHER_LOCALE } from "@/content/locale";
 import { scrollToSection } from "./lenis-provider";
 
-const LINKS = [
-  { id: "practices", label: "Practices" },
-  { id: "partners", label: "Partners" },
-  { id: "process", label: "Process" },
-  { id: "values", label: "Values" },
-];
-
 /**
- * Official mark, dark-background variant: same paths as logo-mark.svg with the
- * charcoal half recoloured to paper so it reads on the v4 palette.
+ * Official mark. On paper the charcoal-and-rose original reads correctly, so
+ * the light theme uses logo-mark.svg rather than the dark-background variant.
  */
 export function BrandMark({ className = "h-7 w-auto" }: { className?: string }) {
   return (
     <span className="flex items-center gap-3">
-      <img src="/brand/logo-mark-dark.svg" alt="" aria-hidden="true" className={className} />
-      <span className="v4-display text-[1.05rem] leading-none" style={{ letterSpacing: "0.01em" }}>
-        Alpha Pro MENA
-      </span>
+      <img src="/brand/logo-mark.svg" alt="" aria-hidden="true" className={className} />
+      <span className="v4-display text-[1.05rem] leading-none">Alpha Pro MENA</span>
     </span>
   );
 }
 
 export function Navbar() {
+  const t = useContent();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const otherPath = LOCALE_PATH[OTHER_LOCALE[t.locale]];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -49,7 +44,7 @@ export function Navbar() {
     <header
       className="fixed inset-x-0 top-0 z-50"
       style={{
-        background: scrolled ? "rgba(11,12,13,0.72)" : "transparent",
+        background: scrolled ? "rgba(243,242,241,0.86)" : "transparent",
         backdropFilter: scrolled ? "blur(10px)" : "none",
         borderBottom: `1px solid ${scrolled ? "var(--line)" : "transparent"}`,
         transition: "background 0.3s ease, border-color 0.3s ease",
@@ -65,36 +60,44 @@ export function Navbar() {
             e.preventDefault();
             go("hero");
           }}
-          aria-label="Alpha Pro MENA, back to top"
+          aria-label={t.nav.backToTopAria}
         >
           <BrandMark />
         </a>
 
-        <div className="hidden items-center gap-9 md:flex">
-          {LINKS.map((link) => (
+        <div className="hidden items-center gap-8 lg:flex">
+          {t.nav.links.map((link) => (
             <button
               key={link.id}
               onClick={() => go(link.id)}
               className="text-sm font-medium transition-colors"
-              style={{ color: "rgba(243,242,241,0.66)" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--paper)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(243,242,241,0.66)")}
+              style={{ color: "var(--ink-soft)" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink-soft)")}
             >
               {link.label}
             </button>
           ))}
+          <Link
+            href={otherPath}
+            className="text-sm font-semibold"
+            style={{ color: "var(--ink)" }}
+            hrefLang={OTHER_LOCALE[t.locale]}
+          >
+            {t.nav.languageToggle}
+          </Link>
           <button className="v4-pill" onClick={() => go("contact")}>
-            Start a project
+            {t.nav.cta}
           </button>
         </div>
 
         <button
-          className="md:hidden"
+          className="lg:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="v4-mobile-nav"
-          aria-label={open ? "Close menu" : "Open menu"}
-          style={{ color: "var(--paper)" }}
+          aria-label={open ? t.nav.menuClose : t.nav.menuOpen}
+          style={{ color: "var(--ink)" }}
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
@@ -103,26 +106,35 @@ export function Navbar() {
       {open && (
         <div
           id="v4-mobile-nav"
-          className="md:hidden"
+          className="lg:hidden"
           style={{
-            background: "rgba(11,12,13,0.97)",
+            background: "var(--paper)",
             borderTop: "1px solid var(--line)",
             height: "calc(100svh - 4.5rem)",
+            overflowY: "auto",
           }}
         >
-          <div className="flex flex-col gap-2 px-6 py-8">
-            {LINKS.map((link) => (
+          <div className="flex flex-col gap-1 px-6 py-8">
+            {t.nav.links.map((link) => (
               <button
                 key={link.id}
                 onClick={() => go(link.id)}
-                className="v4-display py-3 text-left text-[2rem]"
+                className="v4-display py-3 text-start text-[1.7rem]"
                 style={{ borderBottom: "1px solid var(--line)" }}
               >
                 {link.label}
               </button>
             ))}
+            <Link
+              href={otherPath}
+              className="v4-display py-3 text-start text-[1.7rem]"
+              style={{ borderBottom: "1px solid var(--line)" }}
+              hrefLang={OTHER_LOCALE[t.locale]}
+            >
+              {t.nav.languageToggle}
+            </Link>
             <button className="v4-pill mt-6 self-start" onClick={() => go("contact")}>
-              Start a project
+              {t.nav.cta}
             </button>
           </div>
         </div>

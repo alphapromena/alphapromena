@@ -172,7 +172,7 @@ export function HeroScrub({
         const index = resolveFrame(target);
         if (index >= 0 && index !== lastDrawn) {
           const frame = frames[index]!;
-          ctx.fillStyle = "#0B0C0D";
+          ctx.fillStyle = "#F3F2F1";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           drawCover(ctx, frame, sourceW, sourceH, canvas.width, canvas.height);
           lastDrawn = index;
@@ -283,7 +283,7 @@ export function HeroScrub({
       <div className="sticky top-0 overflow-hidden" style={{ height: "100svh" }}>
         {/* The canvas box is reserved before any frame decodes, so the hero
             never shifts layout as assets arrive. */}
-        <div className="absolute inset-0" style={{ background: "var(--void)" }}>
+        <div className="absolute inset-0" style={{ background: "var(--paper)" }}>
           <img
             ref={posterRef}
             src={reduced ? POSTER_END : POSTER_START}

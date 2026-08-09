@@ -13,6 +13,11 @@ import "@fontsource/barlow/latin-800.css";
 /* v4 display type is Barlow Condensed, latin subset, same family kit. */
 import "@fontsource/barlow-condensed/latin-700.css";
 import "@fontsource/barlow-condensed/latin-800.css";
+/* Barlow has no Arabic coverage; IBM Plex Sans Arabic carries the /ar locale. */
+import "@fontsource/ibm-plex-sans-arabic/400.css";
+import "@fontsource/ibm-plex-sans-arabic/500.css";
+import "@fontsource/ibm-plex-sans-arabic/600.css";
+import "@fontsource/ibm-plex-sans-arabic/700.css";
 import App from "./App";
 import "./index.css";
 

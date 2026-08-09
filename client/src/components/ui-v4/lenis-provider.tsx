@@ -20,17 +20,11 @@ export function scrollToSection(id: string) {
 }
 
 /**
- * Mounts Lenis smooth scrolling for the v4 page and paints the document dark
- * so the overscroll gutter matches. Skipped entirely under reduced motion,
- * where the browser's own scrolling is the correct behaviour.
+ * Mounts Lenis smooth scrolling for the v4 page. Skipped entirely under
+ * reduced motion, where the browser's own scrolling is the correct behaviour.
  */
 export function LenisProvider({ children }: { children: ReactNode }) {
   const reduced = usePrefersReducedMotion();
-
-  useEffect(() => {
-    document.documentElement.classList.add("v4-dark");
-    return () => document.documentElement.classList.remove("v4-dark");
-  }, []);
 
   useEffect(() => {
     if (reduced) return;

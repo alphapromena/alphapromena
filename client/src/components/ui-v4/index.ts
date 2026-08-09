@@ -1,3 +1,4 @@
+export { BuildRail } from "./build-rail";
 export { Cursor } from "./cursor";
 export { Footer } from "./footer";
 export { Grain } from "./grain";
@@ -7,7 +8,7 @@ export { KineticManifesto } from "./kinetic";
 export { LenisProvider, scrollToSection } from "./lenis-provider";
 export { Marquee } from "./marquee";
 export { BrandMark, Navbar } from "./navbar";
-export { ProcessRail, type ProcessStep } from "./process-rail";
 export { Reveal, Section } from "./section";
+export { ThreadPanel } from "./thread-panel";
 export { usePrefersReducedMotion, useMaxWidth, pinProgress } from "./use-motion";
 export { VideoBand } from "./video-band";

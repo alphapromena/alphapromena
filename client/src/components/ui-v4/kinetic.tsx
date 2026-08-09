@@ -1,11 +1,7 @@
 import { useEffect, useRef } from "react";
 import { pinProgress, usePrefersReducedMotion } from "./use-motion";
 
-const WORDS = [
-  { text: "Governed.", rose: false },
-  { text: "Intelligent.", rose: true },
-  { text: "Delivered.", rose: false },
-];
+
 
 const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
@@ -16,7 +12,9 @@ const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
  * clears for the next. The closing word never leaves, so the section hands off
  * on a held frame rather than an empty screen.
  */
-export function KineticManifesto() {
+export function KineticManifesto({ words }: { words: readonly [string, string, string] }) {
+  // Middle word carries the accent.
+  const WORDS = words.map((text, i) => ({ text, rose: i === 1 }));
   const pinRef = useRef<HTMLElement>(null);
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const reduced = usePrefersReducedMotion();
@@ -55,7 +53,7 @@ export function KineticManifesto() {
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [reduced]);
+  }, [reduced, words]);
 
   if (reduced) {
     return (
@@ -71,7 +69,7 @@ export function KineticManifesto() {
               className="v4-display"
               style={{
                 fontSize: "clamp(3rem, 11vw, 9rem)",
-                color: word.rose ? "var(--rose)" : "var(--paper)",
+                color: word.rose ? "var(--rose)" : "var(--ink)",
               }}
             >
               {word.text}
@@ -93,7 +91,7 @@ export function KineticManifesto() {
         className="sticky top-0 flex items-center justify-center overflow-hidden px-6 lg:px-10"
         style={{ height: "100svh" }}
       >
-        <h2 className="sr-only">Governed. Intelligent. Delivered.</h2>
+        <h2 className="sr-only">{words.join(" ")}</h2>
         <div className="relative grid w-full max-w-[1300px] place-items-center">
           {WORDS.map((word, i) => (
             <span
@@ -105,7 +103,7 @@ export function KineticManifesto() {
               className="v4-display col-start-1 row-start-1 text-center"
               style={{
                 fontSize: "clamp(3rem, 11vw, 9rem)",
-                color: word.rose ? "var(--rose)" : "var(--paper)",
+                color: word.rose ? "var(--rose)" : "var(--ink)",
                 opacity: 0,
                 willChange: "transform, opacity",
               }}

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Footer, Grain, Navbar } from "@/components/ui-v4";
 
 interface PolicyPageProps {
@@ -21,10 +20,6 @@ interface PolicyPageProps {
  * them without confirmation from Abdallah.
  */
 export function PolicyPage({ eyebrow, title, html }: PolicyPageProps) {
-  useEffect(() => {
-    document.documentElement.classList.add("v4-dark");
-    return () => document.documentElement.classList.remove("v4-dark");
-  }, []);
 
   return (
     <div className="v4 flex min-h-screen flex-col">

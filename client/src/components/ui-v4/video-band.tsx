@@ -57,7 +57,7 @@ export function VideoBand({
       id={id}
       ref={sectionRef}
       className={`relative overflow-hidden py-24 sm:py-32 lg:py-40 ${className}`}
-      style={{ background: "var(--void)", borderTop: "1px solid var(--line)" }}
+      style={{ background: "var(--paper)", borderTop: "1px solid var(--line)" }}
     >
       <div className="absolute inset-0" aria-hidden="true">
         {poster && (
@@ -75,7 +75,7 @@ export function VideoBand({
             className="absolute inset-0 h-full w-full object-cover"
           />
         )}
-        <div className="absolute inset-0" style={{ background: `rgba(11,12,13,${scrim})` }} />
+        <div className="absolute inset-0" style={{ background: `rgba(243,242,241,${scrim})` }} />
         <div className="v4-vignette" />
       </div>
 

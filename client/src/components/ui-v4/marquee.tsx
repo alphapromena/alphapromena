@@ -6,10 +6,10 @@
  */
 export function Marquee({ items }: { items: readonly string[] }) {
   const track = (
-    <ul className="flex items-center gap-12 pr-12">
+    <ul className="flex items-center gap-12 pe-12">
       {items.map((item) => (
         <li key={item} className="flex shrink-0 items-center gap-12">
-          <span className="whitespace-nowrap text-sm font-medium" style={{ color: "rgba(243,242,241,0.72)" }}>
+          <span className="whitespace-nowrap text-sm font-medium" style={{ color: "var(--ink-soft)" }}>
             {item}
           </span>
           <span

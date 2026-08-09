@@ -1,4 +1,5 @@
 import { useEffect, useRef, type MutableRefObject } from "react";
+import { useContent } from "@/content/locale";
 
 /**
  * Fixed readout that climbs from 00.0 to 99.9 in lockstep with the hero
@@ -7,6 +8,7 @@ import { useEffect, useRef, type MutableRefObject } from "react";
  * page does not re-render sixty times a second while scrolling.
  */
 export function Hud({ progressRef }: { progressRef: MutableRefObject<number> }) {
+  const t = useContent();
   const valueRef = useRef<HTMLSpanElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -55,23 +57,24 @@ export function Hud({ progressRef }: { progressRef: MutableRefObject<number> }) 
   return (
     <div
       ref={boxRef}
-      className="fixed right-5 z-40 hidden select-none sm:block lg:right-8"
-      style={{ top: "5.5rem", transition: "opacity 0.45s ease" }}
+      className="fixed z-40 hidden select-none sm:block"
+      style={{ insetBlockStart: "5.5rem", insetInlineEnd: "1.5rem", transition: "opacity 0.45s ease" }}
       aria-hidden="true"
     >
       <div
         className="px-3 py-2.5"
         style={{
-          background: "rgba(11,12,13,0.42)",
+          background: "rgba(255,255,255,0.72)",
           border: "1px solid var(--line)",
+          borderRadius: "12px",
           backdropFilter: "blur(6px)",
         }}
       >
         <div className="v4-eyebrow" style={{ fontSize: "0.6rem" }}>
-          Data quality
+          {t.hero.hudLabel}
         </div>
         <div className="mt-1 flex items-baseline gap-1">
-          <span ref={valueRef} className="v4-num text-[1.6rem] leading-none">
+          <span ref={valueRef} className="v4-num text-[1.6rem] leading-none" style={{ color: "var(--rose)" }}>
             00.0
           </span>
           <span className="v4-num text-[0.8rem]" style={{ color: "var(--rose)" }}>
@@ -79,12 +82,12 @@ export function Hud({ progressRef }: { progressRef: MutableRefObject<number> }) 
           </span>
         </div>
         <div
-          className="mt-2 h-px w-24 overflow-hidden"
-          style={{ background: "rgba(243,242,241,0.14)" }}
+          className="mt-2 h-px w-24 overflow-hidden rounded-full"
+          style={{ background: "var(--line)" }}
         >
           <span
             ref={barRef}
-            className="block h-full w-full origin-left"
+            className="v4-bar block h-full w-full"
             style={{ background: "var(--rose)", transform: "scaleX(0)" }}
           />
         </div>
