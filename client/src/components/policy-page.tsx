@@ -1,9 +1,9 @@
+import { useEffect } from "react";
 import { Streamdown } from "streamdown";
-import { NavbarDropdown } from "@/components/ui/navbar-dropdown";
-import { SiteFooter } from "@/components/ui/site-footer";
+import { Footer, Grain, Navbar } from "@/components/ui-v4";
 
 interface PolicyPageProps {
-  /** Small mono eyebrow label shown above the title, e.g. "Legal · Privacy". */
+  /** Small uppercase eyebrow shown above the title, e.g. "Legal · Privacy". */
   eyebrow: string;
   /** Page heading, e.g. "Privacy Policy". */
   title: string;
@@ -12,35 +12,45 @@ interface PolicyPageProps {
 }
 
 /**
- * Standalone legal / policy page. Reuses the site's header and footer so
- * it feels part of the marketing site, and renders a markdown document
- * inside a readable, single-column article.
+ * Standalone legal page. Shares the v4 header, footer, and dark palette so a
+ * visitor arriving from the footer stays inside the same site rather than
+ * landing on a differently-designed document.
  */
 export function PolicyPage({ eyebrow, title, markdown }: PolicyPageProps) {
+  useEffect(() => {
+    document.documentElement.classList.add("v4-dark");
+    return () => document.documentElement.classList.remove("v4-dark");
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col bg-paper" style={{ color: "var(--ink)" }}>
-      <NavbarDropdown />
+    <div className="v4 flex min-h-screen flex-col">
+      <a href="#policy" className="v4-skip">
+        Skip to content
+      </a>
+      <Grain />
+      <Navbar />
 
-      <main className="flex-1">
-        {/* Header band */}
-        <section className="hero-wash" style={{ borderBottom: "1px solid var(--line)", paddingTop: "8.5rem", paddingBottom: "3rem" }}>
-          <div className="container">
-            <span className="eyebrow">{eyebrow}</span>
-            <h1 className="display mt-6" style={{ fontSize: "clamp(2.2rem, 5vw, 3.6rem)" }}>{title}</h1>
+      <main id="policy" className="flex-1">
+        <header
+          className="px-6 pb-14 pt-36 lg:px-10 lg:pt-44"
+          style={{ borderBottom: "1px solid var(--line)" }}
+        >
+          <div className="mx-auto w-full max-w-[1300px]">
+            <p className="v4-eyebrow">{eyebrow}</p>
+            <h1 className="v4-display mt-6" style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)" }}>
+              {title}
+            </h1>
           </div>
-        </section>
+        </header>
 
-        {/* Document body */}
-        <section className="py-14">
-          <div className="container">
-            <article className="policy-prose">
-              <Streamdown>{markdown}</Streamdown>
-            </article>
-          </div>
-        </section>
+        <div className="px-6 py-16 lg:px-10">
+          <article className="v4-prose mx-auto w-full max-w-[70ch]">
+            <Streamdown>{markdown}</Streamdown>
+          </article>
+        </div>
       </main>
 
-      <SiteFooter />
+      <Footer />
     </div>
   );
 }

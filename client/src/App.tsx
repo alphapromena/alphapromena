@@ -1,13 +1,17 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
+import HomeV4 from "./pages/HomeV4";
+
+// The policy pages pull in a full markdown renderer with syntax highlighting
+// and diagram support. Splitting them out keeps roughly a megabyte of that
+// out of the landing page's entry chunk.
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
 
 /**
  * Reset scroll to the top on client-side route changes (e.g. clicking a
@@ -26,13 +30,15 @@ function ScrollToTop() {
 
 function Router() {
   return (
-    <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/privacy"} component={Privacy} />
-      <Route path={"/terms"} component={Terms} />
-      <Route path={"/404"} component={NotFound} />
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<div style={{ minHeight: "100svh", background: "#1A1C1E" }} />}>
+      <Switch>
+        <Route path={"/"} component={HomeV4} />
+        <Route path={"/privacy"} component={Privacy} />
+        <Route path={"/terms"} component={Terms} />
+        <Route path={"/404"} component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 
