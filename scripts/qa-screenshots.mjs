@@ -79,13 +79,21 @@ async function run(label, width, height) {
   await jumpTo(page, processTop + vh * 0.6);
   await shoot(page, `${label}-06-process`);
 
+  const valuesTop = await sectionTop(page, "values");
+  await jumpTo(page, valuesTop + 60);
+  await shoot(page, `${label}-07-values-marquee`);
+
   const contactTop = await sectionTop(page, "contact");
   await jumpTo(page, contactTop + 60);
-  await shoot(page, `${label}-07-contact`);
+  await shoot(page, `${label}-08-contact`);
 
   const docHeight = await page.evaluate(() => document.documentElement.scrollHeight);
   await jumpTo(page, docHeight);
-  await shoot(page, `${label}-08-footer`);
+  await shoot(page, `${label}-09-footer`);
+
+  await page.goto(`${BASE}/privacy`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(1200);
+  await shoot(page, `${label}-10-privacy`);
 
   console.log(`  HUD: start=${hudStart} end=${hudEnd}`);
   console.log(`  document height: ${docHeight}px`);
