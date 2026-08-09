@@ -111,3 +111,6 @@ temp/
 
 # Manus debug logs (legacy)
 .manus-logs/
+
+# Raw Higgsfield generations, never committed (see scripts/prepare-cinema.mjs)
+.cinema-raw/
