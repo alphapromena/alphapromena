@@ -600,3 +600,13 @@ html.lenis body { height: auto; }
 /* Progress bars fill from the reading edge. */
 .v4-bar { transform-origin: left center; }
 [dir="rtl"] .v4-bar { transform-origin: right center; }
+
+/* Blanket guard for connected script. The base layer tracks all headings, so
+   any Arabic heading that is not .v4-display would inherit it. Unlayered
+   rules beat @layer base regardless of specificity, and :lang(ar) skips
+   nodes explicitly marked lang="en" such as the Latin partner names. */
+.v4 :lang(ar),
+.v4:lang(ar) {
+  letter-spacing: 0;
+  text-transform: none;
+}
