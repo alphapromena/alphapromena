@@ -6,8 +6,8 @@
  *   client/public/cinema/hero/frame_###.webp  scroll-scrub frame sequence
  *   client/public/cinema/hero/manifest.json   frame count / size / fps / ext
  *   client/public/cinema/hero/poster-*.jpg    first + last frame (LQIP, reduced motion)
- *   client/public/cinema/lineage.mp4          section loop
- *   client/public/cinema/team.mp4             section loop
+ *   client/public/cinema/lineage.mp4          proof band loop
+ *   client/public/cinema/contact.mp4          contact loop (built, not shipped in the page)
  *
  * Raw downloads land in .cinema-raw/ and are never committed. Encoding is
  * retried at progressively cheaper settings until each output fits its budget,
@@ -201,7 +201,7 @@ async function buildLoop(src, name) {
 
 async function main() {
   const config = JSON.parse(await fs.readFile(CONFIG, "utf8"));
-  for (const key of ["heroImage", "heroClip", "lineageClip", "teamClip"]) {
+  for (const key of ["heroImage", "heroClip", "lineageClip", "contactClip"]) {
     if (!config[key]) throw new Error(`cinema.config.json is missing "${key}"`);
   }
 
@@ -212,14 +212,14 @@ async function main() {
   const heroImage = await download(config.heroImage, path.join(RAW_DIR, "hero.png"));
   const heroClip = await download(config.heroClip, path.join(RAW_DIR, "hero.mp4"));
   const lineage = await download(config.lineageClip, path.join(RAW_DIR, "lineage.mp4"));
-  const team = await download(config.teamClip, path.join(RAW_DIR, "team.mp4"));
+  const contact = await download(config.contactClip, path.join(RAW_DIR, "contact.mp4"));
 
   console.log("\nHero scrub sequence");
   const hero = await buildHeroFrames(heroClip);
 
   console.log("\nSection loops");
   const lineageOut = await buildLoop(lineage, "lineage");
-  const teamOut = await buildLoop(team, "team");
+  const contactOut = await buildLoop(contact, "contact");
 
   // A small still of the reference image backs the hero before frames decode.
   ffmpeg(["-i", heroImage, "-vf", "scale=1280:-2", "-q:v", "7", path.join(OUT_DIR, "hero-still.jpg")]);
@@ -238,12 +238,12 @@ async function main() {
   console.log(`hero frames   ${hero.count} x ${hero.width}x${hero.height} ${hero.ext}   ${fmt(heroTotal)}  (budget ${fmt(HERO_BUDGET)})`);
   console.log(`hero still    ${fmt(stillSize)}`);
   console.log(`lineage.mp4   ${fmt(lineageOut.size)}  (budget ${fmt(LOOP_BUDGET)})`);
-  console.log(`team.mp4      ${fmt(teamOut.size)}  (budget ${fmt(LOOP_BUDGET)})`);
-  console.log(`total shipped ${fmt(heroTotal + stillSize + lineageOut.size + teamOut.size)}`);
+  console.log(`contact.mp4   ${fmt(contactOut.size)}  (budget ${fmt(LOOP_BUDGET)})`);
+  console.log(`total shipped ${fmt(heroTotal + stillSize + lineageOut.size + contactOut.size)}`);
   console.log("───────────────────────────────────────────\n");
 
   if (heroTotal > HERO_BUDGET) throw new Error("hero frames exceeded budget");
-  if (lineageOut.size > LOOP_BUDGET || teamOut.size > LOOP_BUDGET) {
+  if (lineageOut.size > LOOP_BUDGET || contactOut.size > LOOP_BUDGET) {
     throw new Error("a section loop exceeded budget");
   }
 }
