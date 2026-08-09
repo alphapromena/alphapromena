@@ -3,12 +3,43 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ─── Above-fold fonts (Barlow latin, preloaded from index.html) ──── */
+/* Descriptors copied verbatim from the fontsource latin subset; files
+   vendored in /public/fonts (see LICENSE.txt there). */
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(/fonts/barlow-latin-400-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face {
+  font-family: 'Barlow';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url(/fonts/barlow-latin-700-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
 /* ─── Tailwind Theme Mapping ─────────────────────────────────────── */
 @theme inline {
-  --radius-sm: calc(var(--radius) - 2px);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 2px);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 6px);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-ink-deep: var(--ink-deep);
+  --color-line: var(--line);
+  --color-rose: var(--rose);
+  --color-rose-mid: var(--rose-mid);
+  --color-rose-deep: var(--rose-deep);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -43,63 +74,98 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-/* ─── Tokens — sharp light ───────────────────────────────────────── */
+/* ═══ Tokens — "Interlock" (official brand kit, light-first) ══════ */
 :root {
-  --radius: 0.4rem;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --radius: 18px;
 
-  --rose:      #FF1E57;
-  --rose-ink:  #D11048;
-  --rose-soft: #FFEAF0;
-  --rose-line: rgba(255,30,87,0.28);
+  /* Barlow only, per the kit */
+  --font-display: 'Barlow', system-ui, sans-serif;
+  --font-sans: 'Barlow', system-ui, sans-serif;
+  --font-mono: 'Barlow', system-ui, sans-serif;
 
-  --paper:     #FBFAFB;   /* near-white, faintly cool */
-  --paper-2:   #F1EFF3;   /* light cool grey, whisper of mauve */
-  --paper-3:   #E8E5EC;   /* deeper cool grey — footer / accents */
-  --tint-rose: #FBEEF2;   /* soft rose-tinted section */
-  --surface:   #FFFFFF;
-  --ink:       #14131A;     /* near-black, high contrast */
-  --ink-soft:  #4E4C57;
-  --ink-faint: #8A8893;
-  --line:      rgba(20,19,26,0.14);   /* crisper hairline */
-  --line-soft: rgba(20,19,26,0.07);
+  /* Official kit — REDESIGN_V3_PLAN.md */
+  --paper:     #F3F2F1;   /* page background */
+  --surface:   #FFFFFF;   /* cards */
+  --ink:       #313234;   /* primary text, dark bands */
+  --ink-deep:  #1A1C1E;   /* darkest band stop */
+  --rose:      #FF1E57;   /* primary accent, CTAs, display words */
+  --rose-mid:  #E92156;   /* hover */
+  --rose-deep: #B7274F;   /* pressed; small rose text on light (AA) */
+  --line:      rgba(49, 50, 52, 0.12);
 
-  --shadow-sm: 0 1px 2px rgba(20,19,26,0.04);
-  --shadow-md: 0 10px 26px -16px rgba(20,19,26,0.18);
-  --shadow-lg: 0 24px 50px -28px rgba(20,19,26,0.22);
+  /* Derived from the kit (alpha/soft variants only, no new hues) */
+  --ink-soft:  rgba(49, 50, 52, 0.74);
+  --ink-faint: rgba(49, 50, 52, 0.55);
+  --rose-glow: rgba(255, 30, 87, 0.16);
+  --band-text: #F3F2F1;                    /* off-white on dark bands */
+  --band-text-soft: rgba(243, 242, 241, 0.72);
+  --shadow-card: 0 12px 34px -20px rgba(26, 28, 30, 0.35);
+  --shadow-card-hover: 0 18px 44px -22px rgba(26, 28, 30, 0.4);
 
-  --background:         oklch(0.99 0.002 300);
-  --foreground:         oklch(0.20 0.012 300);
-  --card:               oklch(1 0 0);
-  --card-foreground:    oklch(0.20 0.012 300);
-  --popover:            oklch(1 0 0);
-  --popover-foreground: oklch(0.20 0.012 300);
-  --primary:            oklch(0.62 0.24 13);
-  --primary-foreground: oklch(1 0 0);
-  --secondary:          oklch(0.965 0.004 300);
-  --secondary-foreground: oklch(0.24 0.012 300);
-  --muted:              oklch(0.965 0.004 300);
-  --muted-foreground:   oklch(0.50 0.012 300);
-  --accent:             oklch(0.95 0.03 13);
-  --accent-foreground:  oklch(0.45 0.16 13);
-  --destructive:        oklch(0.62 0.24 13);
-  --destructive-foreground: oklch(1 0 0);
-  --border:             oklch(0.90 0.004 300);
-  --input:              oklch(0.90 0.004 300);
-  --ring:               oklch(0.62 0.24 13);
-  --chart-1: oklch(0.62 0.24 13);
-  --chart-2: oklch(0.70 0.16 25);
-  --chart-3: oklch(0.55 0.10 280);
-  --chart-4: oklch(0.75 0.12 70);
-  --chart-5: oklch(0.45 0.08 200);
-  --sidebar: oklch(1 0 0);
-  --sidebar-foreground: oklch(0.20 0.012 300);
-  --sidebar-primary: oklch(0.62 0.24 13);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.95 0.03 13);
-  --sidebar-accent-foreground: oklch(0.45 0.16 13);
-  --sidebar-border: oklch(0.88 0.006 80);
-  --sidebar-ring: oklch(0.62 0.24 13);
+  /* Type scale */
+  --text-display: clamp(2.6rem, 6vw, 5rem);
+  --text-h2:      clamp(1.9rem, 3.5vw, 3rem);
+  --text-h3:      1.375rem;
+  --text-body:    1.0625rem;
+  --text-small:   0.875rem;
+  --text-mono:    0.8125rem;
+
+  /* Spacing — 4px base */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* Motion (kept from v2) */
+  --dur-fast: 150ms;
+  --dur-med:  300ms;
+  --dur-slow: 700ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Z registry */
+  --z-nav: 50;
+  --z-overlay: 60;
+  --z-toast: 70;
+
+  /* shadcn semantic tokens, mapped onto the kit (light) */
+  --background:         var(--paper);
+  --foreground:         var(--ink);
+  --card:               var(--surface);
+  --card-foreground:    var(--ink);
+  --popover:            var(--surface);
+  --popover-foreground: var(--ink);
+  --primary:            var(--rose);
+  --primary-foreground: #FFFFFF;
+  --secondary:          #E9E8E6;
+  --secondary-foreground: var(--ink);
+  --muted:              #E9E8E6;
+  --muted-foreground:   var(--ink-soft);
+  --accent:             #FBE9EE;
+  --accent-foreground:  var(--rose-deep);
+  --destructive:        var(--rose-deep);
+  --destructive-foreground: #FFFFFF;
+  --border:             var(--line);
+  --input:              var(--line);
+  --ring:               var(--rose);
+  --chart-1: var(--rose);
+  --chart-2: var(--ink);
+  --chart-3: var(--rose-deep);
+  --chart-4: var(--ink-faint);
+  --chart-5: var(--rose-mid);
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--rose);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FBE9EE;
+  --sidebar-accent-foreground: var(--rose-deep);
+  --sidebar-border: var(--line);
+  --sidebar-ring: var(--rose);
 }
 
 /* ─── Base ───────────────────────────────────────────────────────── */
@@ -111,23 +177,24 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-padding-top: 5.5rem;
+    color-scheme: light;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: var(--font-sans);
     font-weight: 400;
+    font-size: var(--text-body);
     background-color: var(--paper);
     color: var(--ink);
     overflow-x: hidden;
-    letter-spacing: -0.012em;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-family: var(--font-display);
     font-weight: 700;
-    line-height: 1.02;
-    letter-spacing: -0.03em;
+    line-height: 1.04;
+    letter-spacing: -0.01em;
     color: var(--ink);
   }
 
@@ -138,29 +205,24 @@
   a[href],
   select:not(:disabled) { @apply cursor-pointer; }
 
-  ::selection { background: var(--rose-soft); color: var(--rose-ink); }
+  /* Default visible focus everywhere; components with custom rose
+     box-shadow rings opt out via their own outline: none. */
+  :focus-visible {
+    outline: 2px solid var(--rose);
+    outline-offset: 2px;
+  }
+
+  ::selection { background: var(--rose); color: #FFFFFF; }
 
   ::-webkit-scrollbar { width: 11px; }
-  ::-webkit-scrollbar-track { background: var(--paper-2); }
-  ::-webkit-scrollbar-thumb { background: #cdcad4; border-radius: 0; border: 3px solid var(--paper-2); }
+  ::-webkit-scrollbar-track { background: var(--paper); }
+  ::-webkit-scrollbar-thumb { background: #C9C7C4; border-radius: 0; border: 3px solid var(--paper); }
 }
 
-/* ─── Layout ─────────────────────────────────────────────────────── */
-@layer components {
-  .container {
-    width: 100%;
-    max-width: 1180px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-  @media (min-width: 1024px) {
-    .container { padding-left: 2.5rem; padding-right: 2.5rem; }
-  }
-  .container-wide { max-width: 1300px; }
-  .flex { min-width: 0; min-height: 0; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
+
 
 /* ═══════════════════════════════════════════════════════════════════
    v4 "SIGNAL" — dark cinematic layer
@@ -220,7 +282,6 @@ html.lenis-stopped { overflow: hidden; }
   color: var(--paper);
   text-wrap: balance;
 }
-.v4-display-700 { font-weight: 700; }
 .v4-rose { color: var(--rose); }
 
 .v4-eyebrow {
@@ -245,8 +306,6 @@ html.lenis-stopped { overflow: hidden; }
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
 }
-
-.v4-hairline { border-top: 1px solid var(--line); }
 
 /* ── Controls ───────────────────────────────────────────────────── */
 .v4-pill {
@@ -323,7 +382,6 @@ html.lenis-stopped { overflow: hidden; }
   pointer-events: none;
   background: radial-gradient(ellipse at center, transparent 42%, rgba(11, 12, 13, 0.72) 100%);
 }
-.v4-scrim { position: absolute; inset: 0; pointer-events: none; background: rgba(11, 12, 13, 0.68); }
 
 .v4-grain {
   position: fixed;

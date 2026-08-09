@@ -1,4 +1,4 @@
-import { chromium } from "@playwright/test";
+import { chromium } from "playwright";
 
 // 127.0.0.1 rather than localhost: another dev server may hold the IPv6
 // loopback on the same port, and "localhost" resolves to ::1 first.
@@ -42,11 +42,21 @@ const topOf = (page, id) =>
   const selected = await page.locator("#v4-inquiry").inputValue();
   check(
     "practice row preselects the inquiry type",
-    selected === "Data Governance & Ataccama One",
+    selected === "Data Governance & Intelligence",
     `got "${selected}"`,
   );
   const contactVisible = await page.locator("#contact").isVisible();
   check("clicking a practice CTA lands on the contact form", contactVisible);
+
+  // Routing chips are the other entry point into the same preselect
+  await page.getByRole("button", { name: "Banking & finance" }).click();
+  await page.waitForTimeout(500);
+  const routed = await page.locator("#v4-inquiry").inputValue();
+  check(
+    "routing chip preselects its practice",
+    routed === "Banking & Finance Advisory",
+    `got "${routed}"`,
+  );
 
   // Validation: submit with everything empty
   await page.locator("#v4-name").fill("");
@@ -76,12 +86,14 @@ const topOf = (page, id) =>
   const payload = trpcCalls[0]?.body ?? "";
   check(
     "mutation payload carries the form fields",
-    payload.includes("jane@acme.com") && payload.includes("Data Governance"),
-    payload.slice(0, 140),
+    // The routing chip clicked above is the most recent preselect, so that is
+    // the practice the submission should carry.
+    payload.includes("jane@acme.com") && payload.includes("Banking & Finance Advisory"),
+    payload.slice(0, 160),
   );
-  const toastText = (await page.locator("[data-sonner-toast]").allTextContents()).join(" | ");
-  console.log(`  toast shown after submit: "${toastText}"`);
-  check("submit result is surfaced to the user as a toast", toastText.length > 0, toastText);
+  const statusText = (await page.locator("[role='status']").allTextContents()).join(" | ").trim();
+  console.log(`  form status after submit: "${statusText}"`);
+  check("submit result is announced in an aria-live status", statusText.length > 0, statusText);
 
   // Section loops
   await jumpTo(page, await topOf(page, "partners"));

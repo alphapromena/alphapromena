@@ -1,10 +1,14 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { PROCESS } from "@/content/site";
 import { usePrefersReducedMotion, useMaxWidth } from "./use-motion";
 
 gsap.registerPlugin(ScrollTrigger);
+
+export type ProcessStep = { step: string; label: string; desc: string };
+
+/** "STEP 04" reads as an instruction in prose but as a numeral on the card. */
+const numeral = (step: string) => step.replace(/^STEP\s+/i, "");
 
 /**
  * The six engagement stages. On desktop the section pins and the stages
@@ -12,7 +16,7 @@ gsap.registerPlugin(ScrollTrigger);
  * sequence is felt rather than just listed. Narrow viewports and reduced
  * motion get the same content as an ordinary vertical list.
  */
-export function ProcessRail() {
+export function ProcessRail({ steps }: { steps: ProcessStep[] }) {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLOListElement>(null);
   const lineRef = useRef<HTMLSpanElement>(null);
@@ -75,7 +79,7 @@ export function ProcessRail() {
             A structured <span className="v4-rose">engagement.</span>
           </h2>
           <ol className="mt-12">
-            {PROCESS.map((step) => (
+            {steps.map((step) => (
               <li key={step.step} className="py-7" style={{ borderTop: "1px solid var(--line)" }}>
                 <span className="v4-num text-sm" style={{ color: "var(--rose)" }}>
                   {step.step}
@@ -116,14 +120,14 @@ export function ProcessRail() {
         </div>
 
         <ol ref={trackRef} className="mt-14 flex w-max gap-8 pl-10 pr-24">
-          {PROCESS.map((step) => (
+          {steps.map((step) => (
             <li
               key={step.step}
               className="flex h-[18rem] w-[24rem] shrink-0 flex-col p-9"
               style={{ border: "1px solid var(--line)", background: "rgba(243,242,241,0.02)" }}
             >
               <span className="v4-num text-[3.2rem] leading-none" style={{ color: "var(--rose)" }}>
-                {step.step}
+                {numeral(step.step)}
               </span>
               <h3 className="v4-display mt-auto text-[1.7rem]">{step.label}</h3>
               <p className="v4-body mt-3 text-[0.95rem]">{step.desc}</p>

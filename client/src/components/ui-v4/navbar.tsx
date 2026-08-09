@@ -10,24 +10,15 @@ const LINKS = [
 ];
 
 /**
- * The official mark pairs a rose square with a charcoal one, so on a dark page
- * the charcoal half disappears. Seating it on a paper chip keeps the brand
- * exactly as drawn while staying legible.
+ * Official mark, dark-background variant: same paths as logo-mark.svg with the
+ * charcoal half recoloured to paper so it reads on the v4 palette.
  */
-function BrandMark() {
+export function BrandMark({ className = "h-7 w-auto" }: { className?: string }) {
   return (
-    <span className="flex items-center gap-2.5">
-      <span
-        className="grid h-8 w-8 shrink-0 place-items-center rounded-md"
-        style={{ background: "var(--paper)" }}
-      >
-        <img src="/alpha-pro-mena-icon.png" alt="" aria-hidden="true" className="h-5 w-auto" />
-      </span>
-      <span
-        className="v4-display text-[1.05rem] leading-none"
-        style={{ letterSpacing: "0.01em" }}
-      >
-        Alpha Pro<span style={{ color: "var(--rose)" }}>.</span>
+    <span className="flex items-center gap-3">
+      <img src="/brand/logo-mark-dark.svg" alt="" aria-hidden="true" className={className} />
+      <span className="v4-display text-[1.05rem] leading-none" style={{ letterSpacing: "0.01em" }}>
+        Alpha Pro MENA
       </span>
     </span>
   );

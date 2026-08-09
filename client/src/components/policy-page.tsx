@@ -1,22 +1,26 @@
 import { useEffect } from "react";
-import { Streamdown } from "streamdown";
 import { Footer, Grain, Navbar } from "@/components/ui-v4";
 
 interface PolicyPageProps {
-  /** Small uppercase eyebrow shown above the title, e.g. "Legal · Privacy". */
+  /** Small uppercase eyebrow label shown above the title, e.g. "Legal · Privacy". */
   eyebrow: string;
   /** Page heading, e.g. "Privacy Policy". */
   title: string;
-  /** Raw markdown document to render as the page body. */
-  markdown: string;
+  /** Pre-rendered document body (static HTML generated from the markdown
+      source at build time — see client/src/content/policies/). */
+  html: string;
 }
 
 /**
- * Standalone legal page. Shares the v4 header, footer, and dark palette so a
- * visitor arriving from the footer stays inside the same site rather than
- * landing on a differently-designed document.
+ * Standalone legal / policy page. Shares the v4 header, footer, and dark
+ * palette so a visitor arriving from the footer stays inside the same site.
+ *
+ * SHIP-AS-IS (28.4): the document content is written for AlphaBeacon on
+ * purpose. These URLs likely back the pending LinkedIn OAuth app review
+ * (which requires public privacy/terms links), so do not rewrite or move
+ * them without confirmation from Abdallah.
  */
-export function PolicyPage({ eyebrow, title, markdown }: PolicyPageProps) {
+export function PolicyPage({ eyebrow, title, html }: PolicyPageProps) {
   useEffect(() => {
     document.documentElement.classList.add("v4-dark");
     return () => document.documentElement.classList.remove("v4-dark");
@@ -24,13 +28,10 @@ export function PolicyPage({ eyebrow, title, markdown }: PolicyPageProps) {
 
   return (
     <div className="v4 flex min-h-screen flex-col">
-      <a href="#policy" className="v4-skip">
-        Skip to content
-      </a>
       <Grain />
       <Navbar />
 
-      <main id="policy" className="flex-1">
+      <main id="main" className="flex-1">
         <header
           className="px-6 pb-14 pt-36 lg:px-10 lg:pt-44"
           style={{ borderBottom: "1px solid var(--line)" }}
@@ -44,9 +45,10 @@ export function PolicyPage({ eyebrow, title, markdown }: PolicyPageProps) {
         </header>
 
         <div className="px-6 py-16 lg:px-10">
-          <article className="v4-prose mx-auto w-full max-w-[70ch]">
-            <Streamdown>{markdown}</Streamdown>
-          </article>
+          <article
+            className="v4-prose mx-auto w-full max-w-[70ch]"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
         </div>
       </main>
 

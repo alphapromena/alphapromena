@@ -1,15 +1,11 @@
-import { Toaster } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { lazy, Suspense, useEffect } from "react";
 import { Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
 import HomeV4 from "./pages/HomeV4";
 
-// The policy pages pull in a full markdown renderer with syntax highlighting
-// and diagram support. Splitting them out keeps roughly a megabyte of that
-// out of the landing page's entry chunk.
+/* Route-split: the legal pages carry their pre-rendered HTML documents,
+   which almost no visitor loads — keep them out of the main chunk. */
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 
@@ -30,7 +26,7 @@ function ScrollToTop() {
 
 function Router() {
   return (
-    <Suspense fallback={<div style={{ minHeight: "100svh", background: "#1A1C1E" }} />}>
+    <Suspense fallback={<div className="min-h-screen" style={{ background: "var(--ink-deep)" }} />}>
       <Switch>
         <Route path={"/"} component={HomeV4} />
         <Route path={"/privacy"} component={Privacy} />
@@ -45,13 +41,9 @@ function Router() {
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="light" switchable={false}>
-        <TooltipProvider>
-          <Toaster />
-          <ScrollToTop />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
+      <a href="#main" className="v4-skip">Skip to content</a>
+      <ScrollToTop />
+      <Router />
     </ErrorBoundary>
   );
 }

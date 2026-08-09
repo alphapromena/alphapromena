@@ -1,0 +1,10 @@
+Fonts in this directory are licensed under the SIL Open Font License 1.1.
+
+- barlow-latin-400-normal.woff2 / barlow-latin-700-normal.woff2 — Barlow,
+  copyright Jeremy Tribby. https://github.com/jpt/barlow
+
+Files sourced from the fontsource distribution (latin subset). These two
+above-fold faces are self-hosted here (instead of via the fontsource CSS
+imports) so index.html can preload them with stable URLs; the remaining
+weights (500/600/800) load through @fontsource/barlow latin-only CSS
+imports in client/src/main.tsx.
