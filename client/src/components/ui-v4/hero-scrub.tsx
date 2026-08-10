@@ -1,10 +1,6 @@
-import {
-  useEffect,
-  useRef,
-  type MutableRefObject,
-  type ReactNode,
-} from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { pinProgress, usePrefersReducedMotion } from "./use-motion";
+import type { Scrub } from "./scrub";
 
 type Manifest = {
   count: number;
@@ -101,11 +97,11 @@ function drawCover(
 }
 
 export function HeroScrub({
-  progressRef,
+  scrub,
   children,
 }: {
-  /** Written every frame so sibling HUDs can read scrub progress cheaply. */
-  progressRef: MutableRefObject<number>;
+  /** Published once per rendered frame so the HUD shares this exact tick. */
+  scrub: Scrub;
   children?: ReactNode;
 }) {
   const pinRef = useRef<HTMLElement>(null);
@@ -120,7 +116,7 @@ export function HeroScrub({
     // Reduced motion: hold the finished lattice, publish full progress so the
     // HUD reads its settled value, and never start a rAF loop.
     if (reduced) {
-      progressRef.current = 1;
+      scrub.set(1);
       return;
     }
 
@@ -164,7 +160,9 @@ export function HeroScrub({
     const render = () => {
       if (disposed) return;
       const progress = pinProgress(pin);
-      progressRef.current = progress;
+      // Publish before drawing, so subscribers and the canvas agree on the
+      // value within a single frame.
+      scrub.set(progress);
 
       if (frames.length) {
         sizeCanvas();
@@ -271,7 +269,7 @@ export function HeroScrub({
       });
       frames = [];
     };
-  }, [progressRef, reduced]);
+  }, [scrub, reduced]);
 
   return (
     <section

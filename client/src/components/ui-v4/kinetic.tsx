@@ -66,11 +66,8 @@ export function KineticManifesto({ words }: { words: readonly [string, string, s
           {WORDS.map((word) => (
             <h2
               key={word.text}
-              className="v4-display"
-              style={{
-                fontSize: "clamp(3rem, 11vw, 9rem)",
-                color: word.rose ? "var(--rose)" : "var(--ink)",
-              }}
+              className="v4-display v4-slam"
+              style={{ color: word.rose ? "var(--rose)" : "var(--ink)" }}
             >
               {word.text}
             </h2>
@@ -100,9 +97,8 @@ export function KineticManifesto({ words }: { words: readonly [string, string, s
                 wordRefs.current[i] = el;
               }}
               aria-hidden="true"
-              className="v4-display col-start-1 row-start-1 text-center"
+              className="v4-display v4-slam col-start-1 row-start-1 text-center"
               style={{
-                fontSize: "clamp(3rem, 11vw, 9rem)",
                 color: word.rose ? "var(--rose)" : "var(--ink)",
                 opacity: 0,
                 willChange: "transform, opacity",

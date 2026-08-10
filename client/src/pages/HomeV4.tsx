@@ -30,6 +30,26 @@ import {
   VideoBand,
   scrollToSection,
 } from "@/components/ui-v4";
+import { createScrub } from "@/components/ui-v4/scrub";
+
+
+/**
+ * Isolates a Latin run inside RTL text.
+ *
+ * "Agentic AI." in an RTL paragraph puts the full stop on the left, because a
+ * period is direction-neutral and inherits the paragraph. <bdi dir="ltr">
+ * scopes the run so its punctuation stays attached where a reader expects it.
+ * Arabic-bearing strings pass through untouched.
+ */
+const HAS_ARABIC = /[؀-ۿ]/;
+function Bidi({ text }: { text: string }) {
+  if (HAS_ARABIC.test(text)) return <>{text}</>;
+  return (
+    <bdi dir="ltr" lang="en">
+      {text}
+    </bdi>
+  );
+}
 
 /* ═══════════════════════════════════════════════════════════════════
    HomeV4 "SIGNAL / LIGHT"
@@ -42,9 +62,9 @@ import {
 export default function HomeV4() {
   const t = useContent();
 
-  // Written by the hero scrub every frame, read by the HUD. Deliberately a
-  // ref, not state: this value changes on every animation frame.
-  const heroProgress = useRef(0);
+  // One published value shared by the canvas and the HUD, so the readout can
+  // never land a frame away from the footage it describes.
+  const scrub = useRef(createScrub()).current;
 
   // Built from the locale's messages so validation speaks the page's language,
   // while the values that reach the server stay canonical English.
@@ -98,29 +118,23 @@ export default function HomeV4() {
         <Grain />
         <Cursor />
         <Navbar />
-        <Hud progressRef={heroProgress} />
+        <Hud scrub={scrub} />
 
         <main id="main">
           {/* ══ 2. HERO ═══════════════════════════════════════════ */}
-          <HeroScrub progressRef={heroProgress}>
+          <HeroScrub scrub={scrub}>
             <div className="relative flex h-full items-center">
               <div className="mx-auto w-full max-w-[1300px] px-6 lg:px-10">
                 <p className="v4-eyebrow">{t.hero.eyebrow}</p>
 
-                <h1
-                  className="v4-display mt-7"
-                  style={{
-                    fontSize:
-                      t.locale === "ar"
-                        ? "clamp(2.6rem, 8.3vw, 7.6rem)"
-                        : "clamp(2.9rem, 9.2vw, 8.4rem)",
-                  }}
-                >
-                  {t.hero.headline[0]}
+                <h1 className="v4-display v4-d1 mt-7">
+                  <Bidi text={t.hero.headline[0]} />
                   <br />
-                  {t.hero.headline[1]}
+                  <Bidi text={t.hero.headline[1]} />
                   <br />
-                  <span className="v4-rose">{t.hero.headline[2]}</span>
+                  <span className="v4-rose">
+                    <Bidi text={t.hero.headline[2]} />
+                  </span>
                 </h1>
 
                 <p className="v4-lead mt-8">{t.hero.sub}</p>
@@ -155,7 +169,7 @@ export default function HomeV4() {
 
           <Section rule={false}>
             <Reveal>
-              <h2 className="v4-display" style={{ fontSize: "clamp(1.9rem, 3.6vw, 3rem)" }}>
+              <h2 className="v4-display v4-d2">
                 {t.convictions.heading}
               </h2>
             </Reveal>
@@ -180,11 +194,11 @@ export default function HomeV4() {
             <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-5">
                 <Reveal>
-                  <h2 className="v4-display" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.6rem)" }}>
+                  <h2 className="v4-display v4-d2">
                     {t.context.heading}
                   </h2>
                   <blockquote className="v4-accent mt-10">
-                    <p className="v4-display" style={{ fontSize: "clamp(1.2rem, 1.8vw, 1.5rem)", lineHeight: 1.3 }}>
+                    <p className="v4-display v4-d3" style={{ lineHeight: 1.3 }}>
                       {t.context.pullQuote}
                     </p>
                   </blockquote>
@@ -218,7 +232,7 @@ export default function HomeV4() {
                         {gen.label}
                       </p>
                       <h3
-                        className="v4-display mt-3 text-[1.5rem]"
+                        className="v4-display v4-d3 mt-3"
                         style={isAgents ? { color: "var(--rose-deep)" } : undefined}
                       >
                         {gen.title}
@@ -237,7 +251,7 @@ export default function HomeV4() {
               <div className="lg:col-span-4">
                 <div className="lg:sticky lg:top-28">
                   <Reveal>
-                    <h2 className="v4-display" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.4rem)" }}>
+                    <h2 className="v4-display v4-d2">
                       {t.practices.heading}
                     </h2>
                     <p className="v4-lead mt-6">{t.practices.intro}</p>
@@ -254,8 +268,7 @@ export default function HomeV4() {
                           {practice.index}
                         </span>
                         <h3
-                          className="v4-display flex-1"
-                          style={{ fontSize: "clamp(1.6rem, 3vw, 2.4rem)" }}
+                          className="v4-display v4-d2 flex-1"
                         >
                           {practice.title}
                         </h3>
@@ -295,7 +308,7 @@ export default function HomeV4() {
           {/* ══ 6. FLAGSHIP, AGENTIC AI ═══════════════════════════ */}
           <Section id="agentic" eyebrow={t.agentic.eyebrow} className="bg-[var(--surface)]">
             <Reveal>
-              <h2 className="v4-display" style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.8rem)" }}>
+              <h2 className="v4-display v4-d2">
                 {t.agentic.heading}
               </h2>
               <p className="v4-lead mt-6">{t.agentic.lead}</p>
@@ -305,7 +318,7 @@ export default function HomeV4() {
               {t.agentic.agents.map((agent, i) => (
                 <Reveal key={agent.title} delay={i * 50}>
                   <div className="v4-card v4-card-hover h-full p-7">
-                    <h3 className="v4-display text-[1.25rem]">{agent.title}</h3>
+                    <h3 className="v4-display v4-d4">{agent.title}</h3>
                     <p className="v4-body mt-3 text-[0.95rem]">{agent.body}</p>
                   </div>
                 </Reveal>
@@ -321,7 +334,7 @@ export default function HomeV4() {
                   borderRadius: "var(--radius)",
                 }}
               >
-                <h3 className="v4-display text-[1.5rem]" style={{ color: "var(--band-text)" }}>
+                <h3 className="v4-display v4-d3" style={{ color: "var(--band-text)" }}>
                   {t.agentic.safety.heading}
                 </h3>
                 <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -349,8 +362,7 @@ export default function HomeV4() {
               <Reveal>
                 <p className="v4-eyebrow">{t.assessment.eyebrow}</p>
                 <h2
-                  className="v4-display mt-6"
-                  style={{ fontSize: "clamp(2.2rem, 5vw, 4.2rem)" }}
+                  className="v4-display v4-d2 mt-6"
                 >
                   {t.assessment.heading}
                 </h2>
@@ -364,7 +376,7 @@ export default function HomeV4() {
                       <p className="v4-num text-[0.9rem]" style={{ color: "var(--rose)" }}>
                         {day.label}
                       </p>
-                      <h3 className="v4-display mt-3 text-[1.35rem]">{day.title}</h3>
+                      <h3 className="v4-display v4-d3 mt-3">{day.title}</h3>
                       <p className="v4-body mt-3 text-[0.9rem]">{day.body}</p>
                     </div>
                   </Reveal>
@@ -374,7 +386,7 @@ export default function HomeV4() {
               <div className="mt-16 grid gap-12 md:grid-cols-2">
                 {[t.assessment.receive, t.assessment.costs].map((block, i) => (
                   <Reveal key={block.heading} delay={i * 70}>
-                    <h3 className="v4-display text-[1.4rem]">{block.heading}</h3>
+                    <h3 className="v4-display v4-d3">{block.heading}</h3>
                     <ul className="mt-6">
                       {block.items.map((item) => (
                         <li
@@ -407,7 +419,7 @@ export default function HomeV4() {
           {/* ══ 8. AI SERVICES ════════════════════════════════════ */}
           <Section id="services" eyebrow={t.services.eyebrow}>
             <Reveal>
-              <h2 className="v4-display" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.4rem)" }}>
+              <h2 className="v4-display v4-d2">
                 {t.services.heading}
               </h2>
               <p className="v4-lead mt-6">{t.services.lead}</p>
@@ -431,7 +443,7 @@ export default function HomeV4() {
           {/* ══ 10. PLATFORM, ATACCAMA ONE ════════════════════════ */}
           <Section id="platform" eyebrow={t.platform.eyebrow} className="bg-[var(--surface)]">
             <Reveal>
-              <h2 className="v4-display" style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.6rem)" }}>
+              <h2 className="v4-display v4-d2">
                 {t.platform.heading}
               </h2>
               <p className="v4-lead mt-6">{t.platform.lead}</p>
@@ -451,7 +463,7 @@ export default function HomeV4() {
                       }
                     >
                       <h3
-                        className="v4-display text-[1.1rem]"
+                        className="v4-display v4-d4"
                         style={highlighted ? { color: "var(--rose-deep)" } : undefined}
                       >
                         {module.title}
@@ -473,7 +485,7 @@ export default function HomeV4() {
           >
             <Reveal>
               <p className="v4-eyebrow">{t.proof.eyebrow}</p>
-              <h2 className="v4-display mt-6" style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.6rem)" }}>
+              <h2 className="v4-display v4-d2 mt-6">
                 {t.proof.heading}
               </h2>
               <p className="v4-lead mt-6">{t.proof.lead}</p>
@@ -554,7 +566,7 @@ export default function HomeV4() {
           {/* ══ 12. PARTNERSHIPS AND SOVEREIGNTY ══════════════════ */}
           <Section id="partners" eyebrow={t.partners.eyebrow}>
             <Reveal>
-              <h2 className="v4-display" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.4rem)" }}>
+              <h2 className="v4-display v4-d2">
                 {t.partners.heading}
               </h2>
               <p className="v4-lead mt-6">{t.partners.intro}</p>
@@ -567,7 +579,7 @@ export default function HomeV4() {
                     <p className="v4-eyebrow" style={{ color: "var(--rose-deep)" }}>
                       {partner.label}
                     </p>
-                    <h3 className="v4-display mt-4 text-[1.8rem]" lang="en" dir="ltr">
+                    <h3 className="v4-display v4-d2 mt-4" lang="en" dir="ltr">
                       {partner.name}
                     </h3>
                     <p className="v4-body mt-4 flex-1 text-[0.95rem]">{partner.body}</p>
@@ -586,7 +598,7 @@ export default function HomeV4() {
 
             <Reveal delay={60}>
               <div className="v4-rule mt-16 pt-12">
-                <h3 className="v4-display text-[1.6rem]">{t.partners.sovereignty.heading}</h3>
+                <h3 className="v4-display v4-d3">{t.partners.sovereignty.heading}</h3>
                 <div className="mt-8 grid gap-10 md:grid-cols-2">
                   {t.partners.sovereignty.columns.map((column) => (
                     <p key={column.slice(0, 24)} className="v4-body text-[0.98rem]">
@@ -601,7 +613,7 @@ export default function HomeV4() {
           {/* ══ 13. WHY ALPHA PRO MENA ════════════════════════════ */}
           <Section id="why" eyebrow={t.why.eyebrow} className="bg-[var(--surface)]">
             <Reveal>
-              <h2 className="v4-display" style={{ fontSize: "clamp(2.2rem, 4.2vw, 3.4rem)" }}>
+              <h2 className="v4-display v4-d2">
                 {t.why.heading}
               </h2>
             </Reveal>
@@ -612,7 +624,7 @@ export default function HomeV4() {
                     <span className="v4-num text-sm" style={{ color: "var(--rose)" }}>
                       {item.index}
                     </span>
-                    <h3 className="v4-display mt-3 text-[1.3rem]">{item.title}</h3>
+                    <h3 className="v4-display v4-d4 mt-3">{item.title}</h3>
                     <p className="v4-body mt-2 text-[0.95rem]">{item.body}</p>
                   </div>
                 </Reveal>
@@ -628,7 +640,7 @@ export default function HomeV4() {
             <div className="grid gap-14 lg:grid-cols-12 lg:gap-16">
               <div className="lg:col-span-5">
                 <Reveal>
-                  <h2 className="v4-display" style={{ fontSize: "clamp(2.2rem, 4.4vw, 3.6rem)" }}>
+                  <h2 className="v4-display v4-d2">
                     {t.contact.heading}
                   </h2>
                   <p className="v4-lead mt-6">{t.contact.lead}</p>
@@ -851,7 +863,7 @@ export default function HomeV4() {
           <section className="v4-band relative py-24 sm:py-32">
             <div className="mx-auto w-full max-w-[1300px] px-6 lg:px-10">
               <Reveal>
-                <p className="v4-display" style={{ fontSize: "clamp(2rem, 6vw, 5rem)" }}>
+                <p className="v4-display v4-band-display">
                   {t.footer.display[0]}
                   <br />
                   <span className="v4-rose">{t.footer.display[1]}</span>

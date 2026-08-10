@@ -70,7 +70,7 @@ export function Navbar() {
             <button
               key={link.id}
               onClick={() => go(link.id)}
-              className="text-sm font-medium transition-colors"
+              className="v4-nav-item text-sm font-medium transition-colors"
               style={{ color: "var(--ink-soft)" }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "var(--ink)")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "var(--ink-soft)")}
@@ -119,7 +119,7 @@ export function Navbar() {
               <button
                 key={link.id}
                 onClick={() => go(link.id)}
-                className="v4-display py-3 text-start text-[1.7rem]"
+                className="v4-display v4-d3 py-3 text-start"
                 style={{ borderBottom: "1px solid var(--line)" }}
               >
                 {link.label}
@@ -127,7 +127,7 @@ export function Navbar() {
             ))}
             <Link
               href={otherPath}
-              className="v4-display py-3 text-start text-[1.7rem]"
+              className="v4-display v4-d3 py-3 text-start"
               style={{ borderBottom: "1px solid var(--line)" }}
               hrefLang={OTHER_LOCALE[t.locale]}
             >

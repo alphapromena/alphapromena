@@ -113,7 +113,15 @@ for (const locale of ["en", "ar"]) {
       check(`[${locale}] offices rendered with Muscat`, audit.offices);
       check(`[${locale}] CEO mailto and tel present`, audit.mailto && audit.tel);
       check(`[${locale}] build rail has five stops`, audit.railStops === 5, String(audit.railStops));
-      check(`[${locale}] localized title`, locale === "ar" ? /ذكاء/.test(audit.title) : /Built to Run/i.test(audit.title), audit.title);
+      // The Arabic title leads with Latin "Agentic AI" by policy, so assert on the
+      // Arabic that follows it rather than on a term now held in Latin.
+      check(
+        `[${locale}] localized title`,
+        locale === "ar"
+          ? /[؀-ۿ]/.test(audit.title) && /Agentic AI/.test(audit.title)
+          : /Built to Run/i.test(audit.title),
+        audit.title,
+      );
       check(`[${locale}] localized description`, locale === "ar" ? /Ataccama/.test(audit.description) && /الشريك/.test(audit.description) : /Preferred Partner/.test(audit.description));
 
       // Form: localized labels, canonical English submitted values.

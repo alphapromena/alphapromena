@@ -246,10 +246,14 @@
   font-weight: 400;
 }
 
-/* Arabic swaps the family and drops the Latin display mannerisms. */
+/* Arabic swaps the family and drops the Latin display mannerisms.
+   Barlow leads the stack even here: it has no Arabic coverage, so Arabic
+   glyphs fall through to IBM Plex Sans Arabic per glyph, while the proper
+   nouns and acronyms held in Latin (Gartner, Ataccama ONE, Agentic AI, PDPL)
+   render in the brand face rather than Plex's Latin. */
 .v4:lang(ar) {
-  --font-display: "IBM Plex Sans Arabic", "Barlow", system-ui, sans-serif;
-  --font-body: "IBM Plex Sans Arabic", "Barlow", system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-body: "Barlow", "IBM Plex Sans Arabic", system-ui, sans-serif;
 }
 
 .v4 ::selection { background: var(--rose); color: #FFFFFF; }
@@ -610,3 +614,75 @@ html.lenis body { height: auto; }
   letter-spacing: 0;
   text-transform: none;
 }
+
+/* ── HUD growth ─────────────────────────────────────────────────── */
+/* The slot is reserved at the final 2x size from first paint, so the
+   number growing inside it never moves anything: no reflow, no CLS. */
+.v4-hud-slot {
+  margin-block-start: 0.25rem;
+  height: 3.4rem;
+  min-width: 6.6rem;
+  display: grid;
+  place-items: center;
+}
+.v4-hud-grow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  transform-origin: center;
+  will-change: transform;
+}
+.v4-hud-value { font-size: 1.6rem; line-height: 1; color: var(--rose); }
+.v4-hud-pct { font-size: 0.8rem; color: var(--rose); }
+
+/* One spring overshoot when the readout completes, armed once per pin. */
+@keyframes v4-hud-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+.v4-hud-pop { animation: v4-hud-pop 200ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* ── Display scale ──────────────────────────────────────────────── */
+/* Latin and Arabic need genuinely different scales, not one scale with a
+   different face. Arabic glyphs carry more ink per em and stack taller, so
+   at the Latin sizes the hero read enormous and cramped. The Arabic levels
+   below sit at roughly 57% of their Latin equivalents with a looser line,
+   which is a token swap rather than a per-section override. */
+.v4 {
+  --fs-d1: clamp(2.9rem, 9.2vw, 8.4rem);   /* hero */
+  --fs-d2: clamp(2.2rem, 4.4vw, 3.6rem);   /* section headings */
+  --fs-d3: clamp(1.5rem, 2.4vw, 1.9rem);   /* sub headings */
+  --fs-d4: 1.25rem;                        /* card titles */
+  --fs-slam: clamp(3rem, 11vw, 9rem);      /* kinetic manifesto */
+  --fs-band: clamp(2rem, 6vw, 5rem);       /* pre-footer display */
+  --lh-display: 0.88;
+}
+.v4:lang(ar) {
+  --fs-d1: clamp(1.7rem, 5.2vw, 4.8rem);
+  --fs-d2: clamp(1.35rem, 2.5vw, 2.05rem);
+  --fs-d3: clamp(1.05rem, 1.4vw, 1.15rem);
+  --fs-d4: 1.05rem;
+  --fs-slam: clamp(1.9rem, 6.3vw, 5.1rem);
+  --fs-band: clamp(1.35rem, 3.4vw, 2.85rem);
+  --lh-display: 1.2;
+}
+
+.v4-d1 { font-size: var(--fs-d1); }
+.v4-d2 { font-size: var(--fs-d2); }
+.v4-d3 { font-size: var(--fs-d3); }
+.v4-d4 { font-size: var(--fs-d4); }
+.v4-slam { font-size: var(--fs-slam); }
+.v4-band-display { font-size: var(--fs-band); }
+
+/* Hero keeps 700 in Arabic; section headings settle to 600 so the smaller
+   scale does not read as a wall of bold. */
+.v4-display:lang(ar) { line-height: var(--lh-display); }
+.v4-d1:lang(ar) { font-weight: 700; }
+.v4-d2:lang(ar),
+.v4-d3:lang(ar),
+.v4-d4:lang(ar),
+.v4-band-display:lang(ar) { font-weight: 600; }
+
+/* Nav and footer sit on the same reduced Arabic scale. */
+.v4-nav-item:lang(ar) { font-size: 0.92rem; }
