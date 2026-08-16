@@ -420,17 +420,12 @@ export const en: SiteContent = {
       { city: "Riyadh, Saudi Arabia" },
       { city: "Washington State, USA" },
     ],
-    directHeading: "Direct",
-    directRole: "Chief Executive Officer",
     labels: {
       name: "Full name",
       company: "Company",
       email: "Email address",
       practice: "Practice",
       message: "Message",
-      emailChannel: "Email",
-      phoneChannel: "Phone",
-      webChannel: "Web",
     },
     placeholders: {
       name: "Jane Smith",

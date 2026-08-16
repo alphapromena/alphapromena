@@ -191,17 +191,12 @@ export type SiteContent = {
     officesHeading: string;
     /** Muscat leads and carries the rose highlight. */
     offices: { city: string; primary?: boolean }[];
-    directHeading: string;
-    directRole: string;
     labels: {
       name: string;
       company: string;
       email: string;
       practice: string;
       message: string;
-      emailChannel: string;
-      phoneChannel: string;
-      webChannel: string;
     };
     placeholders: {
       name: string;

@@ -1,7 +1,7 @@
 import { ArrowUp } from "lucide-react";
 import { Link } from "wouter";
 import { useContent } from "@/content/locale";
-import { CONTACT_DIRECT, SOCIALS } from "@/content/site.shared";
+import { CONTACT_EMAIL, SOCIALS } from "@/content/site.shared";
 import { BrandMark } from "./navbar";
 import { scrollToSection } from "./lenis-provider";
 
@@ -33,8 +33,8 @@ export function Footer() {
           </div>
 
           <div className="flex flex-wrap items-center gap-6">
-            <a href={`mailto:${CONTACT_DIRECT.email}`} className="v4-link" lang="en" dir="ltr">
-              {CONTACT_DIRECT.email}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="v4-link" lang="en" dir="ltr">
+              {CONTACT_EMAIL}
             </a>
             {socials.map(([key, href]) => (
               <a key={key} href={href} target="_blank" rel="noopener noreferrer" className="v4-link">

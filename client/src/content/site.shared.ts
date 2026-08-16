@@ -16,16 +16,12 @@ export const SOCIALS: Record<string, string | null> = {
   linkedin: "https://www.linkedin.com/company/alpha-pro-consulting",
 };
 
-/** Direct channels for the CEO, published per Amendment 1 P1. */
-export const CONTACT_DIRECT = {
-  name: "Abdallah Abulbasal",
-  email: "Abdallah@alphapromena.com",
-  phone: "+1 (425) 336-8884",
-  /** Dialable form for the tel: href. */
-  phoneHref: "+14253368884",
-  web: "alphapromena.com",
-  webHref: "https://alphapromena.com/",
-} as const;
+/**
+ * The one published contact address. The named CEO block — personal email,
+ * phone, and web line — was removed by request, so the site now publishes the
+ * company inbox only. This is the same address the policy documents give.
+ */
+export const CONTACT_EMAIL = "info@alphapromena.com";
 
 /** Reproduced verbatim, in English, on both locales. Do not edit or translate. */
 export const ATTRIBUTIONS = {

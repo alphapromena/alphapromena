@@ -8,7 +8,7 @@ import { trpc } from "@/lib/trpc";
 import { useContent } from "@/content/locale";
 import {
   ATTRIBUTIONS,
-  CONTACT_DIRECT,
+  CONTACT_EMAIL,
   INQUIRY_VALUES,
   LINKS,
   TRUSTED_BY,
@@ -645,81 +645,22 @@ export default function HomeV4() {
                   </h2>
                   <p className="v4-lead mt-6">{t.contact.lead}</p>
 
-                  <div className="mt-12 grid gap-10 sm:grid-cols-2">
-                    <div>
-                      <p className="v4-eyebrow">{t.contact.officesHeading}</p>
-                      <ul className="mt-5">
-                        {t.contact.offices.map((office) => (
-                          <li
-                            key={office.city}
-                            className="v4-rule py-3 text-[0.95rem]"
-                            style={{
-                              color: office.primary ? "var(--rose-deep)" : "var(--ink-soft)",
-                              fontWeight: office.primary ? 600 : 400,
-                            }}
-                          >
-                            {office.city}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div>
-                      <p className="v4-eyebrow">{t.contact.directHeading}</p>
-                      <div className="mt-5">
-                        <p className="text-[0.98rem] font-semibold" lang="en" dir="ltr">
-                          {CONTACT_DIRECT.name}
-                        </p>
-                        <p className="v4-body text-[0.88rem]">{t.contact.directRole}</p>
-                      </div>
-                      <dl className="mt-5">
-                        <div className="v4-rule py-3">
-                          <dt className="v4-eyebrow" style={{ fontSize: "0.62rem" }}>
-                            {t.contact.labels.emailChannel}
-                          </dt>
-                          <dd className="mt-1">
-                            <a
-                              href={`mailto:${CONTACT_DIRECT.email}`}
-                              className="v4-link"
-                              lang="en"
-                              dir="ltr"
-                            >
-                              {CONTACT_DIRECT.email}
-                            </a>
-                          </dd>
-                        </div>
-                        <div className="v4-rule py-3">
-                          <dt className="v4-eyebrow" style={{ fontSize: "0.62rem" }}>
-                            {t.contact.labels.phoneChannel}
-                          </dt>
-                          <dd className="mt-1">
-                            <a
-                              href={`tel:${CONTACT_DIRECT.phoneHref}`}
-                              className="v4-link"
-                              lang="en"
-                              dir="ltr"
-                            >
-                              {CONTACT_DIRECT.phone}
-                            </a>
-                          </dd>
-                        </div>
-                        <div className="v4-rule py-3">
-                          <dt className="v4-eyebrow" style={{ fontSize: "0.62rem" }}>
-                            {t.contact.labels.webChannel}
-                          </dt>
-                          <dd className="mt-1">
-                            <a
-                              href={CONTACT_DIRECT.webHref}
-                              className="v4-link"
-                              lang="en"
-                              dir="ltr"
-                            >
-                              {CONTACT_DIRECT.web}
-                            </a>
-                          </dd>
-                        </div>
-                      </dl>
-                    </div>
+                  <div className="mt-12 sm:max-w-[20rem]">
+                    <p className="v4-eyebrow">{t.contact.officesHeading}</p>
+                    <ul className="mt-5">
+                      {t.contact.offices.map((office) => (
+                        <li
+                          key={office.city}
+                          className="v4-rule py-3 text-[0.95rem]"
+                          style={{
+                            color: office.primary ? "var(--rose-deep)" : "var(--ink-soft)",
+                            fontWeight: office.primary ? 600 : 400,
+                          }}
+                        >
+                          {office.city}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </Reveal>
               </div>
@@ -845,8 +786,8 @@ export default function HomeV4() {
                           {submitContact.isError && (
                             <span style={{ color: "var(--rose-deep)" }}>
                               {t.contact.failure}{" "}
-                              <a href={`mailto:${CONTACT_DIRECT.email}`} lang="en" dir="ltr">
-                                {CONTACT_DIRECT.email}
+                              <a href={`mailto:${CONTACT_EMAIL}`} lang="en" dir="ltr">
+                                {CONTACT_EMAIL}
                               </a>
                             </span>
                           )}
@@ -872,8 +813,8 @@ export default function HomeV4() {
                   <button className="v4-pill" onClick={bookAssessment}>
                     {t.footer.emailCta} <ArrowRight className="h-4 w-4" />
                   </button>
-                  <a href={`mailto:${CONTACT_DIRECT.email}`} className="v4-link" lang="en" dir="ltr">
-                    {CONTACT_DIRECT.email}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="v4-link" lang="en" dir="ltr">
+                    {CONTACT_EMAIL}
                   </a>
                 </div>
               </Reveal>

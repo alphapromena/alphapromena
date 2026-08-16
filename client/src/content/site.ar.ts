@@ -424,17 +424,12 @@ export const ar: SiteContent = {
       { city: "الرياض، السعودية" },
       { city: "ولاية واشنطن، الولايات المتحدة" },
     ],
-    directHeading: "تواصل مباشر",
-    directRole: "الرئيس التنفيذي",
     labels: {
       name: "الاسم الكامل",
       company: "جهة العمل",
       email: "البريد الإلكتروني",
       practice: "الممارسة",
       message: "الرسالة",
-      emailChannel: "البريد الإلكتروني",
-      phoneChannel: "الهاتف",
-      webChannel: "الموقع",
     },
     placeholders: {
       name: "الاسم",
