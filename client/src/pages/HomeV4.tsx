@@ -9,6 +9,7 @@ import { useContent } from "@/content/locale";
 import {
   ATTRIBUTIONS,
   CONTACT_EMAIL,
+  CONTACT_PHONE,
   INQUIRY_VALUES,
   LINKS,
   TRUSTED_BY,
@@ -645,22 +646,63 @@ export default function HomeV4() {
                   </h2>
                   <p className="v4-lead mt-6">{t.contact.lead}</p>
 
-                  <div className="mt-12 sm:max-w-[20rem]">
-                    <p className="v4-eyebrow">{t.contact.officesHeading}</p>
-                    <ul className="mt-5">
-                      {t.contact.offices.map((office) => (
-                        <li
-                          key={office.city}
-                          className="v4-rule py-3 text-[0.95rem]"
-                          style={{
-                            color: office.primary ? "var(--rose-deep)" : "var(--ink-soft)",
-                            fontWeight: office.primary ? 600 : 400,
-                          }}
-                        >
-                          {office.city}
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="mt-12 grid gap-10 sm:grid-cols-2">
+                    <div>
+                      <p className="v4-eyebrow">{t.contact.officesHeading}</p>
+                      <ul className="mt-5">
+                        {t.contact.offices.map((office) => (
+                          <li
+                            key={office.city}
+                            className="v4-rule py-3 text-[0.95rem]"
+                            style={{
+                              color: office.primary ? "var(--rose-deep)" : "var(--ink-soft)",
+                              fontWeight: office.primary ? 600 : 400,
+                            }}
+                          >
+                            {office.city}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* Company channels, not a named person's. Both values stay
+                        Latin and LTR so the Arabic locale does not mirror
+                        an address or reorder a dialable number. */}
+                    <div>
+                      <p className="v4-eyebrow">{t.contact.channelsHeading}</p>
+                      <dl className="mt-5">
+                        <div className="v4-rule py-3">
+                          <dt className="v4-eyebrow" style={{ fontSize: "0.62rem" }}>
+                            {t.contact.labels.emailChannel}
+                          </dt>
+                          <dd className="mt-1">
+                            <a
+                              href={`mailto:${CONTACT_EMAIL}`}
+                              className="v4-link"
+                              lang="en"
+                              dir="ltr"
+                            >
+                              {CONTACT_EMAIL}
+                            </a>
+                          </dd>
+                        </div>
+                        <div className="v4-rule py-3">
+                          <dt className="v4-eyebrow" style={{ fontSize: "0.62rem" }}>
+                            {t.contact.labels.phoneChannel}
+                          </dt>
+                          <dd className="mt-1">
+                            <a
+                              href={`tel:${CONTACT_PHONE.href}`}
+                              className="v4-link"
+                              lang="en"
+                              dir="ltr"
+                            >
+                              {CONTACT_PHONE.display}
+                            </a>
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
                   </div>
                 </Reveal>
               </div>

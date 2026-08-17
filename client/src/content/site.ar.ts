@@ -424,12 +424,15 @@ export const ar: SiteContent = {
       { city: "الرياض، السعودية" },
       { city: "ولاية واشنطن، الولايات المتحدة" },
     ],
+    channelsHeading: "للتواصل",
     labels: {
       name: "الاسم الكامل",
       company: "جهة العمل",
       email: "البريد الإلكتروني",
       practice: "الممارسة",
       message: "الرسالة",
+      emailChannel: "البريد الإلكتروني",
+      phoneChannel: "الهاتف",
     },
     placeholders: {
       name: "الاسم",

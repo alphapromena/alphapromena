@@ -96,10 +96,10 @@ for (const locale of ["en", "ar"]) {
           offices: [...document.querySelectorAll("#contact li")].some((li) =>
             /Muscat|مسقط/.test(li.textContent ?? ""),
           ),
-          mailto: !!document.querySelector('a[href^="mailto:"]'),
-          // The named CEO block (phone included) was removed from the contact
-          // section, so a tel: link must no longer appear anywhere on the page.
-          tel: !!document.querySelector('a[href^="tel:"]'),
+          // Company channels, so both assert the published values rather than
+          // any link of the right kind.
+          mailto: !!document.querySelector('a[href^="mailto:info@"]'),
+          tel: !!document.querySelector('a[href^="tel:+962"]'),
           railStops: document.querySelectorAll("#build li").length,
         };
       });
@@ -113,7 +113,7 @@ for (const locale of ["en", "ar"]) {
       check(`[${locale}] customers disclaimer verbatim`, audit.disclaimer);
       check(`[${locale}] "only certified" absent from served output`, !audit.onlyCertified);
       check(`[${locale}] offices rendered with Muscat`, audit.offices);
-      check(`[${locale}] email link present, no phone link`, audit.mailto && !audit.tel);
+      check(`[${locale}] company email and phone links present`, audit.mailto && audit.tel);
       check(`[${locale}] build rail has five stops`, audit.railStops === 5, String(audit.railStops));
       // The Arabic title leads with Latin "Agentic AI" by policy, so assert on the
       // Arabic that follows it rather than on a term now held in Latin.

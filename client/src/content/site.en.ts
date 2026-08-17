@@ -420,12 +420,15 @@ export const en: SiteContent = {
       { city: "Riyadh, Saudi Arabia" },
       { city: "Washington State, USA" },
     ],
+    channelsHeading: "Contact",
     labels: {
       name: "Full name",
       company: "Company",
       email: "Email address",
       practice: "Practice",
       message: "Message",
+      emailChannel: "Email",
+      phoneChannel: "Phone",
     },
     placeholders: {
       name: "Jane Smith",

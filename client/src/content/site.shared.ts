@@ -17,11 +17,17 @@ export const SOCIALS: Record<string, string | null> = {
 };
 
 /**
- * The one published contact address. The named CEO block — personal email,
- * phone, and web line — was removed by request, so the site now publishes the
- * company inbox only. This is the same address the policy documents give.
+ * Published contact channels. These belong to the company, not to a named
+ * person: the inbox is the one the policy documents give, and the line is the
+ * Jordan number. Both render Latin and LTR inside the Arabic locale.
  */
 export const CONTACT_EMAIL = "info@alphapromena.com";
+
+export const CONTACT_PHONE = {
+  display: "+962 79 186 4006",
+  /** Dialable form for the tel: href. */
+  href: "+962791864006",
+} as const;
 
 /** Reproduced verbatim, in English, on both locales. Do not edit or translate. */
 export const ATTRIBUTIONS = {
